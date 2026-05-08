@@ -126,7 +126,7 @@
             <div class="step-text"><strong>Pay</strong> → We create and ship your custom sticker</div>
         </div>
     </div>
-   <button class="btn-main" id="start-btn" style="max-width:280px;" onclick="alert('CLICK OK')">INITIALIZE SCANNER</button>
+   <button class="btn-main" id="start-btn" style="max-width:280px;">INITIALIZE SCANNER</button>
 </div>
 
 <!-- CAMERA -->
@@ -726,42 +726,42 @@
     // ============================================================
     // INIT
     // ============================================================
+   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start-btn').addEventListener('click', () => {
-    const btn = document.getElementById('start-btn');
-    btn.innerText = "STARTING...";
-    btn.disabled = true;
+        const btn = document.getElementById('start-btn');
+        btn.innerText = "STARTING...";
+        btn.disabled = true;
 
-    document.getElementById('sensor-auth').style.display = 'none';
-    document.getElementById('camera-view').style.display = 'flex';
+        document.getElementById('sensor-auth').style.display = 'none';
+        document.getElementById('camera-view').style.display = 'flex';
 
-    // Pide permisos después de mostrar la cámara
-    if (typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-            .then(state => {
-                if (state === 'granted') {
+        if (typeof DeviceOrientationEvent !== 'undefined' &&
+            typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission()
+                .then(state => {
+                    if (state === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                    }
+                })
+                .catch(() => {
                     window.addEventListener('deviceorientation', handleOrientation);
-                }
+                });
+        } else {
+            window.addEventListener('deviceorientation', handleOrientation);
+        }
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play().catch(() => {});
             })
             .catch(() => {
-                window.addEventListener('deviceorientation', handleOrientation);
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        video.srcObject = stream;
+                        video.play().catch(() => {});
+                    })
+                    .catch(() => alert("Camera access required."));
             });
-    } else {
-        window.addEventListener('deviceorientation', handleOrientation);
-    }
-
-    // Inicia cámara sin await
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(stream => {
-            video.srcObject = stream;
-            video.play().catch(() => {});
-        })
-        .catch(() => {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    video.srcObject = stream;
-                    video.play().catch(() => {});
-                })
-                .catch(() => alert("Camera access required."));
-        });
+    });
 });
