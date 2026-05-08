@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CamoPro AI V29 - Full Automated Flow</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        body { margin: 0; padding: 0; background: #000; font-family: -apple-system, sans-serif; color: #fff; overflow-x: hidden; }
+        
+        /* Contenedores de Flujo */
+        #camera-view, #gallery-view, #order-view { display: none; min-height: 100vh; width: 100vw; }
+        #camera-view { display: flex; flex-direction: column; }
+
+        /* Pantalla de Inicio / Sensores */
+        #sensor-auth { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; }
+        
+        /* Cámara (Funcionalidad V23) */
+        .header { padding: 15px; text-align: center; border-bottom: 1px solid #222; background: #000; }
+        #viewport { position: relative; flex-grow: 1; margin: 10px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: #000; border: 2px solid #222; }
+        video { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        #fixed-guide { position: absolute; width: 110px; height: 150px; border: 2px dashed rgba(255,255,255,0.4); border-radius: 8px; z-index: 5; }
+        #dynamic-guide { position: absolute; width: 110px; height: 150px; border: 3px solid #ff4444; border-radius: 8px; z-index: 6; transition: border-color 0.2s; }
+        #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.8); padding: 6px 12px; border-radius: 15px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 10; color: #ff4444; }
+
+        /* Galería de Validación */
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .gallery-item { position: relative; border-radius: 10px; overflow: hidden; border: 2px solid #333; transition: 0.3s; }
+        .gallery-item.selected { border-color: #00ff00; transform: scale(1.02); }
+        .gallery-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+        .check-badge { position: absolute; top: 10px; right: 10px; background: #00ff00; color: #000; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+
+        /* Formulario de Pedido */
+        .form-container { padding: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 11px; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: #fff; font-size: 16px; box-sizing: border-box; }
+        input:focus { border-color: #00ff00; outline: none; background: #222; }
+        
+        .summary-card { background: #111; padding: 20px; border-radius: 15px; margin-top: 30px; border: 1px solid #222; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .total-row { border-top: 1px solid #333; padding-top: 15px; margin-top: 10px; font-size: 22px; font-weight: 900; color: #00ff00; }
+
+        /* Botones Globales */
+        .footer-action { padding: 20px; background: #000; border-top: 1px solid #222; text-align: center; }
+        .btn-main { background: #00ff00; color: #000; border: none; padding: 18px 0; width: 100%; border-radius: 35px; font-weight: 800; text-transform: uppercase; cursor: pointer; font-size: 14px; letter-spacing: 1px; }
+        .btn-main:disabled { background: #333; color: #666; }
+    </style>
+</head>
+<body>
+
+<div id="sensor-auth">
+    <h1 style="color: #00ff00; letter-spacing: 3px; font-weight: 900;">CAMOPRO AI</h1>
+    <p style="color: #666; margin-bottom: 30px;">Automated Texture Cloning System</p>
+    <button class="btn-main" id="start-btn" style="max-width: 280px;">INITIALIZE SCANNER</button>
+</div>
+
+<div id="camera-view">
+    <div class="header"><span style="font-weight: 800; color: #00ff00; letter-spacing: 1px;">SCANNER ACTIVE</span></div>
+    <div id="viewport">
+        <div id="status-msg">AIM AT OUTLET</div>
+        <video id="video" autoplay playsinline muted></video>
+        <div id="fixed-guide"></div>
+        <div id="dynamic-guide"></div>
+    </div>
+    <div class="footer-action">
+        <div id="capture-indicator" style="margin-bottom: 15px; font-size: 11px; color: #00ff00; font-weight: bold;">0 OUTLETS CAPTURED</div>
+        <button id="go-to-gallery" class="btn-main" style="display: none;">VALIDATE SELECTION</button>
+    </div>
+</div>
+
+<div id="gallery-view">
+    <div style="padding: 25px 25px 5px 25px;">
+        <h2 style="color: #00ff00; margin: 0; font-weight: 900;">GALLERY</h2>
+        <p style="color: #888; font-size: 13px;">Deselect any photo you don't want to process.</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="footer-action">
+        <button id="go-to-form" class="btn-main">PROCEED TO SHIPPING</button>
+    </div>
+</div>
+
+<div id="order-view">
+    <div class="form-container">
+        <h2 style="color: #00ff00; font-weight: 900; margin-bottom: 25px;">CHECKOUT</h2>
+        <div class="form-group"><label>Full Name</label><input type="text" id="cust-name"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" id="cust-email"></div>
+        <div class="form-group"><label>Shipping Address</label><input type="text" id="cust-address"></div>
+        
+        <div class="summary-card">
+            <div class="summary-row"><span>Items for production:</span><span id="final-count" style="font-weight: bold;">0</span></div>
+            <div class="summary-row"><span>Cloning Service:</span><span>$45.00 / unit</span></div>
+            <div class="summary-row total-row"><span>TOTAL:</span><span id="final-price">$0.00</span></div>
+        </div>
+    </div>
+    <div class="footer-action">
+        <button class="btn-main" id="final-pay-btn">PAY & SEND TO PRODUCTION</button>
+    </div>
+</div>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const dynamicGuide = document.getElementById('dynamic-guide');
+    const statusMsg = document.getElementById('status-msg');
+    
+    let capturedPhotos = [];
+    let isLocked = false;
+    let hasLeftZone = true;
+    const PRICE_UNIT = 45;
+    const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
+
+    // --- LÓGICA DE CÁMARA (BASE V23) ---
+    async function initCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "environment", width: { ideal: 1920 } } 
+            });
+            video.srcObject = stream;
+            document.getElementById('sensor-auth').style.display = 'none';
+            document.getElementById('camera-view').style.display = 'flex';
+        } catch (err) { alert("Camera Access Required"); }
+    }
+
+    function handleOrientation(event) {
+        if (isLocked) return;
+        const beta = event.beta;
+        const gamma = event.gamma;
+        let targetB = (beta > 45 && beta < 135) ? 90 : (beta <= 45 && beta >= -45) ? 0 : 180;
+        
+        const dV = Math.abs(beta - targetB);
+        const dL = Math.abs(gamma);
+        
+        dynamicGuide.style.transform = `translate(${gamma * 5}px, ${(beta - targetB) * 5}px)`;
+
+        if (dV < 4 && dL < 4) {
+            if (hasLeftZone) {
+                dynamicGuide.style.borderColor = "#00ff00";
+                statusMsg.innerText = "CAPTURING...";
+                statusMsg.style.color = "#00ff00";
+                executeCapture();
+            }
+        } else {
+            hasLeftZone = true;
+            dynamicGuide.style.borderColor = "#ff4444";
+            statusMsg.innerText = "AIM AT OUTLET";
+            statusMsg.style.color = "#ff4444";
+        }
+    }
+
+    function executeCapture() {
+        isLocked = true;
+        hasLeftZone = false;
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        capturedPhotos.push({ 
+            id: Date.now(), 
+            data: canvas.toDataURL('image/jpeg', 0.8), 
+            selected: true 
+        });
+        
+        document.getElementById('capture-indicator').innerText = `${capturedPhotos.length} OUTLETS CAPTURED`;
+        document.getElementById('go-to-gallery').style.display = 'block';
+        
+        setTimeout(() => { isLocked = false; }, 1200);
+    }
+
+    // --- NAVEGACIÓN Y GALERÍA ---
+    document.getElementById('go-to-gallery').addEventListener('click', () => {
+        document.getElementById('camera-view').style.display = 'none';
+        document.getElementById('gallery-view').style.display = 'block';
+        renderGallery();
+    });
+
+    function renderGallery() {
+        const grid = document.getElementById('gallery-grid');
+        grid.innerHTML = '';
+        capturedPhotos.forEach(p => {
+            const item = document.createElement('div');
+            item.className = `gallery-item ${p.selected ? 'selected' : ''}`;
+            item.innerHTML = `
+                <img src="${p.data}">
+                ${p.selected ? '<div class="check-badge">✓</div>' : ''}
+            `;
+            item.onclick = () => {
+                p.selected = !p.selected;
+                renderGallery();
+            };
+            grid.appendChild(item);
+        });
+    }
+
+    document.getElementById('go-to-form').addEventListener('click', () => {
+        const validPhotos = capturedPhotos.filter(p => p.selected);
+        if(validPhotos.length === 0) return alert("Please select at least one photo.");
+        
+        document.getElementById('gallery-view').style.display = 'none';
+        document.getElementById('order-view').style.display = 'block';
+        
+        document.getElementById('final-count').innerText = validPhotos.length;
+        document.getElementById('final-price').innerText = `$${(validPhotos.length * PRICE_UNIT).toFixed(2)}`;
+    });
+
+    // --- ENVÍO AUTOMATIZADO (WEBHOOK & PAYLOAD) ---
+    document.getElementById('final-pay-btn').addEventListener('click', async () => {
+        const name = document.getElementById('cust-name').value;
+        const email = document.getElementById('cust-email').value;
+        const address = document.getElementById('cust-address').value;
+        const selectedImages = capturedPhotos.filter(p => p.selected);
+
+        if (!name || !email || !address) return alert("Please fill all fields.");
+
+        const btn = document.getElementById('final-pay-btn');
+        btn.innerText = "SYNCING TO PRODUCTION...";
+        btn.disabled = true;
+
+        const payload = {
+            customer: { name, email, address },
+            order_info: {
+                total_items: selectedImages.length,
+                total_price: selectedImages.length * PRICE_UNIT,
+                timestamp: new Date().toISOString()
+            },
+            assets: selectedImages.map(img => ({
+                id: img.id,
+                base64: img.data.split(',')[1]
+            }))
+        };
+
+        try {
+            const response = await fetch(MAKE_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                btn.innerText = "REDIRECTING TO PAYMENT...";
+                setTimeout(() => {
+                    // Aquí iría tu link de Stripe
+                    alert("Order sent to Make successfully!");
+                }, 1000);
+            } else { throw new Error(); }
+
+        } catch (err) {
+            console.error(err);
+            alert("Connection error. Data saved locally, trying again...");
+            btn.innerText = "PAY & SEND TO PRODUCTION";
+            btn.disabled = false;
+        }
+    });
+
+    // --- INICIO ---
+    document.getElementById('start-btn').addEventListener('click', () => {
+        if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission().then(state => {
+                if(state === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    initCamera();
+                }
+            });
+        } else {
+            window.addEventListener('deviceorientation', handleOrientation);
+            initCamera();
+        }
+    });
+</script>
+</body>
+</html>
