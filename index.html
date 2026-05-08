@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CamoPro AI V31</title>
+    <title>CamoPro AI V32</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <style>
@@ -11,42 +11,53 @@
         body { margin: 0; padding: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #fff; overflow-x: hidden; user-select: none; }
         #camera-view, #gallery-view, #order-view { display: none; min-height: 100vh; width: 100vw; }
         #camera-view { display: flex; flex-direction: column; }
+
+        /* AUTH SCREEN — Texto grande y visible */
         #sensor-auth { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; }
-        .header { padding: 12px 15px; text-align: center; border-bottom: 1px solid #1a1a1a; background: #000; display: flex; justify-content: space-between; align-items: center; }
+        .auth-title { color: #00ff00; letter-spacing: 4px; font-weight: 900; font-size: 36px; margin: 0 0 8px; text-shadow: 0 0 30px rgba(0,255,0,0.5); }
+        .auth-subtitle { color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 40px; opacity: 0.7; }
+        .auth-steps { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px 25px; margin-bottom: 35px; max-width: 300px; text-align: left; }
+        .auth-steps p { color: #aaa; font-size: 13px; margin: 0; line-height: 2; }
+        .auth-steps span { color: #00ff00; font-weight: 700; }
+
+        .header { padding: 12px 15px; border-bottom: 1px solid #1a1a1a; background: #000; display: flex; justify-content: space-between; align-items: center; }
         #viewport { position: relative; flex-grow: 1; margin: 10px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: #000; border: 2px solid #222; }
         video { width: 100%; height: 100%; object-fit: contain; position: absolute; background: #000; }
-        #fixed-guide { position: absolute; width: 130px; height: 170px; border: 2px dashed rgba(255,255,255,0.25); border-radius: 8px; z-index: 5; }
-        #dynamic-guide { position: absolute; width: 130px; height: 170px; border: 3px solid #ff4444; border-radius: 8px; z-index: 6; transition: all 0.15s ease; }
+        #fixed-guide { position: absolute; width: 130px; height: 170px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; z-index: 5; }
+        #dynamic-guide { position: absolute; width: 130px; height: 170px; border: 3px solid #ff4444; border-radius: 8px; z-index: 6; transition: all 0.2s ease; }
         #dynamic-guide::before, #dynamic-guide::after { content: ''; position: absolute; width: 20px; height: 20px; border-color: inherit; border-style: solid; }
         #dynamic-guide::before { top: -3px; left: -3px; border-width: 3px 0 0 3px; border-radius: 6px 0 0 0; }
         #dynamic-guide::after { bottom: -3px; right: -3px; border-width: 0 3px 3px 0; border-radius: 0 0 6px 0; }
-        #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.85); padding: 8px 16px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1.5px; backdrop-filter: blur(10px); }
-        #distance-msg { position: absolute; top: 50px; background: rgba(0,0,0,0.7); padding: 5px 12px; border-radius: 15px; font-size: 9px; font-weight: 600; z-index: 10; color: #888; letter-spacing: 1px; display: none; }
-        #outlet-badge { position: absolute; bottom: 25px; background: rgba(0,0,0,0.9); padding: 10px 18px; border-radius: 20px; font-size: 11px; font-weight: 800; z-index: 10; color: #00ff00; display: none; text-align: center; max-width: 85%; border: 1px solid rgba(0,255,0,0.3); backdrop-filter: blur(10px); }
-        #scan-progress { position: absolute; top: 48px; width: 75%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; z-index: 10; display: none; }
-        #scan-bar { height: 100%; width: 0%; background: #00ff00; border-radius: 2px; transition: width 0.05s linear; }
+        #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.85); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1.5px; }
+        #distance-msg { position: absolute; top: 52px; background: rgba(0,0,0,0.75); padding: 5px 12px; border-radius: 15px; font-size: 10px; font-weight: 600; z-index: 10; color: #ffaa00; letter-spacing: 1px; display: none; }
+        #outlet-badge { position: absolute; bottom: 25px; background: rgba(0,0,0,0.92); padding: 12px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; z-index: 10; color: #00ff00; display: none; text-align: center; max-width: 88%; border: 1px solid rgba(0,255,0,0.4); }
+        #scan-progress { position: absolute; top: 50px; width: 70%; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; z-index: 10; display: none; }
+        #scan-bar { height: 100%; width: 0%; background: #00ff00; border-radius: 2px; }
         #scanning-indicator { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; z-index: 7; pointer-events: none; }
-        .scan-ring { width: 145px; height: 185px; border: 2px solid rgba(0,255,0,0.4); border-radius: 10px; animation: pulseRing 1s infinite; }
-        @keyframes pulseRing { 0%,100% { opacity:0.2; transform:scale(0.98); } 50% { opacity:0.8; transform:scale(1.02); } }
-        #perspective-warning { position: absolute; background: rgba(255,170,0,0.9); color: #000; padding: 6px 14px; border-radius: 15px; font-size: 9px; font-weight: 800; text-transform: uppercase; z-index: 10; bottom: 80px; display: none; letter-spacing: 1px; }
+        .scan-ring { width: 145px; height: 185px; border: 2px solid rgba(0,255,0,0.5); border-radius: 10px; animation: pulseRing 1s infinite; }
+        @keyframes pulseRing { 0%,100% { opacity:0.2; transform:scale(0.97); } 50% { opacity:1; transform:scale(1.03); } }
+        #perspective-warning { position: absolute; background: rgba(255,170,0,0.95); color: #000; padding: 7px 16px; border-radius: 15px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 10; bottom: 85px; display: none; letter-spacing: 1px; }
+
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .gallery-item { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid #2a2a2a; transition: all 0.2s; cursor: pointer; background: #111; }
         .gallery-item.selected { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
         .gallery-item img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
         .check-badge { position: absolute; top: 8px; right: 8px; background: #00ff00; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
-        .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 15px 8px 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .tap-hint { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.7); color: #888; font-size: 8px; padding: 3px 7px; border-radius: 8px; letter-spacing: 0.5px; }
+        .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tap-hint { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #666; font-size: 8px; padding: 3px 7px; border-radius: 8px; }
+
         .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .preview-overlay.active { display: flex; }
-        .preview-overlay img { max-width: 95vw; max-height: 70vh; object-fit: contain; border-radius: 12px; }
-        .preview-info { margin-top: 15px; color: #00ff00; font-size: 13px; font-weight: 800; text-align: center; letter-spacing: 1px; }
-        .preview-meta { color: #444; font-size: 10px; margin-top: 5px; text-align: center; }
-        .preview-actions { display: flex; gap: 12px; margin-top: 20px; }
-        .preview-close { background: #00ff00; color: #000; border: none; padding: 12px 28px; border-radius: 25px; font-weight: 800; font-size: 13px; cursor: pointer; }
-        .preview-delete { background: #ff4444; color: #fff; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 800; font-size: 13px; cursor: pointer; }
+        .preview-overlay img { max-width: 95vw; max-height: 68vh; object-fit: contain; border-radius: 12px; }
+        .preview-info { margin-top: 14px; color: #00ff00; font-size: 14px; font-weight: 800; text-align: center; }
+        .preview-meta { color: #444; font-size: 11px; margin-top: 4px; text-align: center; }
+        .preview-actions { display: flex; gap: 12px; margin-top: 18px; }
+        .preview-close { background: #00ff00; color: #000; border: none; padding: 13px 30px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
+        .preview-delete { background: #ff4444; color: #fff; border: none; padding: 13px 22px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
+
         .form-container { padding: 25px 20px 10px; }
         .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 10px; color: #555; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+        label { display: block; font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
         input { width: 100%; padding: 14px 16px; background: #111; border: 1px solid #2a2a2a; border-radius: 12px; color: #fff; font-size: 16px; -webkit-appearance: none; }
         input:focus { border-color: #00ff00; outline: none; background: #161616; }
         input::placeholder { color: #333; }
@@ -55,27 +66,25 @@
         .total-row { border-top: 1px solid #222; padding-top: 16px; margin-top: 5px; font-size: 24px; font-weight: 900; color: #00ff00; }
         .outlet-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
         .outlet-chip { background: #0a2a0a; border: 1px solid #00ff00; color: #00ff00; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
+
         .footer-action { padding: 15px 20px 25px; background: #000; border-top: 1px solid #111; text-align: center; position: sticky; bottom: 0; }
         .btn-main { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; border-radius: 35px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; letter-spacing: 1.5px; -webkit-appearance: none; }
         .btn-main:active { transform: scale(0.98); }
         .btn-main:disabled { background: #1a1a1a; color: #333; cursor: not-allowed; transform: none; }
-        .btn-secondary { background: transparent; color: #00ff00; border: 1px solid #00ff00; padding: 12px 0; width: 100%; border-radius: 35px; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 12px; letter-spacing: 1px; margin-top: 10px; }
+        .btn-secondary { background: transparent; color: #00ff00; border: 1px solid #333; padding: 12px 0; width: 100%; border-radius: 35px; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 12px; letter-spacing: 1px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="sensor-auth">
-    <div style="margin-bottom:40px;">
-        <h1 style="color:#00ff00;letter-spacing:4px;font-weight:900;font-size:26px;margin:0;">CAMOPRO AI</h1>
-        <p style="color:#333;margin:8px 0 0;font-size:11px;text-transform:uppercase;letter-spacing:2px;">Texture Cloning System V31</p>
-    </div>
-    <div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:16px;padding:20px;margin-bottom:30px;max-width:300px;text-align:left;">
-        <p style="color:#555;font-size:11px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">How it works:</p>
-        <p style="color:#333;font-size:12px;margin:0;line-height:1.8;">
-            1. Point camera at outlet<br>
-            2. AI identifies outlet type<br>
-            3. Auto-captures when ready<br>
-            4. Pay → We create your sticker
+    <h1 class="auth-title">CAMOPRO AI</h1>
+    <p class="auth-subtitle">Texture Cloning System V32</p>
+    <div class="auth-steps">
+        <p>
+            <span>1.</span> Point camera at outlet or switch<br>
+            <span>2.</span> AI identifies the exact type<br>
+            <span>3.</span> Hold steady — auto-captures<br>
+            <span>4.</span> Pay → We ship your sticker
         </p>
     </div>
     <button class="btn-main" id="start-btn" style="max-width:280px;">INITIALIZE SCANNER</button>
@@ -83,8 +92,8 @@
 
 <div id="camera-view">
     <div class="header">
-        <span style="font-weight:900;color:#00ff00;letter-spacing:1px;font-size:12px;">● SCANNER ACTIVE</span>
-        <span id="header-count" style="font-size:11px;color:#333;">0 captured</span>
+        <span style="font-weight:900;color:#00ff00;font-size:12px;letter-spacing:1px;">● SCANNER ACTIVE</span>
+        <span id="header-count" style="font-size:11px;color:#444;">0 captured</span>
     </div>
     <div id="viewport">
         <div id="status-msg">AIM AT OUTLET</div>
@@ -98,28 +107,28 @@
         <div id="perspective-warning">⚠ ADJUST ANGLE</div>
     </div>
     <div class="footer-action">
-        <div id="capture-indicator" style="margin-bottom:12px;font-size:10px;color:#333;font-weight:700;letter-spacing:1px;">WAITING FOR OUTLET DETECTION</div>
+        <div id="capture-indicator" style="margin-bottom:12px;font-size:10px;color:#444;font-weight:700;letter-spacing:1px;">WAITING FOR DETECTION</div>
         <button id="go-to-gallery" class="btn-main" style="display:none;">REVIEW & VALIDATE</button>
     </div>
 </div>
 
 <div id="gallery-view">
     <div style="padding:20px 20px 0;">
-        <h2 style="color:#00ff00;margin:0;font-weight:900;font-size:20px;">CAPTURED OUTLETS</h2>
-        <p style="color:#444;font-size:11px;margin:6px 0 0;line-height:1.5;">
-            <span style="color:#555;">TAP</span> to preview &nbsp;|&nbsp;
-            <span style="color:#555;">HOLD</span> to select/deselect
+        <h2 style="color:#00ff00;margin:0;font-weight:900;font-size:20px;">CAPTURED</h2>
+        <p style="color:#555;font-size:11px;margin:6px 0 0;">
+            <span style="color:#777;">TAP</span> to preview &nbsp;·&nbsp;
+            <span style="color:#777;">HOLD</span> to select/deselect
         </p>
     </div>
     <div class="gallery-grid" id="gallery-grid"></div>
     <div class="footer-action">
         <button id="go-to-form" class="btn-main">PROCEED TO CHECKOUT</button>
-        <button id="back-to-camera" class="btn-secondary">SCAN MORE OUTLETS</button>
+        <button id="back-to-camera" class="btn-secondary">SCAN MORE</button>
     </div>
 </div>
 
 <div id="preview-overlay" class="preview-overlay">
-    <img id="preview-img" src="" alt="Outlet Preview">
+    <img id="preview-img" src="" alt="Preview">
     <div class="preview-info" id="preview-info"></div>
     <div class="preview-meta" id="preview-meta"></div>
     <div class="preview-actions">
@@ -131,7 +140,7 @@
 <div id="order-view">
     <div class="form-container">
         <h2 style="color:#00ff00;font-weight:900;margin:0 0 4px;font-size:22px;">CHECKOUT</h2>
-        <p style="color:#333;font-size:10px;margin:0 0 25px;text-transform:uppercase;letter-spacing:1px;">Secured by Stripe</p>
+        <p style="color:#444;font-size:10px;margin:0 0 25px;text-transform:uppercase;letter-spacing:1px;">Secured by Stripe</p>
         <div class="form-group">
             <label>Full Name</label>
             <input type="text" id="cust-name" placeholder="John Smith" autocomplete="name">
@@ -146,15 +155,15 @@
         </div>
         <div class="summary-card">
             <div class="summary-row">
-                <span style="color:#444;">Items:</span>
-                <span id="final-count" style="font-weight:800;">0</span>
+                <span style="color:#555;">Items:</span>
+                <span id="final-count" style="font-weight:800;color:#fff;">0</span>
             </div>
             <div class="summary-row">
-                <span style="color:#444;">Price per unit:</span>
-                <span>$29.99</span>
+                <span style="color:#555;">Price per unit:</span>
+                <span style="color:#fff;">$29.99</span>
             </div>
             <div class="summary-row" style="flex-direction:column;align-items:flex-start;">
-                <span style="color:#444;margin-bottom:6px;">Detected outlets:</span>
+                <span style="color:#555;margin-bottom:6px;">Detected:</span>
                 <div class="outlet-chips" id="outlet-chips"></div>
             </div>
             <div class="summary-row total-row">
@@ -171,20 +180,29 @@
 <canvas id="canvas" style="display:none;"></canvas>
 
 <script>
+    // ============================================================
+    // CONFIG
+    // ============================================================
     const PRICE_UNIT = 29.99;
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     const STRIPE_URL = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     const GEMINI_API_KEY = 'AIzaSyBp08DC7BLYSJI0dAzSvRXVk1c0ExSZugc';
     const GEMINI_DETECT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
+    // Tolerancia de movimiento — aumentada para facilitar captura
+    const ORIENTATION_TOLERANCE = 15;
+
+    // ============================================================
+    // STATE
+    // ============================================================
     let capturedPhotos = [];
     let isLocked = false;
-    let hasLeftZone = true;
     let isScanning = false;
     let scanInterval = null;
     let detectedOutletType = null;
     let orientationAligned = false;
     let currentPreviewId = null;
+    let captureTriggered = false;
 
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -197,15 +215,17 @@
     const perspectiveWarning = document.getElementById('perspective-warning');
     const distanceMsg = document.getElementById('distance-msg');
 
-    // RESET on every load
+    // ============================================================
+    // RESET on load
+    // ============================================================
     window.addEventListener('load', () => {
         capturedPhotos = [];
         isLocked = false;
-        hasLeftZone = true;
         isScanning = false;
         detectedOutletType = null;
         orientationAligned = false;
         currentPreviewId = null;
+        captureTriggered = false;
         document.getElementById('sensor-auth').style.display = 'flex';
         document.getElementById('camera-view').style.display = 'none';
         document.getElementById('gallery-view').style.display = 'none';
@@ -213,6 +233,9 @@
         document.getElementById('preview-overlay').classList.remove('active');
     });
 
+    // ============================================================
+    // UTILITIES
+    // ============================================================
     function generateOrderId() {
         return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     }
@@ -235,13 +258,17 @@
     function checkPerspective(beta, gamma) {
         const tiltX = Math.abs(gamma);
         const tiltY = beta > 45 && beta < 135 ? Math.abs(beta - 90) : Math.abs(beta);
-        return tiltX < 15 && tiltY < 15;
+        return tiltX < 20 && tiltY < 20;
     }
 
+    // ============================================================
+    // OUTLET + SWITCH DETECTION — Gemini Vision
+    // ============================================================
     async function detectOutletInFrame() {
-        if (isScanning || isLocked) return false;
+        if (isScanning || isLocked || captureTriggered) return false;
         isScanning = true;
         scanningIndicator.style.display = 'flex';
+
         try {
             const frameBase64 = captureFrame();
             const response = await fetch(GEMINI_DETECT_URL, {
@@ -251,7 +278,7 @@
                     contents: [{
                         parts: [
                             {
-                                text: `Analyze this image carefully. Respond with ONLY a valid JSON object, no markdown, no explanation. Detect if there is an electrical outlet or power socket visible. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. If no outlet: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Types: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Rocker", "Single Outlet", "Triplex", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Schuko EU", "UK BS1363", "French Type E", "Belgian Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT NBR", "Australian AS/NZS", "Industrial CEE", "Shaver Outlet", "Floor Outlet", "Combination Switch-Outlet".`
+                                text: `Analyze this image. Respond with ONLY a valid JSON object, no markdown. Detect electrical outlets, power sockets, wall switches, or any electrical wall plate. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. No device: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Use these types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Belgian Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable/Data Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.`
                             },
                             { inline_data: { mime_type: 'image/jpeg', data: frameBase64 } }
                         ]
@@ -259,26 +286,34 @@
                     generationConfig: { maxOutputTokens: 200, temperature: 0.1 }
                 })
             });
+
             const data = await response.json();
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
             const jsonMatch = text.match(/\{[\s\S]*\}/);
+
             if (jsonMatch) {
                 const result = JSON.parse(jsonMatch[0]);
+
                 if (result.outlet_detected && result.confidence >= 75) {
                     detectedOutletType = result.outlet_type;
                     const countLabel = result.count > 1 ? ` ×${result.count}` : '';
                     outletBadge.style.color = '#00ff00';
                     outletBadge.style.display = 'block';
-                    outletBadge.innerHTML = `✓ ${result.outlet_type}${countLabel}<br><span style="font-size:9px;color:#00aa00;">${result.confidence}% confidence</span>`;
+                    outletBadge.innerHTML = `
+                        ✓ ${result.outlet_type}${countLabel}
+                        <br><span style="font-size:9px;color:#00bb00;">${result.confidence}% confidence · HOLD STEADY</span>
+                    `;
                     distanceMsg.style.display = 'none';
                     return true;
+
                 } else if (result.outlet_detected && result.confidence >= 50) {
                     detectedOutletType = null;
                     outletBadge.style.color = '#ffaa00';
                     outletBadge.style.display = 'block';
-                    outletBadge.innerHTML = `⚠ ${result.outlet_type || 'Outlet'} — Move closer`;
+                    outletBadge.innerHTML = `⚠ ${result.outlet_type || 'Device'} detected — Move closer`;
                     distanceMsg.style.display = 'block';
                     return false;
+
                 } else {
                     detectedOutletType = null;
                     outletBadge.style.display = 'none';
@@ -295,20 +330,40 @@
         return false;
     }
 
+    // ============================================================
+    // SCAN LOOP — FIX: para inmediatamente al detectar
+    // ============================================================
     function startScanLoop() {
+        if (scanInterval) return;
         scanProgressEl.style.display = 'block';
-        const TICK_MS = 50;
-        const TICKS_PER_SCAN = 2500 / TICK_MS;
+        const TICK_MS = 60;
+        const SCAN_EVERY_MS = 2500;
+        const TICKS_PER_SCAN = SCAN_EVERY_MS / TICK_MS;
         let tick = 0;
+
         scanInterval = setInterval(async () => {
-            if (!orientationAligned || isLocked) { tick = 0; scanBar.style.width = '0%'; return; }
+            // No scan si no está alineado, bloqueado, o ya capturó
+            if (!orientationAligned || isLocked || captureTriggered) {
+                tick = 0;
+                scanBar.style.width = '0%';
+                return;
+            }
+
             tick++;
-            scanBar.style.width = ((tick / TICKS_PER_SCAN) * 100) + '%';
+            scanBar.style.width = Math.min((tick / TICKS_PER_SCAN) * 100, 100) + '%';
+
             if (tick >= TICKS_PER_SCAN) {
                 tick = 0;
                 scanBar.style.width = '0%';
+
                 const found = await detectOutletInFrame();
-                if (found && orientationAligned && !isLocked) executeCapture();
+
+                // CAPTURA INMEDIATA al detectar — sin esperar siguiente ciclo
+                if (found && orientationAligned && !isLocked && !captureTriggered) {
+                    captureTriggered = true;
+                    stopScanLoop();
+                    executeCapture();
+                }
             }
         }, TICK_MS);
     }
@@ -319,10 +374,17 @@
         scanBar.style.width = '0%';
     }
 
+    // ============================================================
+    // CAMERA INIT
+    // ============================================================
     async function initCamera() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { exact: "environment" }, width: { ideal: 1920, min: 1280 }, height: { ideal: 1080, min: 720 } }
+                video: {
+                    facingMode: { exact: "environment" },
+                    width: { ideal: 1920, min: 1280 },
+                    height: { ideal: 1080, min: 720 }
+                }
             });
             video.srcObject = stream;
             await video.play();
@@ -331,7 +393,9 @@
             startScanLoop();
         } catch {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "environment" }
+                });
                 video.srcObject = stream;
                 document.getElementById('sensor-auth').style.display = 'none';
                 document.getElementById('camera-view').style.display = 'flex';
@@ -342,18 +406,23 @@
         }
     }
 
+    // ============================================================
+    // ORIENTATION — Tolerancia aumentada a 15 grados
+    // ============================================================
     function handleOrientation(event) {
-        if (isLocked) return;
+        if (isLocked || captureTriggered) return;
         const beta = event.beta || 0;
         const gamma = event.gamma || 0;
         let targetB = (beta > 45 && beta < 135) ? 90 : (beta <= 45 && beta >= -45) ? 0 : 180;
         const dV = Math.abs(beta - targetB);
         const dL = Math.abs(gamma);
         const perspectiveOk = checkPerspective(beta, gamma);
-        const clampedGamma = Math.max(-30, Math.min(30, gamma));
-        const clampedBeta = Math.max(-30, Math.min(30, beta - targetB));
-        dynamicGuide.style.transform = `translate(${clampedGamma * 4}px, ${clampedBeta * 4}px)`;
-        if (dV < 6 && dL < 6) {
+
+        const clampedGamma = Math.max(-25, Math.min(25, gamma));
+        const clampedBeta = Math.max(-25, Math.min(25, beta - targetB));
+        dynamicGuide.style.transform = `translate(${clampedGamma * 3}px, ${clampedBeta * 3}px)`;
+
+        if (dV < ORIENTATION_TOLERANCE && dL < ORIENTATION_TOLERANCE) {
             orientationAligned = true;
             if (!perspectiveOk) {
                 perspectiveWarning.style.display = 'block';
@@ -364,7 +433,7 @@
                 perspectiveWarning.style.display = 'none';
                 if (detectedOutletType) {
                     dynamicGuide.style.borderColor = '#00ff00';
-                    statusMsg.innerText = '✓ OUTLET IDENTIFIED';
+                    statusMsg.innerText = '✓ DETECTED — HOLD STEADY';
                     statusMsg.style.color = '#00ff00';
                 } else {
                     dynamicGuide.style.borderColor = '#ffaa00';
@@ -374,7 +443,6 @@
             }
         } else {
             orientationAligned = false;
-            hasLeftZone = true;
             detectedOutletType = null;
             dynamicGuide.style.borderColor = '#ff4444';
             statusMsg.innerText = 'AIM AT OUTLET';
@@ -385,17 +453,31 @@
         }
     }
 
+    // ============================================================
+    // CAPTURE
+    // ============================================================
     function executeCapture() {
-        if (isLocked || !detectedOutletType) return;
+        if (isLocked || !detectedOutletType) {
+            captureTriggered = false;
+            startScanLoop();
+            return;
+        }
         isLocked = true;
-        hasLeftZone = false;
+
+        // Flash
         const flash = document.createElement('div');
-        flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.3s;';
+        flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
         document.getElementById('viewport').appendChild(flash);
-        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 300); }, 100);
+        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 400); }, 80);
+
+        // Haptic
+        if (navigator.vibrate) navigator.vibrate([80, 50, 80]);
+
+        // Full res capture
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
+
         capturedPhotos.push({
             id: Date.now(),
             data: canvas.toDataURL('image/jpeg', 0.95),
@@ -403,21 +485,30 @@
             outletType: detectedOutletType,
             timestamp: new Date().toISOString()
         });
+
         const count = capturedPhotos.length;
-        document.getElementById('capture-indicator').innerText = `${count} OUTLET${count > 1 ? 'S' : ''} CAPTURED`;
+        document.getElementById('capture-indicator').innerText = `${count} CAPTURED ✓`;
         document.getElementById('header-count').innerText = `${count} captured`;
         document.getElementById('go-to-gallery').style.display = 'block';
-        outletBadge.innerHTML = `<span style="font-size:16px;">📸</span> CAPTURED!`;
+
+        outletBadge.innerHTML = `📸 CAPTURED — ${detectedOutletType}`;
         outletBadge.style.color = '#00ff00';
         outletBadge.style.display = 'block';
+
+        // Reset para siguiente captura después de 3s
         setTimeout(() => {
             isLocked = false;
+            captureTriggered = false;
             detectedOutletType = null;
             outletBadge.style.display = 'none';
             distanceMsg.style.display = 'none';
-        }, 2500);
+            startScanLoop();
+        }, 3000);
     }
 
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
     document.getElementById('go-to-gallery').addEventListener('click', () => {
         stopScanLoop();
         document.getElementById('camera-view').style.display = 'none';
@@ -428,14 +519,18 @@
     document.getElementById('back-to-camera').addEventListener('click', () => {
         document.getElementById('gallery-view').style.display = 'none';
         document.getElementById('camera-view').style.display = 'flex';
+        captureTriggered = false;
         startScanLoop();
     });
 
+    // ============================================================
+    // GALLERY
+    // ============================================================
     function renderGallery() {
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = '';
         if (capturedPhotos.length === 0) {
-            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#333;padding:40px;font-size:12px;">No photos captured yet</div>';
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#333;padding:40px;font-size:12px;">No photos captured</div>';
             return;
         }
         capturedPhotos.forEach(p => {
@@ -447,15 +542,14 @@
                 ${p.selected ? '<div class="check-badge">✓</div>' : ''}
                 <div class="outlet-tag">${p.outletType || 'Unknown'}</div>
             `;
-            let pressTimer;
-            let didLongPress = false;
+            let pressTimer, didLongPress = false;
             item.addEventListener('touchstart', () => {
                 didLongPress = false;
                 pressTimer = setTimeout(() => {
                     didLongPress = true;
                     p.selected = !p.selected;
                     renderGallery();
-                    if (navigator.vibrate) navigator.vibrate(50);
+                    if (navigator.vibrate) navigator.vibrate(40);
                 }, 500);
             });
             item.addEventListener('touchend', (e) => {
@@ -467,11 +561,15 @@
         });
     }
 
+    // ============================================================
+    // PREVIEW
+    // ============================================================
     function openPreview(photo) {
         currentPreviewId = photo.id;
         document.getElementById('preview-img').src = photo.data;
-        document.getElementById('preview-info').innerText = photo.outletType || 'Unknown outlet type';
-        document.getElementById('preview-meta').innerText = `Captured: ${new Date(photo.timestamp).toLocaleTimeString()} · ${photo.selected ? 'Selected ✓' : 'Deselected'}`;
+        document.getElementById('preview-info').innerText = photo.outletType || 'Unknown type';
+        document.getElementById('preview-meta').innerText =
+            `${new Date(photo.timestamp).toLocaleTimeString()} · ${photo.selected ? 'Selected ✓' : 'Deselected'}`;
         document.getElementById('preview-overlay').classList.add('active');
     }
 
@@ -481,20 +579,22 @@
     });
 
     document.getElementById('preview-delete-btn').addEventListener('click', () => {
-        if (currentPreviewId) {
-            capturedPhotos = capturedPhotos.filter(p => p.id !== currentPreviewId);
-            document.getElementById('preview-overlay').classList.remove('active');
-            currentPreviewId = null;
-            renderGallery();
-            const count = capturedPhotos.length;
-            document.getElementById('header-count').innerText = `${count} captured`;
-            if (count === 0) {
-                document.getElementById('go-to-gallery').style.display = 'none';
-                document.getElementById('capture-indicator').innerText = 'WAITING FOR OUTLET DETECTION';
-            }
+        if (!currentPreviewId) return;
+        capturedPhotos = capturedPhotos.filter(p => p.id !== currentPreviewId);
+        document.getElementById('preview-overlay').classList.remove('active');
+        currentPreviewId = null;
+        renderGallery();
+        const count = capturedPhotos.length;
+        document.getElementById('header-count').innerText = `${count} captured`;
+        if (count === 0) {
+            document.getElementById('go-to-gallery').style.display = 'none';
+            document.getElementById('capture-indicator').innerText = 'WAITING FOR DETECTION';
         }
     });
 
+    // ============================================================
+    // ORDER FORM
+    // ============================================================
     document.getElementById('go-to-form').addEventListener('click', () => {
         const validPhotos = capturedPhotos.filter(p => p.selected);
         if (validPhotos.length === 0) return alert("Please select at least one photo.");
@@ -504,33 +604,34 @@
         document.getElementById('final-price').innerText = `$${(validPhotos.length * PRICE_UNIT).toFixed(2)}`;
         const chips = document.getElementById('outlet-chips');
         chips.innerHTML = '';
-        const types = [...new Set(validPhotos.map(p => p.outletType).filter(Boolean))];
-        if (types.length > 0) {
-            types.forEach(t => {
-                const chip = document.createElement('span');
-                chip.className = 'outlet-chip';
-                chip.innerText = t;
-                chips.appendChild(chip);
-            });
-        } else {
-            chips.innerHTML = '<span style="color:#333;font-size:11px;">Auto-detected</span>';
-        }
+        [...new Set(validPhotos.map(p => p.outletType).filter(Boolean))].forEach(t => {
+            const chip = document.createElement('span');
+            chip.className = 'outlet-chip';
+            chip.innerText = t;
+            chips.appendChild(chip);
+        });
     });
 
+    // ============================================================
+    // PAYMENT
+    // ============================================================
     document.getElementById('final-pay-btn').addEventListener('click', async () => {
         const name = document.getElementById('cust-name').value.trim();
         const email = document.getElementById('cust-email').value.trim();
         const address = document.getElementById('cust-address').value.trim();
         const selectedImages = capturedPhotos.filter(p => p.selected);
         if (!name) return alert("Please enter your full name.");
-        if (!email || !email.includes('@')) return alert("Please enter a valid email address.");
+        if (!email || !email.includes('@')) return alert("Please enter a valid email.");
         if (!address) return alert("Please enter your shipping address.");
         if (selectedImages.length === 0) return alert("No images selected.");
+
         const btn = document.getElementById('final-pay-btn');
         btn.innerText = "SENDING ORDER...";
         btn.disabled = true;
+
         const orderId = generateOrderId();
         const locationData = await detectCountry();
+
         const payload = {
             customer: { name, email, address },
             order_info: {
@@ -549,6 +650,7 @@
                 timestamp: img.timestamp
             }))
         };
+
         try {
             const response = await fetch(MAKE_WEBHOOK_URL, {
                 method: 'POST',
@@ -557,21 +659,25 @@
             });
             if (response.ok) {
                 btn.innerText = "REDIRECTING TO PAYMENT...";
-                const stripeUrl = STRIPE_URL +
+                window.location.replace(
+                    STRIPE_URL +
                     '?client_reference_id=' + encodeURIComponent(orderId) +
-                    '&prefilled_email=' + encodeURIComponent(email);
-                window.location.replace(stripeUrl);
+                    '&prefilled_email=' + encodeURIComponent(email)
+                );
             } else {
                 throw new Error('Server error: ' + response.status);
             }
         } catch (err) {
-            console.error('Payment error:', err);
-            alert("Connection error. Please check your internet and try again.");
+            console.error(err);
+            alert("Connection error. Please try again.");
             btn.innerText = "PAY & SEND TO PRODUCTION";
             btn.disabled = false;
         }
     });
 
+    // ============================================================
+    // INIT
+    // ============================================================
     document.getElementById('start-btn').addEventListener('click', async () => {
         if (typeof DeviceOrientationEvent !== 'undefined' &&
             typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -581,9 +687,9 @@
                     window.addEventListener('deviceorientation', handleOrientation);
                     await initCamera();
                 } else {
-                    alert("Motion sensor permission required for auto-capture.");
+                    alert("Motion sensor permission required.");
                 }
-            } catch (e) {
+            } catch {
                 window.addEventListener('deviceorientation', handleOrientation);
                 await initCamera();
             }
