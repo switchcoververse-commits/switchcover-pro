@@ -719,25 +719,32 @@
     // INIT
     // ============================================================
     document.getElementById('start-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('start-btn');
+    btn.innerText = "STARTING...";
+    btn.disabled = true;
+
+    try {
         if (typeof DeviceOrientationEvent !== 'undefined' &&
             typeof DeviceOrientationEvent.requestPermission === 'function') {
-            try {
-                const state = await DeviceOrientationEvent.requestPermission();
-                if (state === 'granted') {
-                    window.addEventListener('deviceorientation', handleOrientation);
-                    await initCamera();
-                } else {
-                    alert("Motion sensor permission required.");
-                }
-            } catch {
+            const state = await DeviceOrientationEvent.requestPermission();
+            if (state === 'granted') {
                 window.addEventListener('deviceorientation', handleOrientation);
-                await initCamera();
             }
+            // Continúa aunque no haya permiso de orientación
         } else {
             window.addEventListener('deviceorientation', handleOrientation);
-            await initCamera();
         }
-    });
+    } catch (e) {
+        // Si falla el permiso, continúa de todas formas
+        window.addEventListener('deviceorientation', handleOrientation);
+    }
+
+    // Siempre inicia la cámara
+    await initCamera();
+
+    btn.innerText = "INITIALIZE SCANNER";
+    btn.disabled = false;
+});
 </script>
 </body>
 </html>
