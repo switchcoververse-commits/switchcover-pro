@@ -528,27 +528,35 @@
     // ============================================================
     // CAMERA INIT
     // ============================================================
-    async function initCamera() {
+  async function initCamera() {
+    const constraints = [
+        { video: { facingMode: { exact: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } } },
+        { video: { facingMode: "environment" } },
+        { video: true }
+    ];
+
+    let stream = null;
+    for (const constraint of constraints) {
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { exact: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
-            });
-            video.srcObject = stream;
-            await video.play();
-            document.getElementById('sensor-auth').style.display = 'none';
-            document.getElementById('camera-view').style.display = 'flex';
-        } catch {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-                video.srcObject = stream;
-                document.getElementById('sensor-auth').style.display = 'none';
-                document.getElementById('camera-view').style.display = 'flex';
-            } catch {
-                alert("Camera access required. Please allow camera permission and reload.");
-            }
+            stream = await navigator.mediaDevices.getUserMedia(constraint);
+            break;
+        } catch (e) {
+            continue;
         }
     }
 
+    if (!stream) {
+        alert("Camera access required. Please allow camera permission and reload.");
+        return;
+    }
+
+    video.srcObject = stream;
+    video.oncanplay = () => {
+        video.play().catch(() => {});
+        document.getElementById('sensor-auth').style.display = 'none';
+        document.getElementById('camera-view').style.display = 'flex';
+    };
+}
     // ============================================================
     // NAVIGATION
     // ============================================================
