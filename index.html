@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CamoPro AI V33</title>
+    <title>CamoPro AI V34</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <style>
@@ -11,30 +11,58 @@
         body { margin: 0; padding: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #fff; overflow-x: hidden; user-select: none; }
         #camera-view, #gallery-view, #order-view { display: none; min-height: 100vh; width: 100vw; }
         #camera-view { display: flex; flex-direction: column; }
+
+        /* AUTH */
         #sensor-auth { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; }
         .auth-title { color: #00ff00; letter-spacing: 4px; font-weight: 900; font-size: 36px; margin: 0 0 8px; text-shadow: 0 0 30px rgba(0,255,0,0.5); }
-        .auth-subtitle { color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 40px; opacity: 0.7; }
-        .auth-steps { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px 25px; margin-bottom: 35px; max-width: 300px; text-align: left; }
-        .auth-steps p { color: #aaa; font-size: 13px; margin: 0; line-height: 2; }
-        .auth-steps span { color: #00ff00; font-weight: 700; }
+        .auth-subtitle { color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 35px; opacity: 0.7; }
+        .auth-steps { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px 25px; margin-bottom: 35px; max-width: 300px; text-align: left; width: 100%; }
+        .auth-step { display: flex; align-items: flex-start; margin-bottom: 14px; gap: 12px; }
+        .auth-step:last-child { margin-bottom: 0; }
+        .step-num { background: #00ff00; color: #000; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+        .step-text { color: #aaa; font-size: 13px; line-height: 1.4; }
+        .step-text strong { color: #fff; }
+
+        /* CAMERA */
         .header { padding: 12px 15px; border-bottom: 1px solid #1a1a1a; background: #000; display: flex; justify-content: space-between; align-items: center; }
         #viewport { position: relative; flex-grow: 1; margin: 10px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: #000; border: 2px solid #222; }
         video { width: 100%; height: 100%; object-fit: contain; position: absolute; background: #000; }
-        #fixed-guide { position: absolute; width: 130px; height: 170px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; z-index: 5; }
-        #dynamic-guide { position: absolute; width: 130px; height: 170px; border: 3px solid #ff4444; border-radius: 8px; z-index: 6; transition: border-color 0.3s ease; }
-        #dynamic-guide::before, #dynamic-guide::after { content: ''; position: absolute; width: 20px; height: 20px; border-color: inherit; border-style: solid; }
-        #dynamic-guide::before { top: -3px; left: -3px; border-width: 3px 0 0 3px; border-radius: 6px 0 0 0; }
-        #dynamic-guide::after { bottom: -3px; right: -3px; border-width: 0 3px 3px 0; border-radius: 0 0 6px 0; }
-        #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.85); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1.5px; }
-        #distance-msg { position: absolute; top: 52px; background: rgba(0,0,0,0.75); padding: 5px 12px; border-radius: 15px; font-size: 10px; font-weight: 600; z-index: 10; color: #ffaa00; display: none; }
-        #outlet-badge { position: absolute; bottom: 25px; background: rgba(0,0,0,0.92); padding: 12px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; z-index: 10; color: #00ff00; display: none; text-align: center; max-width: 88%; border: 1px solid rgba(0,255,0,0.4); }
-        #scan-progress { position: absolute; top: 50px; width: 70%; height: 3px; background: rgba(255,255,255,0.08); border-radius: 3px; z-index: 10; display: none; }
-        #scan-bar { height: 100%; width: 0%; background: #00ff00; border-radius: 3px; transition: width 0.06s linear; }
-        #scanning-indicator { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; z-index: 7; pointer-events: none; }
-        .scan-ring { width: 145px; height: 185px; border: 2px solid rgba(0,255,0,0.5); border-radius: 10px; animation: pulseRing 1s infinite; }
-        @keyframes pulseRing { 0%,100% { opacity:0.2; transform:scale(0.97); } 50% { opacity:1; transform:scale(1.03); } }
-        #perspective-warning { position: absolute; background: rgba(255,170,0,0.95); color: #000; padding: 7px 16px; border-radius: 15px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 10; bottom: 85px; display: none; }
-        #countdown-display { position: absolute; font-size: 72px; font-weight: 900; color: #00ff00; z-index: 20; text-shadow: 0 0 40px rgba(0,255,0,0.8); display: none; }
+
+        /* Guides */
+        #fixed-guide { position: absolute; width: 140px; height: 180px; border: 2px dashed rgba(255,255,255,0.15); border-radius: 10px; z-index: 5; }
+        #dynamic-guide { position: absolute; width: 140px; height: 180px; border: 3px solid #ff4444; border-radius: 10px; z-index: 6; transition: border-color 0.3s ease; }
+        #dynamic-guide::before, #dynamic-guide::after { content: ''; position: absolute; width: 22px; height: 22px; border-color: inherit; border-style: solid; }
+        #dynamic-guide::before { top: -3px; left: -3px; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
+        #dynamic-guide::after { bottom: -3px; right: -3px; border-width: 0 3px 3px 0; border-radius: 0 0 8px 0; }
+
+        /* Corner markers top-right and bottom-left */
+        #corner-tr { position: absolute; top: -3px; right: -3px; width: 22px; height: 22px; border-top: 3px solid; border-right: 3px solid; border-color: inherit; border-radius: 0 8px 0 0; }
+        #corner-bl { position: absolute; bottom: -3px; left: -3px; width: 22px; height: 22px; border-bottom: 3px solid; border-left: 3px solid; border-color: inherit; border-radius: 0 0 0 8px; }
+
+        /* HUD elements */
+        #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.88); padding: 8px 18px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1.5px; }
+        #instruction-msg { position: absolute; top: 52px; background: rgba(0,0,0,0.75); padding: 6px 14px; border-radius: 15px; font-size: 10px; font-weight: 600; z-index: 10; color: #888; letter-spacing: 0.5px; text-align: center; max-width: 80%; }
+        #outlet-result { position: absolute; bottom: 20px; background: rgba(0,0,0,0.92); padding: 12px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; z-index: 10; display: none; text-align: center; max-width: 88%; border: 1px solid rgba(0,255,0,0.4); }
+        #perspective-warning { position: absolute; top: 52px; background: rgba(255,170,0,0.95); color: #000; padding: 7px 16px; border-radius: 15px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 10; display: none; }
+        #analyzing-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); z-index: 15; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
+        .analyzing-spinner { width: 50px; height: 50px; border: 3px solid rgba(0,255,0,0.2); border-top: 3px solid #00ff00; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .analyzing-text { color: #00ff00; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Capture button */
+        #capture-btn { width: 75px; height: 75px; border-radius: 50%; border: 4px solid #fff; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; -webkit-appearance: none; position: relative; }
+        #capture-btn::after { content: ''; width: 55px; height: 55px; background: #fff; border-radius: 50%; transition: all 0.2s; }
+        #capture-btn.ready::after { background: #00ff00; }
+        #capture-btn.ready { border-color: #00ff00; box-shadow: 0 0 20px rgba(0,255,0,0.5); }
+        #capture-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        #capture-btn:active:not(:disabled) { transform: scale(0.92); }
+        .camera-controls { padding: 20px; background: #000; border-top: 1px solid #111; display: flex; align-items: center; justify-content: space-between; }
+        .camera-side { width: 80px; text-align: center; }
+        #capture-label { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; font-weight: 700; }
+        #capture-count { font-size: 18px; font-weight: 900; color: #00ff00; }
+        #capture-count-label { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* GALLERY */
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .gallery-item { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid #2a2a2a; transition: all 0.2s; cursor: pointer; background: #111; }
         .gallery-item.selected { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
@@ -42,6 +70,8 @@
         .check-badge { position: absolute; top: 8px; right: 8px; background: #00ff00; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
         .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; }
         .tap-hint { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #666; font-size: 8px; padding: 3px 7px; border-radius: 8px; }
+
+        /* PREVIEW */
         .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .preview-overlay.active { display: flex; }
         .preview-overlay img { max-width: 95vw; max-height: 68vh; object-fit: contain; border-radius: 12px; }
@@ -50,6 +80,8 @@
         .preview-actions { display: flex; gap: 12px; margin-top: 18px; }
         .preview-close { background: #00ff00; color: #000; border: none; padding: 13px 30px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
         .preview-delete { background: #ff4444; color: #fff; border: none; padding: 13px 22px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
+
+        /* FORM */
         .form-container { padding: 25px 20px 10px; }
         .form-group { margin-bottom: 18px; }
         label { display: block; font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
@@ -61,6 +93,8 @@
         .total-row { border-top: 1px solid #222; padding-top: 16px; margin-top: 5px; font-size: 24px; font-weight: 900; color: #00ff00; }
         .outlet-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
         .outlet-chip { background: #0a2a0a; border: 1px solid #00ff00; color: #00ff00; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
+
+        /* BUTTONS */
         .footer-action { padding: 15px 20px 25px; background: #000; border-top: 1px solid #111; text-align: center; position: sticky; bottom: 0; }
         .btn-main { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; border-radius: 35px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; letter-spacing: 1.5px; -webkit-appearance: none; }
         .btn-main:active { transform: scale(0.98); }
@@ -70,20 +104,32 @@
 </head>
 <body>
 
+<!-- AUTH -->
 <div id="sensor-auth">
     <h1 class="auth-title">CAMOPRO AI</h1>
-    <p class="auth-subtitle">Texture Cloning System V33</p>
+    <p class="auth-subtitle">Texture Cloning System V34</p>
     <div class="auth-steps">
-        <p>
-            <span>1.</span> Point camera at outlet or switch<br>
-            <span>2.</span> AI identifies the exact type<br>
-            <span>3.</span> Countdown — then auto-captures<br>
-            <span>4.</span> Pay → We ship your sticker
-        </p>
+        <div class="auth-step">
+            <div class="step-num">1</div>
+            <div class="step-text"><strong>Point</strong> camera directly at your outlet or switch</div>
+        </div>
+        <div class="auth-step">
+            <div class="step-num">2</div>
+            <div class="step-text"><strong>Align</strong> the outlet inside the green frame — hold steady</div>
+        </div>
+        <div class="auth-step">
+            <div class="step-num">3</div>
+            <div class="step-text"><strong>Press</strong> the capture button when frame turns green</div>
+        </div>
+        <div class="auth-step">
+            <div class="step-num">4</div>
+            <div class="step-text"><strong>Pay</strong> → We create and ship your custom sticker</div>
+        </div>
     </div>
     <button class="btn-main" id="start-btn" style="max-width:280px;">INITIALIZE SCANNER</button>
 </div>
 
+<!-- CAMERA -->
 <div id="camera-view">
     <div class="header">
         <span style="font-weight:900;color:#00ff00;font-size:12px;letter-spacing:1px;">● SCANNER ACTIVE</span>
@@ -91,37 +137,53 @@
     </div>
     <div id="viewport">
         <div id="status-msg">AIM AT OUTLET</div>
-        <div id="distance-msg">MOVE CLOSER</div>
-        <div id="scan-progress"><div id="scan-bar"></div></div>
+        <div id="instruction-msg">Center outlet inside the frame</div>
+        <div id="perspective-warning">⚠ ADJUST ANGLE — Hold phone straighter</div>
         <video id="video" autoplay playsinline muted></video>
         <div id="fixed-guide"></div>
-        <div id="dynamic-guide"></div>
-        <div id="scanning-indicator"><div class="scan-ring"></div></div>
-        <div id="outlet-badge"></div>
-        <div id="perspective-warning">⚠ ADJUST ANGLE</div>
-        <div id="countdown-display"></div>
+        <div id="dynamic-guide">
+            <div id="corner-tr"></div>
+            <div id="corner-bl"></div>
+        </div>
+        <div id="outlet-result"></div>
+        <div id="analyzing-overlay">
+            <div class="analyzing-spinner"></div>
+            <div class="analyzing-text">Identifying outlet...</div>
+        </div>
     </div>
-    <div class="footer-action">
-        <div id="capture-indicator" style="margin-bottom:12px;font-size:10px;color:#444;font-weight:700;letter-spacing:1px;">WAITING FOR DETECTION</div>
-        <button id="go-to-gallery" class="btn-main" style="display:none;">REVIEW & VALIDATE</button>
+    <div class="camera-controls">
+        <div class="camera-side">
+            <div id="capture-count" style="font-size:22px;font-weight:900;color:#00ff00;">0</div>
+            <div id="capture-count-label" style="font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;">Captured</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+            <button id="capture-btn" disabled>
+            </button>
+            <div id="capture-label">ALIGN FIRST</div>
+        </div>
+        <div class="camera-side" style="display:flex;justify-content:flex-end;">
+            <button id="go-to-gallery" class="btn-secondary" style="display:none;width:70px;padding:10px 0;font-size:9px;margin:0;">REVIEW</button>
+        </div>
     </div>
 </div>
 
+<!-- GALLERY -->
 <div id="gallery-view">
     <div style="padding:20px 20px 0;">
         <h2 style="color:#00ff00;margin:0;font-weight:900;font-size:20px;">CAPTURED</h2>
         <p style="color:#555;font-size:11px;margin:6px 0 0;">
-            <span style="color:#777;">TAP</span> to preview &nbsp;·&nbsp;
+            <span style="color:#777;">TAP</span> to preview full image &nbsp;·&nbsp;
             <span style="color:#777;">HOLD</span> to select/deselect
         </p>
     </div>
     <div class="gallery-grid" id="gallery-grid"></div>
     <div class="footer-action">
         <button id="go-to-form" class="btn-main">PROCEED TO CHECKOUT</button>
-        <button id="back-to-camera" class="btn-secondary">SCAN MORE</button>
+        <button id="back-to-camera" class="btn-secondary">SCAN MORE OUTLETS</button>
     </div>
 </div>
 
+<!-- PREVIEW -->
 <div id="preview-overlay" class="preview-overlay">
     <img id="preview-img" src="" alt="Preview">
     <div class="preview-info" id="preview-info"></div>
@@ -132,6 +194,7 @@
     </div>
 </div>
 
+<!-- ORDER -->
 <div id="order-view">
     <div class="form-container">
         <h2 style="color:#00ff00;font-weight:900;margin:0 0 4px;font-size:22px;">CHECKOUT</h2>
@@ -189,38 +252,32 @@
     // STATE
     // ============================================================
     let capturedPhotos = [];
-    let isLocked = false;
-    let isScanning = false;
-    let scanInterval = null;
+    let isAnalyzing = false;
     let orientationAligned = false;
+    let perspectiveOk = false;
     let currentPreviewId = null;
-    // FIX: variable local para guardar tipo detectado
-    let pendingOutletType = null;
-    let countdownActive = false;
 
+    // DOM
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const dynamicGuide = document.getElementById('dynamic-guide');
     const statusMsg = document.getElementById('status-msg');
-    const outletBadge = document.getElementById('outlet-badge');
-    const scanningIndicator = document.getElementById('scanning-indicator');
-    const scanBar = document.getElementById('scan-bar');
-    const scanProgressEl = document.getElementById('scan-progress');
+    const instructionMsg = document.getElementById('instruction-msg');
     const perspectiveWarning = document.getElementById('perspective-warning');
-    const distanceMsg = document.getElementById('distance-msg');
-    const countdownDisplay = document.getElementById('countdown-display');
+    const outletResult = document.getElementById('outlet-result');
+    const analyzingOverlay = document.getElementById('analyzing-overlay');
+    const captureBtn = document.getElementById('capture-btn');
+    const captureLabel = document.getElementById('capture-label');
 
     // ============================================================
     // RESET
     // ============================================================
     window.addEventListener('load', () => {
         capturedPhotos = [];
-        isLocked = false;
-        isScanning = false;
+        isAnalyzing = false;
         orientationAligned = false;
+        perspectiveOk = false;
         currentPreviewId = null;
-        pendingOutletType = null;
-        countdownActive = false;
         document.getElementById('sensor-auth').style.display = 'flex';
         document.getElementById('camera-view').style.display = 'none';
         document.getElementById('gallery-view').style.display = 'none';
@@ -247,24 +304,105 @@
         const temp = document.createElement('canvas');
         temp.width = 640; temp.height = 480;
         temp.getContext('2d').drawImage(video, 0, 0, 640, 480);
-        return temp.toDataURL('image/jpeg', 0.75).split(',')[1];
+        return temp.toDataURL('image/jpeg', 0.8).split(',')[1];
     }
 
-    function checkPerspective(beta, gamma) {
+    // ============================================================
+    // ORIENTATION HANDLER
+    // Solo guía visual — NO dispara captura automática
+    // ============================================================
+    function handleOrientation(event) {
+        if (isAnalyzing) return;
+
+        const beta = event.beta || 0;
+        const gamma = event.gamma || 0;
+        let targetB = (beta > 45 && beta < 135) ? 90 : (beta <= 45 && beta >= -45) ? 0 : 180;
+        const dV = Math.abs(beta - targetB);
+        const dL = Math.abs(gamma);
+
+        // Perspectiva — ángulo oblicuo
         const tiltX = Math.abs(gamma);
         const tiltY = beta > 45 && beta < 135 ? Math.abs(beta - 90) : Math.abs(beta);
-        return tiltX < 20 && tiltY < 20;
+        perspectiveOk = tiltX < 20 && tiltY < 20;
+
+        // Animación del recuadro
+        const clampedGamma = Math.max(-20, Math.min(20, gamma));
+        const clampedBeta = Math.max(-20, Math.min(20, beta - targetB));
+        dynamicGuide.style.transform = `translate(${clampedGamma * 3}px, ${clampedBeta * 3}px)`;
+
+        if (dV < ORIENTATION_TOLERANCE && dL < ORIENTATION_TOLERANCE) {
+            orientationAligned = true;
+
+            if (!perspectiveOk) {
+                // Ángulo oblicuo
+                setGuideState('angle');
+            } else {
+                // Todo ok — botón listo
+                setGuideState('ready');
+            }
+        } else {
+            orientationAligned = false;
+            setGuideState('aim');
+        }
+    }
+
+    function setGuideState(state) {
+        outletResult.style.display = 'none';
+        switch(state) {
+            case 'aim':
+                dynamicGuide.style.borderColor = '#ff4444';
+                statusMsg.innerText = 'AIM AT OUTLET';
+                statusMsg.style.color = '#ff4444';
+                instructionMsg.innerText = 'Center the outlet inside the frame';
+                instructionMsg.style.display = 'block';
+                perspectiveWarning.style.display = 'none';
+                captureBtn.disabled = true;
+                captureBtn.classList.remove('ready');
+                captureLabel.innerText = 'ALIGN FIRST';
+                break;
+            case 'angle':
+                dynamicGuide.style.borderColor = '#ffaa00';
+                statusMsg.innerText = 'ADJUST ANGLE';
+                statusMsg.style.color = '#ffaa00';
+                instructionMsg.style.display = 'none';
+                perspectiveWarning.style.display = 'block';
+                captureBtn.disabled = true;
+                captureBtn.classList.remove('ready');
+                captureLabel.innerText = 'HOLD STRAIGHTER';
+                break;
+            case 'ready':
+                dynamicGuide.style.borderColor = '#00ff00';
+                statusMsg.innerText = '✓ READY TO CAPTURE';
+                statusMsg.style.color = '#00ff00';
+                instructionMsg.innerText = 'Press the button to capture';
+                instructionMsg.style.display = 'block';
+                perspectiveWarning.style.display = 'none';
+                captureBtn.disabled = false;
+                captureBtn.classList.add('ready');
+                captureLabel.innerText = 'CAPTURE';
+                break;
+            case 'analyzing':
+                dynamicGuide.style.borderColor = '#00aaff';
+                statusMsg.innerText = 'ANALYZING...';
+                statusMsg.style.color = '#00aaff';
+                instructionMsg.style.display = 'none';
+                perspectiveWarning.style.display = 'none';
+                captureBtn.disabled = true;
+                captureBtn.classList.remove('ready');
+                captureLabel.innerText = 'ANALYZING...';
+                break;
+        }
     }
 
     // ============================================================
-    // DETECTION
-    // FIX: devuelve el tipo detectado directamente en lugar de
-    // guardarlo en variable global que puede ser reseteada
+    // CAPTURE BUTTON — Usuario presiona cuando está listo
     // ============================================================
-    async function detectOutletInFrame() {
-        if (isScanning || isLocked || countdownActive) return null;
-        isScanning = true;
-        scanningIndicator.style.display = 'flex';
+    captureBtn.addEventListener('click', async () => {
+        if (isAnalyzing || !orientationAligned || !perspectiveOk) return;
+
+        isAnalyzing = true;
+        setGuideState('analyzing');
+        analyzingOverlay.style.display = 'flex';
 
         try {
             const frameBase64 = captureFrame();
@@ -275,7 +413,7 @@
                     contents: [{
                         parts: [
                             {
-                                text: `Analyze this image. Respond with ONLY a valid JSON object, no markdown. Detect electrical outlets, power sockets, wall switches, or any electrical wall plate. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. No device: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.`
+                                text: `Analyze this image carefully. Respond with ONLY a valid JSON object, no markdown. Detect if there is an electrical outlet, power socket, wall switch, or electrical wall plate visible. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. If nothing detected: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.`
                             },
                             { inline_data: { mime_type: 'image/jpeg', data: frameBase64 } }
                         ]
@@ -288,170 +426,104 @@
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
             const jsonMatch = text.match(/\{[\s\S]*\}/);
 
+            analyzingOverlay.style.display = 'none';
+
             if (jsonMatch) {
                 const result = JSON.parse(jsonMatch[0]);
-                if (result.outlet_detected && result.confidence >= 75) {
-                    // FIX: retorna el tipo directamente
-                    return result;
-                } else if (result.outlet_detected && result.confidence >= 50) {
-                    outletBadge.style.color = '#ffaa00';
-                    outletBadge.style.display = 'block';
-                    outletBadge.innerHTML = `⚠ ${result.outlet_type || 'Device'} — Move closer`;
-                    distanceMsg.style.display = 'block';
-                    return null;
-                }
-            }
-        } catch (err) {
-            console.error('Detection error:', err);
-        } finally {
-            isScanning = false;
-            scanningIndicator.style.display = 'none';
-        }
-        outletBadge.style.display = 'none';
-        distanceMsg.style.display = 'none';
-        return null;
-    }
 
-    // ============================================================
-    // SCAN LOOP
-    // FIX: usa resultado local de detectOutletInFrame
-    // no depende de variable global que puede resetearse
-    // ============================================================
-    function startScanLoop() {
-        if (scanInterval) return;
-        scanProgressEl.style.display = 'block';
-        const TICK_MS = 60;
-        const SCAN_EVERY_MS = 2500;
-        const TICKS_PER_SCAN = SCAN_EVERY_MS / TICK_MS;
-        let tick = 0;
-
-        scanInterval = setInterval(async () => {
-            if (isLocked || countdownActive) {
-                tick = 0;
-                scanBar.style.width = '0%';
-                return;
-            }
-            if (!orientationAligned) {
-                tick = 0;
-                scanBar.style.width = '0%';
-                return;
-            }
-
-            tick++;
-            scanBar.style.width = Math.min((tick / TICKS_PER_SCAN) * 100, 100) + '%';
-
-            if (tick >= TICKS_PER_SCAN) {
-                tick = 0;
-                scanBar.style.width = '0%';
-
-                // FIX: resultado local — no depende de estado global
-                const result = await detectOutletInFrame();
-
-                if (result && !isLocked && !countdownActive) {
-                    // Guarda tipo localmente antes de iniciar countdown
-                    pendingOutletType = result.outlet_type;
+                if (result.outlet_detected && result.confidence >= 60) {
+                    // ✅ OUTLET DETECTADO — CAPTURA
+                    const outletType = result.outlet_type;
                     const countLabel = result.count > 1 ? ` ×${result.count}` : '';
 
-                    // Muestra badge verde
-                    outletBadge.style.color = '#00ff00';
-                    outletBadge.style.display = 'block';
-                    outletBadge.innerHTML = `✓ ${result.outlet_type}${countLabel} — ${result.confidence}%`;
+                    // Flash
+                    const flash = document.createElement('div');
+                    flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
+                    document.getElementById('viewport').appendChild(flash);
+                    setTimeout(() => { flash.style.opacity='0'; setTimeout(()=>flash.remove(),400); }, 80);
+
+                    // Haptic
+                    if (navigator.vibrate) navigator.vibrate([80, 40, 150]);
+
+                    // Full res capture
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+
+                    capturedPhotos.push({
+                        id: Date.now(),
+                        data: canvas.toDataURL('image/jpeg', 0.95),
+                        selected: true,
+                        outletType: outletType,
+                        count: result.count || 1,
+                        timestamp: new Date().toISOString()
+                    });
+
+                    const total = capturedPhotos.length;
+                    document.getElementById('capture-count').innerText = total;
+                    document.getElementById('header-count').innerText = `${total} captured`;
+                    document.getElementById('go-to-gallery').style.display = 'block';
+
+                    // Muestra resultado
+                    outletResult.style.color = '#00ff00';
+                    outletResult.style.borderColor = 'rgba(0,255,0,0.4)';
+                    outletResult.innerHTML = `📸 ${outletType}${countLabel} — CAPTURED!`;
+                    outletResult.style.display = 'block';
+
                     dynamicGuide.style.borderColor = '#00ff00';
+                    statusMsg.innerText = '✓ CAPTURED!';
+                    statusMsg.style.color = '#00ff00';
+                    captureLabel.innerText = 'CAPTURED ✓';
 
-                    // Inicia countdown
-                    stopScanLoop();
-                    startCountdown(pendingOutletType);
+                    // Reset después de 2.5s
+                    setTimeout(() => {
+                        isAnalyzing = false;
+                        outletResult.style.display = 'none';
+                        setGuideState('aim');
+                    }, 2500);
+
+                } else {
+                    // ❌ NO OUTLET DETECTADO
+                    if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+
+                    outletResult.style.color = '#ff4444';
+                    outletResult.style.borderColor = 'rgba(255,68,68,0.4)';
+                    outletResult.innerHTML = `⚠ No outlet detected<br><span style="font-size:10px;color:#aa2222;">Make sure outlet fills the frame</span>`;
+                    outletResult.style.display = 'block';
+
+                    dynamicGuide.style.borderColor = '#ff4444';
+                    statusMsg.innerText = 'NOT DETECTED';
+                    statusMsg.style.color = '#ff4444';
+
+                    // Reset después de 2s
+                    setTimeout(() => {
+                        isAnalyzing = false;
+                        outletResult.style.display = 'none';
+                        if (orientationAligned && perspectiveOk) {
+                            setGuideState('ready');
+                        } else {
+                            setGuideState('aim');
+                        }
+                    }, 2000);
                 }
-            }
-        }, TICK_MS);
-    }
-
-    function stopScanLoop() {
-        if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
-        scanProgressEl.style.display = 'none';
-        scanBar.style.width = '0%';
-    }
-
-    // ============================================================
-    // COUNTDOWN — 3 segundos antes de capturar
-    // FIX: recibe outletType como parámetro local
-    // no depende de variable global
-    // ============================================================
-    function startCountdown(outletType) {
-        countdownActive = true;
-        let count = 3;
-        countdownDisplay.style.display = 'block';
-        countdownDisplay.innerText = count;
-        statusMsg.innerText = 'HOLD STEADY...';
-        statusMsg.style.color = '#00ff00';
-        if (navigator.vibrate) navigator.vibrate(100);
-
-        const timer = setInterval(() => {
-            count--;
-            if (count > 0) {
-                countdownDisplay.innerText = count;
-                if (navigator.vibrate) navigator.vibrate(50);
             } else {
-                clearInterval(timer);
-                countdownDisplay.style.display = 'none';
-                // FIX: pasa outletType directamente — no usa variable global
-                executeCapture(outletType);
+                throw new Error('Invalid response');
             }
-        }, 1000);
-    }
 
-    // ============================================================
-    // CAPTURE
-    // FIX: recibe outletType como parámetro — 100% independiente
-    // de cualquier variable global que pueda resetearse
-    // ============================================================
-    function executeCapture(outletType) {
-        isLocked = true;
-
-        // Flash
-        const flash = document.createElement('div');
-        flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
-        document.getElementById('viewport').appendChild(flash);
-        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 400); }, 80);
-
-        // Haptic
-        if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
-
-        // Full resolution capture
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-
-        capturedPhotos.push({
-            id: Date.now(),
-            data: canvas.toDataURL('image/jpeg', 0.95),
-            selected: true,
-            outletType: outletType,
-            timestamp: new Date().toISOString()
-        });
-
-        const count = capturedPhotos.length;
-        document.getElementById('capture-indicator').innerText = `${count} CAPTURED ✓`;
-        document.getElementById('header-count').innerText = `${count} captured`;
-        document.getElementById('go-to-gallery').style.display = 'block';
-
-        outletBadge.innerHTML = `📸 CAPTURED — ${outletType}`;
-        outletBadge.style.color = '#00ff00';
-        outletBadge.style.display = 'block';
-
-        // Reset para siguiente captura después de 3s
-        setTimeout(() => {
-            isLocked = false;
-            countdownActive = false;
-            pendingOutletType = null;
-            outletBadge.style.display = 'none';
-            distanceMsg.style.display = 'none';
-            dynamicGuide.style.borderColor = '#ff4444';
-            statusMsg.innerText = 'AIM AT OUTLET';
-            statusMsg.style.color = '#ff4444';
-            startScanLoop();
-        }, 3000);
-    }
+        } catch (err) {
+            console.error('Analysis error:', err);
+            analyzingOverlay.style.display = 'none';
+            outletResult.style.color = '#ff4444';
+            outletResult.style.borderColor = 'rgba(255,68,68,0.4)';
+            outletResult.innerHTML = `⚠ Connection error — Try again`;
+            outletResult.style.display = 'block';
+            setTimeout(() => {
+                isAnalyzing = false;
+                outletResult.style.display = 'none';
+                setGuideState(orientationAligned && perspectiveOk ? 'ready' : 'aim');
+            }, 2000);
+        }
+    });
 
     // ============================================================
     // CAMERA INIT
@@ -465,59 +537,14 @@
             await video.play();
             document.getElementById('sensor-auth').style.display = 'none';
             document.getElementById('camera-view').style.display = 'flex';
-            startScanLoop();
         } catch {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                 video.srcObject = stream;
                 document.getElementById('sensor-auth').style.display = 'none';
                 document.getElementById('camera-view').style.display = 'flex';
-                startScanLoop();
             } catch {
                 alert("Camera access required. Please allow camera permission and reload.");
-            }
-        }
-    }
-
-    // ============================================================
-    // ORIENTATION
-    // ============================================================
-    function handleOrientation(event) {
-        if (isLocked || countdownActive) return;
-        const beta = event.beta || 0;
-        const gamma = event.gamma || 0;
-        let targetB = (beta > 45 && beta < 135) ? 90 : (beta <= 45 && beta >= -45) ? 0 : 180;
-        const dV = Math.abs(beta - targetB);
-        const dL = Math.abs(gamma);
-        const perspectiveOk = checkPerspective(beta, gamma);
-        const clampedGamma = Math.max(-25, Math.min(25, gamma));
-        const clampedBeta = Math.max(-25, Math.min(25, beta - targetB));
-        dynamicGuide.style.transform = `translate(${clampedGamma * 3}px, ${clampedBeta * 3}px)`;
-
-        if (dV < ORIENTATION_TOLERANCE && dL < ORIENTATION_TOLERANCE) {
-            orientationAligned = true;
-            if (!perspectiveOk) {
-                perspectiveWarning.style.display = 'block';
-                dynamicGuide.style.borderColor = '#ffaa00';
-                statusMsg.innerText = 'ADJUST ANGLE';
-                statusMsg.style.color = '#ffaa00';
-            } else {
-                perspectiveWarning.style.display = 'none';
-                if (!isScanning && !countdownActive) {
-                    dynamicGuide.style.borderColor = '#ffaa00';
-                    statusMsg.innerText = 'SCANNING...';
-                    statusMsg.style.color = '#ffaa00';
-                }
-            }
-        } else {
-            orientationAligned = false;
-            if (!countdownActive && !isLocked) {
-                dynamicGuide.style.borderColor = '#ff4444';
-                statusMsg.innerText = 'AIM AT OUTLET';
-                statusMsg.style.color = '#ff4444';
-                outletBadge.style.display = 'none';
-                perspectiveWarning.style.display = 'none';
-                distanceMsg.style.display = 'none';
             }
         }
     }
@@ -526,7 +553,6 @@
     // NAVIGATION
     // ============================================================
     document.getElementById('go-to-gallery').addEventListener('click', () => {
-        stopScanLoop();
         document.getElementById('camera-view').style.display = 'none';
         document.getElementById('gallery-view').style.display = 'block';
         renderGallery();
@@ -535,8 +561,8 @@
     document.getElementById('back-to-camera').addEventListener('click', () => {
         document.getElementById('gallery-view').style.display = 'none';
         document.getElementById('camera-view').style.display = 'flex';
-        countdownActive = false;
-        startScanLoop();
+        isAnalyzing = false;
+        setGuideState('aim');
     });
 
     // ============================================================
@@ -601,11 +627,9 @@
         currentPreviewId = null;
         renderGallery();
         const count = capturedPhotos.length;
+        document.getElementById('capture-count').innerText = count;
         document.getElementById('header-count').innerText = `${count} captured`;
-        if (count === 0) {
-            document.getElementById('go-to-gallery').style.display = 'none';
-            document.getElementById('capture-indicator').innerText = 'WAITING FOR DETECTION';
-        }
+        if (count === 0) document.getElementById('go-to-gallery').style.display = 'none';
     });
 
     // ============================================================
