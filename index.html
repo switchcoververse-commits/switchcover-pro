@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CamoPro AI V32</title>
+    <title>CamoPro AI V33</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <style>
@@ -11,41 +11,37 @@
         body { margin: 0; padding: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #fff; overflow-x: hidden; user-select: none; }
         #camera-view, #gallery-view, #order-view { display: none; min-height: 100vh; width: 100vw; }
         #camera-view { display: flex; flex-direction: column; }
-
-        /* AUTH SCREEN — Texto grande y visible */
         #sensor-auth { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; }
         .auth-title { color: #00ff00; letter-spacing: 4px; font-weight: 900; font-size: 36px; margin: 0 0 8px; text-shadow: 0 0 30px rgba(0,255,0,0.5); }
         .auth-subtitle { color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 40px; opacity: 0.7; }
         .auth-steps { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px 25px; margin-bottom: 35px; max-width: 300px; text-align: left; }
         .auth-steps p { color: #aaa; font-size: 13px; margin: 0; line-height: 2; }
         .auth-steps span { color: #00ff00; font-weight: 700; }
-
         .header { padding: 12px 15px; border-bottom: 1px solid #1a1a1a; background: #000; display: flex; justify-content: space-between; align-items: center; }
         #viewport { position: relative; flex-grow: 1; margin: 10px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: #000; border: 2px solid #222; }
         video { width: 100%; height: 100%; object-fit: contain; position: absolute; background: #000; }
         #fixed-guide { position: absolute; width: 130px; height: 170px; border: 2px dashed rgba(255,255,255,0.2); border-radius: 8px; z-index: 5; }
-        #dynamic-guide { position: absolute; width: 130px; height: 170px; border: 3px solid #ff4444; border-radius: 8px; z-index: 6; transition: all 0.2s ease; }
+        #dynamic-guide { position: absolute; width: 130px; height: 170px; border: 3px solid #ff4444; border-radius: 8px; z-index: 6; transition: border-color 0.3s ease; }
         #dynamic-guide::before, #dynamic-guide::after { content: ''; position: absolute; width: 20px; height: 20px; border-color: inherit; border-style: solid; }
         #dynamic-guide::before { top: -3px; left: -3px; border-width: 3px 0 0 3px; border-radius: 6px 0 0 0; }
         #dynamic-guide::after { bottom: -3px; right: -3px; border-width: 0 3px 3px 0; border-radius: 0 0 6px 0; }
         #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.85); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1.5px; }
-        #distance-msg { position: absolute; top: 52px; background: rgba(0,0,0,0.75); padding: 5px 12px; border-radius: 15px; font-size: 10px; font-weight: 600; z-index: 10; color: #ffaa00; letter-spacing: 1px; display: none; }
+        #distance-msg { position: absolute; top: 52px; background: rgba(0,0,0,0.75); padding: 5px 12px; border-radius: 15px; font-size: 10px; font-weight: 600; z-index: 10; color: #ffaa00; display: none; }
         #outlet-badge { position: absolute; bottom: 25px; background: rgba(0,0,0,0.92); padding: 12px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; z-index: 10; color: #00ff00; display: none; text-align: center; max-width: 88%; border: 1px solid rgba(0,255,0,0.4); }
-        #scan-progress { position: absolute; top: 50px; width: 70%; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; z-index: 10; display: none; }
-        #scan-bar { height: 100%; width: 0%; background: #00ff00; border-radius: 2px; }
+        #scan-progress { position: absolute; top: 50px; width: 70%; height: 3px; background: rgba(255,255,255,0.08); border-radius: 3px; z-index: 10; display: none; }
+        #scan-bar { height: 100%; width: 0%; background: #00ff00; border-radius: 3px; transition: width 0.06s linear; }
         #scanning-indicator { position: absolute; inset: 0; display: none; justify-content: center; align-items: center; z-index: 7; pointer-events: none; }
         .scan-ring { width: 145px; height: 185px; border: 2px solid rgba(0,255,0,0.5); border-radius: 10px; animation: pulseRing 1s infinite; }
         @keyframes pulseRing { 0%,100% { opacity:0.2; transform:scale(0.97); } 50% { opacity:1; transform:scale(1.03); } }
-        #perspective-warning { position: absolute; background: rgba(255,170,0,0.95); color: #000; padding: 7px 16px; border-radius: 15px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 10; bottom: 85px; display: none; letter-spacing: 1px; }
-
+        #perspective-warning { position: absolute; background: rgba(255,170,0,0.95); color: #000; padding: 7px 16px; border-radius: 15px; font-size: 10px; font-weight: 900; text-transform: uppercase; z-index: 10; bottom: 85px; display: none; }
+        #countdown-display { position: absolute; font-size: 72px; font-weight: 900; color: #00ff00; z-index: 20; text-shadow: 0 0 40px rgba(0,255,0,0.8); display: none; }
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .gallery-item { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid #2a2a2a; transition: all 0.2s; cursor: pointer; background: #111; }
         .gallery-item.selected { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
         .gallery-item img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
         .check-badge { position: absolute; top: 8px; right: 8px; background: #00ff00; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
-        .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; }
         .tap-hint { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #666; font-size: 8px; padding: 3px 7px; border-radius: 8px; }
-
         .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .preview-overlay.active { display: flex; }
         .preview-overlay img { max-width: 95vw; max-height: 68vh; object-fit: contain; border-radius: 12px; }
@@ -54,7 +50,6 @@
         .preview-actions { display: flex; gap: 12px; margin-top: 18px; }
         .preview-close { background: #00ff00; color: #000; border: none; padding: 13px 30px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
         .preview-delete { background: #ff4444; color: #fff; border: none; padding: 13px 22px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
-
         .form-container { padding: 25px 20px 10px; }
         .form-group { margin-bottom: 18px; }
         label { display: block; font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
@@ -66,7 +61,6 @@
         .total-row { border-top: 1px solid #222; padding-top: 16px; margin-top: 5px; font-size: 24px; font-weight: 900; color: #00ff00; }
         .outlet-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
         .outlet-chip { background: #0a2a0a; border: 1px solid #00ff00; color: #00ff00; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
-
         .footer-action { padding: 15px 20px 25px; background: #000; border-top: 1px solid #111; text-align: center; position: sticky; bottom: 0; }
         .btn-main { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; border-radius: 35px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; letter-spacing: 1.5px; -webkit-appearance: none; }
         .btn-main:active { transform: scale(0.98); }
@@ -78,12 +72,12 @@
 
 <div id="sensor-auth">
     <h1 class="auth-title">CAMOPRO AI</h1>
-    <p class="auth-subtitle">Texture Cloning System V32</p>
+    <p class="auth-subtitle">Texture Cloning System V33</p>
     <div class="auth-steps">
         <p>
             <span>1.</span> Point camera at outlet or switch<br>
             <span>2.</span> AI identifies the exact type<br>
-            <span>3.</span> Hold steady — auto-captures<br>
+            <span>3.</span> Countdown — then auto-captures<br>
             <span>4.</span> Pay → We ship your sticker
         </p>
     </div>
@@ -105,6 +99,7 @@
         <div id="scanning-indicator"><div class="scan-ring"></div></div>
         <div id="outlet-badge"></div>
         <div id="perspective-warning">⚠ ADJUST ANGLE</div>
+        <div id="countdown-display"></div>
     </div>
     <div class="footer-action">
         <div id="capture-indicator" style="margin-bottom:12px;font-size:10px;color:#444;font-weight:700;letter-spacing:1px;">WAITING FOR DETECTION</div>
@@ -188,8 +183,6 @@
     const STRIPE_URL = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     const GEMINI_API_KEY = 'AIzaSyBp08DC7BLYSJI0dAzSvRXVk1c0ExSZugc';
     const GEMINI_DETECT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-    // Tolerancia de movimiento — aumentada para facilitar captura
     const ORIENTATION_TOLERANCE = 15;
 
     // ============================================================
@@ -199,10 +192,11 @@
     let isLocked = false;
     let isScanning = false;
     let scanInterval = null;
-    let detectedOutletType = null;
     let orientationAligned = false;
     let currentPreviewId = null;
-    let captureTriggered = false;
+    // FIX: variable local para guardar tipo detectado
+    let pendingOutletType = null;
+    let countdownActive = false;
 
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -214,18 +208,19 @@
     const scanProgressEl = document.getElementById('scan-progress');
     const perspectiveWarning = document.getElementById('perspective-warning');
     const distanceMsg = document.getElementById('distance-msg');
+    const countdownDisplay = document.getElementById('countdown-display');
 
     // ============================================================
-    // RESET on load
+    // RESET
     // ============================================================
     window.addEventListener('load', () => {
         capturedPhotos = [];
         isLocked = false;
         isScanning = false;
-        detectedOutletType = null;
         orientationAligned = false;
         currentPreviewId = null;
-        captureTriggered = false;
+        pendingOutletType = null;
+        countdownActive = false;
         document.getElementById('sensor-auth').style.display = 'flex';
         document.getElementById('camera-view').style.display = 'none';
         document.getElementById('gallery-view').style.display = 'none';
@@ -262,10 +257,12 @@
     }
 
     // ============================================================
-    // OUTLET + SWITCH DETECTION — Gemini Vision
+    // DETECTION
+    // FIX: devuelve el tipo detectado directamente en lugar de
+    // guardarlo en variable global que puede ser reseteada
     // ============================================================
     async function detectOutletInFrame() {
-        if (isScanning || isLocked || captureTriggered) return false;
+        if (isScanning || isLocked || countdownActive) return null;
         isScanning = true;
         scanningIndicator.style.display = 'flex';
 
@@ -278,7 +275,7 @@
                     contents: [{
                         parts: [
                             {
-                                text: `Analyze this image. Respond with ONLY a valid JSON object, no markdown. Detect electrical outlets, power sockets, wall switches, or any electrical wall plate. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. No device: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Use these types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Belgian Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable/Data Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.`
+                                text: `Analyze this image. Respond with ONLY a valid JSON object, no markdown. Detect electrical outlets, power sockets, wall switches, or any electrical wall plate. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. No device: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.`
                             },
                             { inline_data: { mime_type: 'image/jpeg', data: frameBase64 } }
                         ]
@@ -293,32 +290,15 @@
 
             if (jsonMatch) {
                 const result = JSON.parse(jsonMatch[0]);
-
                 if (result.outlet_detected && result.confidence >= 75) {
-                    detectedOutletType = result.outlet_type;
-                    const countLabel = result.count > 1 ? ` ×${result.count}` : '';
-                    outletBadge.style.color = '#00ff00';
-                    outletBadge.style.display = 'block';
-                    outletBadge.innerHTML = `
-                        ✓ ${result.outlet_type}${countLabel}
-                        <br><span style="font-size:9px;color:#00bb00;">${result.confidence}% confidence · HOLD STEADY</span>
-                    `;
-                    distanceMsg.style.display = 'none';
-                    return true;
-
+                    // FIX: retorna el tipo directamente
+                    return result;
                 } else if (result.outlet_detected && result.confidence >= 50) {
-                    detectedOutletType = null;
                     outletBadge.style.color = '#ffaa00';
                     outletBadge.style.display = 'block';
-                    outletBadge.innerHTML = `⚠ ${result.outlet_type || 'Device'} detected — Move closer`;
+                    outletBadge.innerHTML = `⚠ ${result.outlet_type || 'Device'} — Move closer`;
                     distanceMsg.style.display = 'block';
-                    return false;
-
-                } else {
-                    detectedOutletType = null;
-                    outletBadge.style.display = 'none';
-                    distanceMsg.style.display = 'none';
-                    return false;
+                    return null;
                 }
             }
         } catch (err) {
@@ -327,11 +307,15 @@
             isScanning = false;
             scanningIndicator.style.display = 'none';
         }
-        return false;
+        outletBadge.style.display = 'none';
+        distanceMsg.style.display = 'none';
+        return null;
     }
 
     // ============================================================
-    // SCAN LOOP — FIX: para inmediatamente al detectar
+    // SCAN LOOP
+    // FIX: usa resultado local de detectOutletInFrame
+    // no depende de variable global que puede resetearse
     // ============================================================
     function startScanLoop() {
         if (scanInterval) return;
@@ -342,8 +326,12 @@
         let tick = 0;
 
         scanInterval = setInterval(async () => {
-            // No scan si no está alineado, bloqueado, o ya capturó
-            if (!orientationAligned || isLocked || captureTriggered) {
+            if (isLocked || countdownActive) {
+                tick = 0;
+                scanBar.style.width = '0%';
+                return;
+            }
+            if (!orientationAligned) {
                 tick = 0;
                 scanBar.style.width = '0%';
                 return;
@@ -356,13 +344,23 @@
                 tick = 0;
                 scanBar.style.width = '0%';
 
-                const found = await detectOutletInFrame();
+                // FIX: resultado local — no depende de estado global
+                const result = await detectOutletInFrame();
 
-                // CAPTURA INMEDIATA al detectar — sin esperar siguiente ciclo
-                if (found && orientationAligned && !isLocked && !captureTriggered) {
-                    captureTriggered = true;
+                if (result && !isLocked && !countdownActive) {
+                    // Guarda tipo localmente antes de iniciar countdown
+                    pendingOutletType = result.outlet_type;
+                    const countLabel = result.count > 1 ? ` ×${result.count}` : '';
+
+                    // Muestra badge verde
+                    outletBadge.style.color = '#00ff00';
+                    outletBadge.style.display = 'block';
+                    outletBadge.innerHTML = `✓ ${result.outlet_type}${countLabel} — ${result.confidence}%`;
+                    dynamicGuide.style.borderColor = '#00ff00';
+
+                    // Inicia countdown
                     stopScanLoop();
-                    executeCapture();
+                    startCountdown(pendingOutletType);
                 }
             }
         }, TICK_MS);
@@ -375,16 +373,93 @@
     }
 
     // ============================================================
+    // COUNTDOWN — 3 segundos antes de capturar
+    // FIX: recibe outletType como parámetro local
+    // no depende de variable global
+    // ============================================================
+    function startCountdown(outletType) {
+        countdownActive = true;
+        let count = 3;
+        countdownDisplay.style.display = 'block';
+        countdownDisplay.innerText = count;
+        statusMsg.innerText = 'HOLD STEADY...';
+        statusMsg.style.color = '#00ff00';
+        if (navigator.vibrate) navigator.vibrate(100);
+
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownDisplay.innerText = count;
+                if (navigator.vibrate) navigator.vibrate(50);
+            } else {
+                clearInterval(timer);
+                countdownDisplay.style.display = 'none';
+                // FIX: pasa outletType directamente — no usa variable global
+                executeCapture(outletType);
+            }
+        }, 1000);
+    }
+
+    // ============================================================
+    // CAPTURE
+    // FIX: recibe outletType como parámetro — 100% independiente
+    // de cualquier variable global que pueda resetearse
+    // ============================================================
+    function executeCapture(outletType) {
+        isLocked = true;
+
+        // Flash
+        const flash = document.createElement('div');
+        flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
+        document.getElementById('viewport').appendChild(flash);
+        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 400); }, 80);
+
+        // Haptic
+        if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
+
+        // Full resolution capture
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+
+        capturedPhotos.push({
+            id: Date.now(),
+            data: canvas.toDataURL('image/jpeg', 0.95),
+            selected: true,
+            outletType: outletType,
+            timestamp: new Date().toISOString()
+        });
+
+        const count = capturedPhotos.length;
+        document.getElementById('capture-indicator').innerText = `${count} CAPTURED ✓`;
+        document.getElementById('header-count').innerText = `${count} captured`;
+        document.getElementById('go-to-gallery').style.display = 'block';
+
+        outletBadge.innerHTML = `📸 CAPTURED — ${outletType}`;
+        outletBadge.style.color = '#00ff00';
+        outletBadge.style.display = 'block';
+
+        // Reset para siguiente captura después de 3s
+        setTimeout(() => {
+            isLocked = false;
+            countdownActive = false;
+            pendingOutletType = null;
+            outletBadge.style.display = 'none';
+            distanceMsg.style.display = 'none';
+            dynamicGuide.style.borderColor = '#ff4444';
+            statusMsg.innerText = 'AIM AT OUTLET';
+            statusMsg.style.color = '#ff4444';
+            startScanLoop();
+        }, 3000);
+    }
+
+    // ============================================================
     // CAMERA INIT
     // ============================================================
     async function initCamera() {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: { exact: "environment" },
-                    width: { ideal: 1920, min: 1280 },
-                    height: { ideal: 1080, min: 720 }
-                }
+                video: { facingMode: { exact: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
             });
             video.srcObject = stream;
             await video.play();
@@ -393,9 +468,7 @@
             startScanLoop();
         } catch {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" }
-                });
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                 video.srcObject = stream;
                 document.getElementById('sensor-auth').style.display = 'none';
                 document.getElementById('camera-view').style.display = 'flex';
@@ -407,17 +480,16 @@
     }
 
     // ============================================================
-    // ORIENTATION — Tolerancia aumentada a 15 grados
+    // ORIENTATION
     // ============================================================
     function handleOrientation(event) {
-        if (isLocked || captureTriggered) return;
+        if (isLocked || countdownActive) return;
         const beta = event.beta || 0;
         const gamma = event.gamma || 0;
         let targetB = (beta > 45 && beta < 135) ? 90 : (beta <= 45 && beta >= -45) ? 0 : 180;
         const dV = Math.abs(beta - targetB);
         const dL = Math.abs(gamma);
         const perspectiveOk = checkPerspective(beta, gamma);
-
         const clampedGamma = Math.max(-25, Math.min(25, gamma));
         const clampedBeta = Math.max(-25, Math.min(25, beta - targetB));
         dynamicGuide.style.transform = `translate(${clampedGamma * 3}px, ${clampedBeta * 3}px)`;
@@ -431,11 +503,7 @@
                 statusMsg.style.color = '#ffaa00';
             } else {
                 perspectiveWarning.style.display = 'none';
-                if (detectedOutletType) {
-                    dynamicGuide.style.borderColor = '#00ff00';
-                    statusMsg.innerText = '✓ DETECTED — HOLD STEADY';
-                    statusMsg.style.color = '#00ff00';
-                } else {
+                if (!isScanning && !countdownActive) {
                     dynamicGuide.style.borderColor = '#ffaa00';
                     statusMsg.innerText = 'SCANNING...';
                     statusMsg.style.color = '#ffaa00';
@@ -443,67 +511,15 @@
             }
         } else {
             orientationAligned = false;
-            detectedOutletType = null;
-            dynamicGuide.style.borderColor = '#ff4444';
-            statusMsg.innerText = 'AIM AT OUTLET';
-            statusMsg.style.color = '#ff4444';
-            outletBadge.style.display = 'none';
-            perspectiveWarning.style.display = 'none';
-            distanceMsg.style.display = 'none';
+            if (!countdownActive && !isLocked) {
+                dynamicGuide.style.borderColor = '#ff4444';
+                statusMsg.innerText = 'AIM AT OUTLET';
+                statusMsg.style.color = '#ff4444';
+                outletBadge.style.display = 'none';
+                perspectiveWarning.style.display = 'none';
+                distanceMsg.style.display = 'none';
+            }
         }
-    }
-
-    // ============================================================
-    // CAPTURE
-    // ============================================================
-    function executeCapture() {
-        if (isLocked || !detectedOutletType) {
-            captureTriggered = false;
-            startScanLoop();
-            return;
-        }
-        isLocked = true;
-
-        // Flash
-        const flash = document.createElement('div');
-        flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
-        document.getElementById('viewport').appendChild(flash);
-        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 400); }, 80);
-
-        // Haptic
-        if (navigator.vibrate) navigator.vibrate([80, 50, 80]);
-
-        // Full res capture
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-
-        capturedPhotos.push({
-            id: Date.now(),
-            data: canvas.toDataURL('image/jpeg', 0.95),
-            selected: true,
-            outletType: detectedOutletType,
-            timestamp: new Date().toISOString()
-        });
-
-        const count = capturedPhotos.length;
-        document.getElementById('capture-indicator').innerText = `${count} CAPTURED ✓`;
-        document.getElementById('header-count').innerText = `${count} captured`;
-        document.getElementById('go-to-gallery').style.display = 'block';
-
-        outletBadge.innerHTML = `📸 CAPTURED — ${detectedOutletType}`;
-        outletBadge.style.color = '#00ff00';
-        outletBadge.style.display = 'block';
-
-        // Reset para siguiente captura después de 3s
-        setTimeout(() => {
-            isLocked = false;
-            captureTriggered = false;
-            detectedOutletType = null;
-            outletBadge.style.display = 'none';
-            distanceMsg.style.display = 'none';
-            startScanLoop();
-        }, 3000);
     }
 
     // ============================================================
@@ -519,7 +535,7 @@
     document.getElementById('back-to-camera').addEventListener('click', () => {
         document.getElementById('gallery-view').style.display = 'none';
         document.getElementById('camera-view').style.display = 'flex';
-        captureTriggered = false;
+        countdownActive = false;
         startScanLoop();
     });
 
@@ -593,7 +609,7 @@
     });
 
     // ============================================================
-    // ORDER FORM
+    // ORDER
     // ============================================================
     document.getElementById('go-to-form').addEventListener('click', () => {
         const validPhotos = capturedPhotos.filter(p => p.selected);
