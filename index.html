@@ -581,17 +581,38 @@
         }
     });
 
-    function startApp() {
-        document.getElementById('sensor-auth').style.display = 'none';
-        document.getElementById('camera-view').style.display = 'flex';
-        window.addEventListener('deviceorientation', handleOrientation);
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => {
-                video.srcObject = stream;
-                video.play().catch(() => {});
+   function startApp() {
+    document.getElementById('sensor-auth').style.display = 'none';
+    document.getElementById('camera-view').style.display = 'flex';
+
+    // Primero pide permiso giroscopio, luego inicia cámara
+    if (typeof DeviceOrientationEvent !== 'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
+            .then(state => {
+                if (state === 'granted') {
+                    window.addEventListener('deviceorientation', handleOrientation);
+                } else {
+                    // Sin giroscopio — activa botón capture directamente
+                    orientationAligned = true;
+                    perspectiveOk = true;
+                    setGuideState('ready');
+                }
             })
-            .catch(() => alert("Camera access required."));
+            .catch(() => {
+                orientationAligned = true;
+                perspectiveOk = true;
+                setGuideState('ready');
+            });
+    } else {
+        // Android u otros — giroscopio disponible sin permiso
+        window.addEventListener('deviceorientation', handleOrientation);
     }
-</script>
-</body>
-</html>
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(stream => {
+            video.srcObject = stream;
+            video.play().catch(() => {});
+        })
+        .catch(() => alert("Camera access required."));
+}
