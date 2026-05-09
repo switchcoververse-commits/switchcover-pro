@@ -1,0 +1,46 @@
+export default async function handler(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        const { imageBase64 } = req.body;
+        const GEMINI_KEY = process.env.GEMINI_API_KEY;
+
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [
+                        { text: 'Analyze this image. Respond ONLY with valid JSON, no markdown. Detect electrical outlets, power sockets, wall switches, floor outlets, ceiling outlets. Format: {"outlet_detected":true,"outlet_type":"TYPE","confidence":85,"count":1}. If none: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0}. Types: "GFCI Duplex","Standard Duplex","USB Duplex","Single Outlet","Triplex Outlet","Quad Outlet","Smart Outlet","Floor Outlet","Ceiling Outlet","Schuko EU","UK BS1363","French Type E","Swiss Type J","Italian Type L","Brazilian ABNT","Australian AS/NZS","Single Switch","Double Switch","Triple Switch","Quad Switch","Dimmer Switch","Fan Switch","Smart Switch","3-Way Switch","Switch Outlet Combo","Unknown Wall Plate".' },
+                        { inline_data: { mime_type: 'image/jpeg', data: imageBase64 } }
+                    ]}],
+                    generationConfig: { maxOutputTokens: 150, temperature: 0.1 }
+                })
+            }
+        );
+
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const match = text.match(/\{[\s\S]*\}/);
+
+        if (match) {
+            return res.status(200).json(JSON.parse(match[0]));
+        } else {
+            return res.status(200).json({ outlet_detected: false, outlet_type: null, confidence: 0, count: 0 });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: err.message });
+    }
+}
