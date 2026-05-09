@@ -584,26 +584,11 @@
    function startApp() {
     document.getElementById('sensor-auth').style.display = 'none';
     document.getElementById('camera-view').style.display = 'flex';
-
-    // Inicia cámara inmediatamente
+    window.addEventListener('deviceorientation', handleOrientation);
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(stream => {
             video.srcObject = stream;
             video.play().catch(() => {});
         })
         .catch(() => alert("Camera access required."));
-
-    // Giroscopio — sin requestPermission, solo addEventListener
-    // El permiso ya fue concedido implícitamente al hacer click
-    window.addEventListener('deviceorientation', handleOrientation);
-
-    // Si después de 3 segundos el recuadro sigue rojo
-    // significa que no hay giroscopio — activamos manual
-    setTimeout(() => {
-        if (!orientationAligned) {
-            orientationAligned = true;
-            perspectiveOk = true;
-            setGuideState('ready');
-        }
-    }, 3000);
 }
