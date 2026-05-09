@@ -144,11 +144,10 @@
     var STRIPE = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     var PRICE = 29.99;
 
-    function startApp() {
+function startApp() {
     document.getElementById('page1').style.display = 'none';
     document.getElementById('page2').style.display = 'flex';
 
-    // Inicia cámara
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(function(stream) {
             video.srcObject = stream;
@@ -156,25 +155,14 @@
         })
         .catch(function() { alert("Camera access required."); });
 
-    // Pide permiso giroscopio explícitamente en iOS
-    if (typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-            .then(function(state) {
-                if (state === 'granted') {
-                    gyroAvailable = true;
-                    window.addEventListener('deviceorientation', handleOrientation);
-                } else {
-                    // Sin giroscopio — activa manual
-                    setReady();
-                }
-            })
-            .catch(function() { setReady(); });
-    } else {
-        // Android — no necesita permiso
-        gyroAvailable = true;
-        window.addEventListener('deviceorientation', handleOrientation);
-    }
+    window.addEventListener('deviceorientation', function(e) {
+        if (e.beta !== null && e.beta !== undefined) gyroAvailable = true;
+        handleOrientation(e);
+    });
+
+    setTimeout(function() {
+        if (!gyroAvailable) setReady();
+    }, 3000);
 }
 
     function handleOrientation(e) {
