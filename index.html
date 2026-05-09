@@ -138,7 +138,7 @@
     var analyzing = false;
     var gyroAvailable = false;
 
-    var GEMINI_KEY = 'AIzaSyBp08DC7BLYSJI0dAzSvRXVk1c0ExSZugc';
+    var GEMINI_KEY = 'var GEMINI_URL = '/api/detect';';
     var GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
     var MAKE_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     var STRIPE = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
@@ -275,7 +275,7 @@
         fetch(GEMINI_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+            body: JSON.stringify({ imageBase64: frameBase64 })
                 contents: [{ parts: [
                     { text: 'Analyze this image. Respond ONLY with valid JSON, no markdown, no extra text. Detect electrical outlets, power sockets, wall switches, floor outlets, ceiling outlets, or any electrical wall/floor/ceiling plate. Format: {"outlet_detected":true,"outlet_type":"TYPE","confidence":85,"count":1}. If none detected: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0}. Types: "GFCI Duplex","Standard Duplex","USB Duplex","USB-C Duplex","Single Outlet","Triplex Outlet","Quad Outlet","Sextuple Outlet","Smart Outlet","Floor Outlet","Ceiling Outlet","Schuko EU","UK BS1363","French Type E","Swiss Type J","Italian Type L","Brazilian ABNT","Australian AS/NZS","Single Switch","Double Switch","Triple Switch","Quad Switch","Dimmer Switch","Fan Switch","Smart Switch","3-Way Switch","Switch Outlet Combo","Unknown Wall Plate".' },
                     { inline_data: { mime_type: 'image/jpeg', data: frameBase64 } }
