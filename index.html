@@ -11,8 +11,6 @@
         body { margin: 0; padding: 0; background: #000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #fff; overflow-x: hidden; user-select: none; }
         #camera-view, #gallery-view, #order-view { display: none; min-height: 100vh; width: 100vw; }
         #camera-view { display: flex; flex-direction: column; }
-
-        /* AUTH */
         #sensor-auth { position: fixed; inset: 0; background: #000; z-index: 9000; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 30px; }
         .auth-title { color: #00ff00; letter-spacing: 4px; font-weight: 900; font-size: 36px; margin: 0 0 8px; text-shadow: 0 0 30px rgba(0,255,0,0.5); }
         .auth-subtitle { color: #fff; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 35px; opacity: 0.7; }
@@ -22,24 +20,16 @@
         .step-num { background: #00ff00; color: #000; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
         .step-text { color: #aaa; font-size: 13px; line-height: 1.4; }
         .step-text strong { color: #fff; }
-
-        /* CAMERA */
         .header { padding: 12px 15px; border-bottom: 1px solid #1a1a1a; background: #000; display: flex; justify-content: space-between; align-items: center; }
         #viewport { position: relative; flex-grow: 1; margin: 10px; overflow: hidden; border-radius: 20px; display: flex; justify-content: center; align-items: center; background: #000; border: 2px solid #222; }
         video { width: 100%; height: 100%; object-fit: contain; position: absolute; background: #000; }
-
-        /* Guides */
         #fixed-guide { position: absolute; width: 140px; height: 180px; border: 2px dashed rgba(255,255,255,0.15); border-radius: 10px; z-index: 5; }
         #dynamic-guide { position: absolute; width: 140px; height: 180px; border: 3px solid #ff4444; border-radius: 10px; z-index: 6; transition: border-color 0.3s ease; }
         #dynamic-guide::before, #dynamic-guide::after { content: ''; position: absolute; width: 22px; height: 22px; border-color: inherit; border-style: solid; }
         #dynamic-guide::before { top: -3px; left: -3px; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
         #dynamic-guide::after { bottom: -3px; right: -3px; border-width: 0 3px 3px 0; border-radius: 0 0 8px 0; }
-
-        /* Corner markers top-right and bottom-left */
         #corner-tr { position: absolute; top: -3px; right: -3px; width: 22px; height: 22px; border-top: 3px solid; border-right: 3px solid; border-color: inherit; border-radius: 0 8px 0 0; }
         #corner-bl { position: absolute; bottom: -3px; left: -3px; width: 22px; height: 22px; border-bottom: 3px solid; border-left: 3px solid; border-color: inherit; border-radius: 0 0 0 8px; }
-
-        /* HUD elements */
         #status-msg { position: absolute; top: 15px; background: rgba(0,0,0,0.88); padding: 8px 18px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1.5px; }
         #instruction-msg { position: absolute; top: 52px; background: rgba(0,0,0,0.75); padding: 6px 14px; border-radius: 15px; font-size: 10px; font-weight: 600; z-index: 10; color: #888; letter-spacing: 0.5px; text-align: center; max-width: 80%; }
         #outlet-result { position: absolute; bottom: 20px; background: rgba(0,0,0,0.92); padding: 12px 20px; border-radius: 20px; font-size: 12px; font-weight: 800; z-index: 10; display: none; text-align: center; max-width: 88%; border: 1px solid rgba(0,255,0,0.4); }
@@ -48,8 +38,6 @@
         .analyzing-spinner { width: 50px; height: 50px; border: 3px solid rgba(0,255,0,0.2); border-top: 3px solid #00ff00; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 15px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .analyzing-text { color: #00ff00; font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* Capture button */
         #capture-btn { width: 75px; height: 75px; border-radius: 50%; border: 4px solid #fff; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; -webkit-appearance: none; position: relative; }
         #capture-btn::after { content: ''; width: 55px; height: 55px; background: #fff; border-radius: 50%; transition: all 0.2s; }
         #capture-btn.ready::after { background: #00ff00; }
@@ -58,11 +46,6 @@
         #capture-btn:active:not(:disabled) { transform: scale(0.92); }
         .camera-controls { padding: 20px; background: #000; border-top: 1px solid #111; display: flex; align-items: center; justify-content: space-between; }
         .camera-side { width: 80px; text-align: center; }
-        #capture-label { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; font-weight: 700; }
-        #capture-count { font-size: 18px; font-weight: 900; color: #00ff00; }
-        #capture-count-label { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* GALLERY */
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .gallery-item { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid #2a2a2a; transition: all 0.2s; cursor: pointer; background: #111; }
         .gallery-item.selected { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
@@ -70,8 +53,6 @@
         .check-badge { position: absolute; top: 8px; right: 8px; background: #00ff00; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
         .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; }
         .tap-hint { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.75); color: #666; font-size: 8px; padding: 3px 7px; border-radius: 8px; }
-
-        /* PREVIEW */
         .preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .preview-overlay.active { display: flex; }
         .preview-overlay img { max-width: 95vw; max-height: 68vh; object-fit: contain; border-radius: 12px; }
@@ -80,8 +61,6 @@
         .preview-actions { display: flex; gap: 12px; margin-top: 18px; }
         .preview-close { background: #00ff00; color: #000; border: none; padding: 13px 30px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
         .preview-delete { background: #ff4444; color: #fff; border: none; padding: 13px 22px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
-
-        /* FORM */
         .form-container { padding: 25px 20px 10px; }
         .form-group { margin-bottom: 18px; }
         label { display: block; font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
@@ -93,8 +72,6 @@
         .total-row { border-top: 1px solid #222; padding-top: 16px; margin-top: 5px; font-size: 24px; font-weight: 900; color: #00ff00; }
         .outlet-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
         .outlet-chip { background: #0a2a0a; border: 1px solid #00ff00; color: #00ff00; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
-
-        /* BUTTONS */
         .footer-action { padding: 15px 20px 25px; background: #000; border-top: 1px solid #111; text-align: center; position: sticky; bottom: 0; }
         .btn-main { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; border-radius: 35px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; letter-spacing: 1.5px; -webkit-appearance: none; }
         .btn-main:active { transform: scale(0.98); }
@@ -104,7 +81,6 @@
 </head>
 <body>
 
-<!-- AUTH -->
 <div id="sensor-auth">
     <h1 class="auth-title">CAMOPRO AI</h1>
     <p class="auth-subtitle">Texture Cloning System V34</p>
@@ -126,10 +102,9 @@
             <div class="step-text"><strong>Pay</strong> → We create and ship your custom sticker</div>
         </div>
     </div>
-   <button class="btn-main" id="start-btn" style="max-width:280px;" onclick="startApp()">INITIALIZE SCANNER</button>
+    <button class="btn-main" id="start-btn" style="max-width:280px;" onclick="startApp()">INITIALIZE SCANNER</button>
 </div>
 
-<!-- CAMERA -->
 <div id="camera-view">
     <div class="header">
         <span style="font-weight:900;color:#00ff00;font-size:12px;letter-spacing:1px;">● SCANNER ACTIVE</span>
@@ -139,7 +114,7 @@
         <div id="status-msg">AIM AT OUTLET</div>
         <div id="instruction-msg">Center outlet inside the frame</div>
         <div id="perspective-warning">⚠ ADJUST ANGLE — Hold phone straighter</div>
-       <video id="video" autoplay playsinline muted webkit-playsinline x-webkit-airplay="deny" style="width:100%;height:100%;object-fit:contain;position:absolute;background:#000;"></video>
+        <video id="video" autoplay playsinline muted></video>
         <div id="fixed-guide"></div>
         <div id="dynamic-guide">
             <div id="corner-tr"></div>
@@ -154,12 +129,11 @@
     <div class="camera-controls">
         <div class="camera-side">
             <div id="capture-count" style="font-size:22px;font-weight:900;color:#00ff00;">0</div>
-            <div id="capture-count-label" style="font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;">Captured</div>
+            <div style="font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;">Captured</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;">
-            <button id="capture-btn" disabled>
-            </button>
-            <div id="capture-label">ALIGN FIRST</div>
+            <button id="capture-btn" disabled></button>
+            <div id="capture-label" style="font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;margin-top:6px;">ALIGN FIRST</div>
         </div>
         <div class="camera-side" style="display:flex;justify-content:flex-end;">
             <button id="go-to-gallery" class="btn-secondary" style="display:none;width:70px;padding:10px 0;font-size:9px;margin:0;">REVIEW</button>
@@ -167,12 +141,11 @@
     </div>
 </div>
 
-<!-- GALLERY -->
 <div id="gallery-view">
     <div style="padding:20px 20px 0;">
         <h2 style="color:#00ff00;margin:0;font-weight:900;font-size:20px;">CAPTURED</h2>
         <p style="color:#555;font-size:11px;margin:6px 0 0;">
-            <span style="color:#777;">TAP</span> to preview full image &nbsp;·&nbsp;
+            <span style="color:#777;">TAP</span> to preview &nbsp;·&nbsp;
             <span style="color:#777;">HOLD</span> to select/deselect
         </p>
     </div>
@@ -183,7 +156,6 @@
     </div>
 </div>
 
-<!-- PREVIEW -->
 <div id="preview-overlay" class="preview-overlay">
     <img id="preview-img" src="" alt="Preview">
     <div class="preview-info" id="preview-info"></div>
@@ -194,7 +166,6 @@
     </div>
 </div>
 
-<!-- ORDER -->
 <div id="order-view">
     <div class="form-container">
         <h2 style="color:#00ff00;font-weight:900;margin:0 0 4px;font-size:22px;">CHECKOUT</h2>
@@ -238,26 +209,19 @@
 <canvas id="canvas" style="display:none;"></canvas>
 
 <script>
-    // ============================================================
-    // CONFIG
-    // ============================================================
     const PRICE_UNIT = 29.99;
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     const STRIPE_URL = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
-    AIzaSyAyNE-TuIGurcIPnrmPft9upEP5RR0ds-g
+    const GEMINI_API_KEY = 'AIzaSyAyNE-TuIGurcIPnrmPft9upEP5RR0ds-g';
     const GEMINI_DETECT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
     const ORIENTATION_TOLERANCE = 15;
 
-    // ============================================================
-    // STATE
-    // ============================================================
     let capturedPhotos = [];
     let isAnalyzing = false;
     let orientationAligned = false;
     let perspectiveOk = false;
     let currentPreviewId = null;
 
-    // DOM
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const dynamicGuide = document.getElementById('dynamic-guide');
@@ -269,9 +233,6 @@
     const captureBtn = document.getElementById('capture-btn');
     const captureLabel = document.getElementById('capture-label');
 
-    // ============================================================
-    // RESET
-    // ============================================================
     window.addEventListener('load', () => {
         capturedPhotos = [];
         isAnalyzing = false;
@@ -285,9 +246,6 @@
         document.getElementById('preview-overlay').classList.remove('active');
     });
 
-    // ============================================================
-    // UTILITIES
-    // ============================================================
     function generateOrderId() {
         return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     }
@@ -307,37 +265,24 @@
         return temp.toDataURL('image/jpeg', 0.8).split(',')[1];
     }
 
-    // ============================================================
-    // ORIENTATION HANDLER
-    // Solo guía visual — NO dispara captura automática
-    // ============================================================
     function handleOrientation(event) {
         if (isAnalyzing) return;
-
         const beta = event.beta || 0;
         const gamma = event.gamma || 0;
         let targetB = (beta > 45 && beta < 135) ? 90 : (beta <= 45 && beta >= -45) ? 0 : 180;
         const dV = Math.abs(beta - targetB);
         const dL = Math.abs(gamma);
-
-        // Perspectiva — ángulo oblicuo
         const tiltX = Math.abs(gamma);
         const tiltY = beta > 45 && beta < 135 ? Math.abs(beta - 90) : Math.abs(beta);
         perspectiveOk = tiltX < 20 && tiltY < 20;
-
-        // Animación del recuadro
         const clampedGamma = Math.max(-20, Math.min(20, gamma));
         const clampedBeta = Math.max(-20, Math.min(20, beta - targetB));
         dynamicGuide.style.transform = `translate(${clampedGamma * 3}px, ${clampedBeta * 3}px)`;
-
         if (dV < ORIENTATION_TOLERANCE && dL < ORIENTATION_TOLERANCE) {
             orientationAligned = true;
-
             if (!perspectiveOk) {
-                // Ángulo oblicuo
                 setGuideState('angle');
             } else {
-                // Todo ok — botón listo
                 setGuideState('ready');
             }
         } else {
@@ -394,16 +339,11 @@
         }
     }
 
-    // ============================================================
-    // CAPTURE BUTTON — Usuario presiona cuando está listo
-    // ============================================================
     captureBtn.addEventListener('click', async () => {
         if (isAnalyzing || !orientationAligned || !perspectiveOk) return;
-
         isAnalyzing = true;
         setGuideState('analyzing');
         analyzingOverlay.style.display = 'flex';
-
         try {
             const frameBase64 = captureFrame();
             const response = await fetch(GEMINI_DETECT_URL, {
@@ -412,44 +352,30 @@
                 body: JSON.stringify({
                     contents: [{
                         parts: [
-                            {
-                                text: `Analyze this image carefully. Respond with ONLY a valid JSON object, no markdown. Detect if there is an electrical outlet, power socket, wall switch, or electrical wall plate visible. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. If nothing detected: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.`
-                            },
+                            { text: `Analyze this image carefully. Respond with ONLY a valid JSON object, no markdown. Detect if there is an electrical outlet, power socket, wall switch, or electrical wall plate visible. Format: {"outlet_detected":true,"outlet_type":"EXACT TYPE","confidence":85,"count":1,"notes":"detail"}. If nothing detected: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0,"notes":""}. Types — OUTLETS: "GFCI Duplex", "Standard Duplex", "USB Duplex", "USB-C Duplex", "Decora Outlet", "Single Outlet", "Triplex Outlet", "Quad Outlet", "Sextuple Outlet", "Smart Outlet", "Floor Outlet", "Schuko EU", "UK BS1363", "French Type E", "Swiss Type J", "Italian Type L", "Brazilian ABNT", "Australian AS/NZS", "Industrial CEE". SWITCHES: "Single Switch", "Double Switch", "Triple Switch", "Quad Switch", "Dimmer Switch", "Fan Switch", "Toggle Switch", "Rocker Switch", "Smart Switch", "GFCI Switch Combo", "Switch Outlet Combo", "3-Way Switch", "4-Way Switch". PANELS: "Blank Wall Plate", "Multi-Gang Panel", "Cable Outlet", "Thermostat Plate". Use "Unknown Wall Plate" if electrical but unidentified.` },
                             { inline_data: { mime_type: 'image/jpeg', data: frameBase64 } }
                         ]
                     }],
                     generationConfig: { maxOutputTokens: 200, temperature: 0.1 }
                 })
             });
-
             const data = await response.json();
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
             const jsonMatch = text.match(/\{[\s\S]*\}/);
-
             analyzingOverlay.style.display = 'none';
-
             if (jsonMatch) {
                 const result = JSON.parse(jsonMatch[0]);
-
                 if (result.outlet_detected && result.confidence >= 60) {
-                    // ✅ OUTLET DETECTADO — CAPTURA
                     const outletType = result.outlet_type;
                     const countLabel = result.count > 1 ? ` ×${result.count}` : '';
-
-                    // Flash
                     const flash = document.createElement('div');
                     flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.9;z-index:100;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
                     document.getElementById('viewport').appendChild(flash);
                     setTimeout(() => { flash.style.opacity='0'; setTimeout(()=>flash.remove(),400); }, 80);
-
-                    // Haptic
                     if (navigator.vibrate) navigator.vibrate([80, 40, 150]);
-
-                    // Full res capture
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     canvas.getContext('2d').drawImage(video, 0, 0);
-
                     capturedPhotos.push({
                         id: Date.now(),
                         data: canvas.toDataURL('image/jpeg', 0.95),
@@ -458,58 +384,41 @@
                         count: result.count || 1,
                         timestamp: new Date().toISOString()
                     });
-
                     const total = capturedPhotos.length;
                     document.getElementById('capture-count').innerText = total;
                     document.getElementById('header-count').innerText = `${total} captured`;
                     document.getElementById('go-to-gallery').style.display = 'block';
-
-                    // Muestra resultado
                     outletResult.style.color = '#00ff00';
                     outletResult.style.borderColor = 'rgba(0,255,0,0.4)';
                     outletResult.innerHTML = `📸 ${outletType}${countLabel} — CAPTURED!`;
                     outletResult.style.display = 'block';
-
                     dynamicGuide.style.borderColor = '#00ff00';
                     statusMsg.innerText = '✓ CAPTURED!';
                     statusMsg.style.color = '#00ff00';
                     captureLabel.innerText = 'CAPTURED ✓';
-
-                    // Reset después de 2.5s
                     setTimeout(() => {
                         isAnalyzing = false;
                         outletResult.style.display = 'none';
                         setGuideState('aim');
                     }, 2500);
-
                 } else {
-                    // ❌ NO OUTLET DETECTADO
                     if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
-
                     outletResult.style.color = '#ff4444';
                     outletResult.style.borderColor = 'rgba(255,68,68,0.4)';
                     outletResult.innerHTML = `⚠ No outlet detected<br><span style="font-size:10px;color:#aa2222;">Make sure outlet fills the frame</span>`;
                     outletResult.style.display = 'block';
-
                     dynamicGuide.style.borderColor = '#ff4444';
                     statusMsg.innerText = 'NOT DETECTED';
                     statusMsg.style.color = '#ff4444';
-
-                    // Reset después de 2s
                     setTimeout(() => {
                         isAnalyzing = false;
                         outletResult.style.display = 'none';
-                        if (orientationAligned && perspectiveOk) {
-                            setGuideState('ready');
-                        } else {
-                            setGuideState('aim');
-                        }
+                        setGuideState(orientationAligned && perspectiveOk ? 'ready' : 'aim');
                     }, 2000);
                 }
             } else {
                 throw new Error('Invalid response');
             }
-
         } catch (err) {
             console.error('Analysis error:', err);
             analyzingOverlay.style.display = 'none';
@@ -525,41 +434,6 @@
         }
     });
 
-    // ============================================================
-    // CAMERA INIT
-    // ============================================================
-  async function initCamera() {
-    const constraints = [
-        { video: { facingMode: { exact: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } } },
-        { video: { facingMode: "environment" } },
-        { video: true }
-    ];
-
-    let stream = null;
-    for (const constraint of constraints) {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia(constraint);
-            break;
-        } catch (e) {
-            continue;
-        }
-    }
-
-    if (!stream) {
-        alert("Camera access required. Please allow camera permission and reload.");
-        return;
-    }
-
-    video.srcObject = stream;
-    video.oncanplay = () => {
-        video.play().catch(() => {});
-        document.getElementById('sensor-auth').style.display = 'none';
-        document.getElementById('camera-view').style.display = 'flex';
-    };
-}
-    // ============================================================
-    // NAVIGATION
-    // ============================================================
     document.getElementById('go-to-gallery').addEventListener('click', () => {
         document.getElementById('camera-view').style.display = 'none';
         document.getElementById('gallery-view').style.display = 'block';
@@ -573,9 +447,6 @@
         setGuideState('aim');
     });
 
-    // ============================================================
-    // GALLERY
-    // ============================================================
     function renderGallery() {
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = '';
@@ -611,9 +482,6 @@
         });
     }
 
-    // ============================================================
-    // PREVIEW
-    // ============================================================
     function openPreview(photo) {
         currentPreviewId = photo.id;
         document.getElementById('preview-img').src = photo.data;
@@ -640,9 +508,6 @@
         if (count === 0) document.getElementById('go-to-gallery').style.display = 'none';
     });
 
-    // ============================================================
-    // ORDER
-    // ============================================================
     document.getElementById('go-to-form').addEventListener('click', () => {
         const validPhotos = capturedPhotos.filter(p => p.selected);
         if (validPhotos.length === 0) return alert("Please select at least one photo.");
@@ -660,9 +525,6 @@
         });
     });
 
-    // ============================================================
-    // PAYMENT
-    // ============================================================
     document.getElementById('final-pay-btn').addEventListener('click', async () => {
         const name = document.getElementById('cust-name').value.trim();
         const email = document.getElementById('cust-email').value.trim();
@@ -672,14 +534,11 @@
         if (!email || !email.includes('@')) return alert("Please enter a valid email.");
         if (!address) return alert("Please enter your shipping address.");
         if (selectedImages.length === 0) return alert("No images selected.");
-
         const btn = document.getElementById('final-pay-btn');
         btn.innerText = "SENDING ORDER...";
         btn.disabled = true;
-
         const orderId = generateOrderId();
         const locationData = await detectCountry();
-
         const payload = {
             customer: { name, email, address },
             order_info: {
@@ -698,7 +557,6 @@
                 timestamp: img.timestamp
             }))
         };
-
         try {
             const response = await fetch(MAKE_WEBHOOK_URL, {
                 method: 'POST',
@@ -723,70 +581,17 @@
         }
     });
 
-    // ============================================================
-    // INIT
-    // ============================================================
-  function startApp() {
-    document.getElementById('sensor-auth').style.display = 'none';
-    document.getElementById('camera-view').style.display = 'flex';
-
-    if (typeof DeviceOrientationEvent !== 'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-            .then(state => {
-                if (state === 'granted') {
-                    window.addEventListener('deviceorientation', handleOrientation);
-                }
-            }).catch(() => {
-                window.addEventListener('deviceorientation', handleOrientation);
-            });
-    } else {
+    function startApp() {
+        document.getElementById('sensor-auth').style.display = 'none';
+        document.getElementById('camera-view').style.display = 'flex';
         window.addEventListener('deviceorientation', handleOrientation);
-    }
-
-    navigator.mediaDevices.getUserMedia({ 
-        video: { 
-            facingMode: "environment",
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-        } 
-    })
-    .then(stream => {
-        video.srcObject = stream;
-        video.setAttribute('playsinline', true);
-        video.setAttribute('muted', true);
-        video.muted = true;
-        video.playsInline = true;
-        
-        // iOS necesita interacción — añade tap para iniciar
-        const tapToStart = document.createElement('div');
-        tapToStart.style.cssText = 'position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgba(0,0,0,0.5);border-radius:18px;cursor:pointer;';
-        tapToStart.innerHTML = '<div style="color:#00ff00;font-size:16px;font-weight:900;letter-spacing:2px;text-transform:uppercase;">TAP TO START CAMERA</div>';
-        document.getElementById('viewport').appendChild(tapToStart);
-        
-        tapToStart.addEventListener('click', () => {
-            video.play()
-                .then(() => tapToStart.remove())
-                .catch(e => console.error(e));
-        });
-
-        // Intenta reproducir automáticamente
-        video.play()
-            .then(() => {
-                if (tapToStart.parentNode) tapToStart.remove();
-            })
-            .catch(() => {
-                // iOS bloqueó — espera tap del usuario
-            });
-    })
-    .catch(() => {
-        navigator.mediaDevices.getUserMedia({ video: true })
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
             .then(stream => {
                 video.srcObject = stream;
-                video.muted = true;
-                video.playsInline = true;
                 video.play().catch(() => {});
             })
             .catch(() => alert("Camera access required."));
-    });
-}
+    }
+</script>
+</body>
+</html>
