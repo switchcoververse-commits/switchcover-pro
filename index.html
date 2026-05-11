@@ -195,30 +195,15 @@
         captureLabel.style.color = '#555';
     }
 
-    function doCapture() {
-        if (analyzing) return;
-        analyzing = true;
-        captureBtn.disabled = true;
-        captureBtn.classList.remove('ready');
-        statusEl.innerText = 'ANALYZING...';
-        statusEl.style.color = '#00aaff';
-        guide.style.borderColor = '#00aaff';
-        analyzingEl.style.display = 'flex';
-
-       var temp = document.createElement('canvas');
-temp.width = video.videoWidth || 640;
-temp.height = video.videoHeight || 480;
-temp.getContext('2d').drawImage(video, 0, 0, temp.width, temp.height);
-var frameBase64 = temp.toDataURL('image/jpeg', 0.9).split(',')[1];
-
-// Verifica que la imagen no está vacía
-if (!frameBase64 || frameBase64.length < 1000) {
-    analyzing = false;
-    statusEl.innerText = 'CAMERA NOT READY';
-    statusEl.style.color = '#ff4444';
-    instruction.innerText = 'Wait for camera to load and try again';
-    setTimeout(function() { setReady(); }, 2000);
-    return;
+   function doCapture() {
+    if (analyzing) return;
+    analyzing = true;
+    captureBtn.disabled = true;
+    captureBtn.classList.remove('ready');
+    statusEl.innerText = 'CAPTURING...';
+    statusEl.style.color = '#00aaff';
+    guide.style.borderColor = '#00aaff';
+    doSaveCapture('Standard Outlet', 1);
 }
 
         fetch(DETECT_URL, {
