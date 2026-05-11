@@ -284,7 +284,7 @@ if (!frameBase64 || frameBase64.length < 1000) {
         statusEl.innerText = 'NO OUTLET DETECTED';
         statusEl.style.color = '#ff4444';
         guide.style.borderColor = '#ff4444';
-      instruction.innerText = JSON.stringify(result);
+      instruction.innerText = 'Make sure outlet is in the frame';
         if (navigator.vibrate) navigator.vibrate([50,50,50]);
         setTimeout(function() {
             analyzing = false;
