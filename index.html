@@ -229,7 +229,7 @@ if (!frameBase64 || frameBase64.length < 1000) {
         .then(function(r) { return r.json(); })
         .then(function(result) {
             analyzingEl.style.display = 'none';
-            if (result.outlet_detected && result.confidence >= 60) {
+            if (result.outlet_detected && result.confidence >= 30) {
                 doSaveCapture(result.outlet_type, result.count || 1);
             } else {
                 showNotDetected();
@@ -284,7 +284,7 @@ if (!frameBase64 || frameBase64.length < 1000) {
         statusEl.innerText = 'NO OUTLET DETECTED';
         statusEl.style.color = '#ff4444';
         guide.style.borderColor = '#ff4444';
-        instruction.innerText = 'Make sure outlet fills the frame';
+      instruction.innerText = JSON.stringify(result);
         if (navigator.vibrate) navigator.vibrate([50,50,50]);
         setTimeout(function() {
             analyzing = false;
