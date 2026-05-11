@@ -33,9 +33,6 @@
         .step-num { background: #00ff00; color: #000; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; flex-shrink: 0; }
         .step-text { color: #aaa; font-size: 13px; line-height: 1.5; }
         .step-text strong { color: #fff; }
-        #analyzing { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
-        .spinner { width: 48px; height: 48px; border: 3px solid rgba(0,255,0,0.2); border-top: 3px solid #00ff00; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -62,10 +59,6 @@
         <div id="guide"></div>
         <div id="status">AIM AT OUTLET</div>
         <div id="instruction">Center outlet or switch inside the frame</div>
-        <div id="analyzing">
-            <div class="spinner"></div>
-            <div style="color:#00ff00;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">Identifying...</div>
-        </div>
     </div>
     <div class="controls">
         <div style="text-align:center;">
@@ -92,7 +85,6 @@
     var instruction = document.getElementById('instruction');
     var captureBtn = document.getElementById('capture-btn');
     var captureLabel = document.getElementById('capture-label');
-    var analyzingEl = document.getElementById('analyzing');
 
     var capturedPhotos = [];
     var aligned = false;
@@ -100,7 +92,6 @@
     var analyzing = false;
     var gyroAvailable = false;
 
-    var DETECT_URL = '/api/detect';
     var MAKE_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     var STRIPE = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     var PRICE = 29.99;
@@ -132,25 +123,14 @@
         var gamma = e.gamma || 0;
         var isVertical = beta > 45 && beta < 135;
         var isHorizontal = Math.abs(beta) < 30 || beta > 150;
-        var dL = Math.abs(gamma);
-        var goodAngle = false;
 
         if (isVertical) {
             var dV = Math.abs(beta - 90);
-            goodAngle = dV < 20 && dL < 20;
-            perspOk = dV < 25 && dL < 25;
+            var dL = Math.abs(gamma);
+            if (dV < 20 && dL < 20) { setReady(); }
+            else { setAim(); }
         } else if (isHorizontal) {
-            goodAngle = true;
-            perspOk = true;
-        } else {
-            goodAngle = false;
-            perspOk = false;
-        }
-
-        if (goodAngle && perspOk) {
             setReady();
-        } else if (goodAngle && !perspOk) {
-            setAngle();
         } else {
             setAim();
         }
@@ -169,19 +149,6 @@
         captureLabel.style.color = '#00ff00';
     }
 
-    function setAngle() {
-        aligned = true;
-        perspOk = false;
-        guide.style.borderColor = '#ffaa00';
-        statusEl.innerText = 'ADJUST ANGLE';
-        statusEl.style.color = '#ffaa00';
-        instruction.innerText = 'Hold phone straighter';
-        captureBtn.disabled = true;
-        captureBtn.classList.remove('ready');
-        captureLabel.innerText = 'ADJUST';
-        captureLabel.style.color = '#ffaa00';
-    }
-
     function setAim() {
         aligned = false;
         perspOk = false;
@@ -195,48 +162,20 @@
         captureLabel.style.color = '#555';
     }
 
-   function doCapture() {
-    if (analyzing) return;
-    analyzing = true;
-    captureBtn.disabled = true;
-    captureBtn.classList.remove('ready');
-    statusEl.innerText = 'CAPTURING...';
-    statusEl.style.color = '#00aaff';
-    guide.style.borderColor = '#00aaff';
-    doSaveCapture('Standard Outlet', 1);
-}
-
-        fetch(DETECT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageBase64: frameBase64 })
-        })
-        .then(function(r) { return r.json(); })
-        .then(function(result) {
-            analyzingEl.style.display = 'none';
-            if (result.outlet_detected && result.confidence >= 30) {
-                doSaveCapture(result.outlet_type, result.count || 1);
-            } else {
-                showNotDetected();
-            }
-        })
-        .catch(function(err) {
-            console.error(err);
-            analyzingEl.style.display = 'none';
-            statusEl.innerText = 'CONNECTION ERROR';
-            statusEl.style.color = '#ff4444';
-            guide.style.borderColor = '#ff4444';
-            instruction.innerText = 'Check connection and try again';
-            setTimeout(function() {
-                analyzing = false;
-                setReady();
-            }, 2000);
-        });
+    function doCapture() {
+        if (analyzing) return;
+        analyzing = true;
+        captureBtn.disabled = true;
+        captureBtn.classList.remove('ready');
+        statusEl.innerText = 'CAPTURING...';
+        statusEl.style.color = '#00aaff';
+        guide.style.borderColor = '#00aaff';
+        doSaveCapture('Standard Outlet', 1);
     }
 
     function doSaveCapture(outletType, count) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
         canvas.getContext('2d').drawImage(video, 0, 0);
         capturedPhotos.push({
             id: Date.now(),
@@ -255,22 +194,10 @@
         document.getElementById('viewport').appendChild(flash);
         setTimeout(function() { flash.style.opacity='0'; setTimeout(function(){flash.remove();},400); }, 80);
         if (navigator.vibrate) navigator.vibrate([80,40,150]);
-        statusEl.innerText = 'CAPTURED: ' + outletType + (count > 1 ? ' x'+count : '');
+        statusEl.innerText = 'CAPTURED ✓';
         statusEl.style.color = '#00ff00';
         guide.style.borderColor = '#00ff00';
         captureLabel.innerText = 'CAPTURED ✓';
-        setTimeout(function() {
-            analyzing = false;
-            setReady();
-        }, 2500);
-    }
-
-    function showNotDetected() {
-        statusEl.innerText = 'NO OUTLET DETECTED';
-        statusEl.style.color = '#ff4444';
-        guide.style.borderColor = '#ff4444';
-      instruction.innerText = 'Make sure outlet is in the frame';
-        if (navigator.vibrate) navigator.vibrate([50,50,50]);
         setTimeout(function() {
             analyzing = false;
             setReady();
