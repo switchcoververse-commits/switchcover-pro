@@ -7,9 +7,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; background: #000; font-family: -apple-system, sans-serif; color: #fff; }
-        #page1 { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; }
-        #page2 { display: none; flex-direction: column; min-height: 100vh; }
+        body { margin: 0; background: #000; font-family: -apple-system, sans-serif; color: #fff; overflow-x: hidden; }
+        #page1, #page2, #page3, #page4 { display: none; min-height: 100vh; flex-direction: column; }
+        #page1 { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 30px; text-align: center; z-index: 100; background: #000; }
+        #page2 { display: none; }
+
+        /* CAMERA */
         #viewport { position: relative; flex: 1; margin: 10px; border-radius: 20px; overflow: hidden; background: #000; border: 2px solid #222; display: flex; justify-content: center; align-items: center; min-height: 300px; }
         video { position: absolute; width: 100%; height: 100%; object-fit: cover; }
         #guide { position: absolute; width: 140px; height: 180px; border: 3px solid #ff4444; border-radius: 10px; z-index: 5; transition: border-color 0.3s; }
@@ -23,10 +26,45 @@
         #capture-btn:disabled { opacity: 0.4; }
         #capture-btn:active:not(:disabled) { transform: scale(0.92); }
         #capture-label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; text-align: center; }
-        #counter { color: #00ff00; font-size: 24px; font-weight: 900; min-width: 50px; text-align: center; }
-        #counter-label { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; text-align: center; }
-        #review-btn { background: transparent; color: #00ff00; border: 1px solid #333; padding: 10px 14px; border-radius: 20px; font-size: 10px; cursor: pointer; display: none; font-weight: 700; text-transform: uppercase; }
-        .btn-green { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; max-width: 280px; border-radius: 35px; font-weight: 900; font-size: 14px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* GALLERY */
+        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
+        .gallery-item { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid #2a2a2a; cursor: pointer; background: #111; }
+        .gallery-item.selected { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
+        .gallery-item img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+        .check-badge { position: absolute; top: 8px; right: 8px; background: #00ff00; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
+        .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; }
+
+        /* PREVIEW */
+        #preview-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        #preview-overlay.active { display: flex; }
+        #preview-overlay img { max-width: 95vw; max-height: 68vh; object-fit: contain; border-radius: 12px; }
+        .preview-info { margin-top: 14px; color: #00ff00; font-size: 14px; font-weight: 800; text-align: center; }
+        .preview-actions { display: flex; gap: 12px; margin-top: 18px; }
+        .preview-close { background: #00ff00; color: #000; border: none; padding: 13px 30px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
+        .preview-delete { background: #ff4444; color: #fff; border: none; padding: 13px 22px; border-radius: 25px; font-weight: 900; font-size: 13px; cursor: pointer; }
+
+        /* FORM */
+        .form-container { padding: 25px 20px 10px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+        input { width: 100%; padding: 14px 16px; background: #111; border: 1px solid #2a2a2a; border-radius: 12px; color: #fff; font-size: 16px; -webkit-appearance: none; }
+        input:focus { border-color: #00ff00; outline: none; }
+        input::placeholder { color: #333; }
+        .summary-card { background: #0a0a0a; padding: 20px; border-radius: 16px; margin-top: 25px; border: 1px solid #1a1a1a; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; }
+        .total-row { border-top: 1px solid #222; padding-top: 16px; margin-top: 5px; font-size: 24px; font-weight: 900; color: #00ff00; }
+        .outlet-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .outlet-chip { background: #0a2a0a; border: 1px solid #00ff00; color: #00ff00; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 700; }
+
+        /* BUTTONS */
+        .footer-action { padding: 15px 20px 25px; background: #000; border-top: 1px solid #111; position: sticky; bottom: 0; }
+        .btn-main { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; border-radius: 35px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 14px; letter-spacing: 1.5px; -webkit-appearance: none; }
+        .btn-main:disabled { background: #1a1a1a; color: #333; }
+        .btn-secondary { background: transparent; color: #00ff00; border: 1px solid #333; padding: 12px 0; width: 100%; border-radius: 35px; font-weight: 700; text-transform: uppercase; cursor: pointer; font-size: 12px; margin-top: 10px; }
+        .btn-green { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; max-width: 280px; border-radius: 35px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; }
+
+        /* MISC */
         .auth-steps { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px; margin-bottom: 35px; max-width: 300px; text-align: left; width: 100%; }
         .auth-step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
         .auth-step:last-child { margin-bottom: 0; }
@@ -37,6 +75,7 @@
 </head>
 <body>
 
+<!-- PAGE 1: INTRO -->
 <div id="page1">
     <h1 style="color:#00ff00;font-size:32px;letter-spacing:3px;margin:0 0 8px;text-shadow:0 0 20px rgba(0,255,0,0.4);">CAMOPRO AI</h1>
     <p style="color:#aaa;font-size:13px;margin:0 0 35px;text-transform:uppercase;letter-spacing:2px;">Texture Cloning V34</p>
@@ -49,6 +88,7 @@
     <button class="btn-green" onclick="startApp()">INITIALIZE SCANNER</button>
 </div>
 
+<!-- PAGE 2: CAMERA -->
 <div id="page2">
     <div style="padding:12px 15px;background:#000;border-bottom:1px solid #111;display:flex;justify-content:space-between;align-items:center;">
         <span style="color:#00ff00;font-size:12px;font-weight:900;letter-spacing:1px;">● SCANNER ACTIVE</span>
@@ -62,16 +102,72 @@
     </div>
     <div class="controls">
         <div style="text-align:center;">
-            <div id="counter">0</div>
-            <div id="counter-label">Captured</div>
+            <div id="counter" style="color:#00ff00;font-size:24px;font-weight:900;">0</div>
+            <div style="font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;margin-top:3px;">Captured</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;">
             <button id="capture-btn" disabled onclick="doCapture()"></button>
             <div id="capture-label">ALIGN FIRST</div>
         </div>
         <div>
-            <button id="review-btn" onclick="goGallery()">REVIEW</button>
+            <button id="review-btn" onclick="showGallery()" style="display:none;background:transparent;color:#00ff00;border:1px solid #333;padding:10px 14px;border-radius:20px;font-size:10px;cursor:pointer;font-weight:700;text-transform:uppercase;">REVIEW</button>
         </div>
+    </div>
+</div>
+
+<!-- PAGE 3: GALLERY -->
+<div id="page3">
+    <div style="padding:20px 20px 0;">
+        <h2 style="color:#00ff00;margin:0;font-weight:900;font-size:20px;">CAPTURED</h2>
+        <p style="color:#555;font-size:11px;margin:6px 0 0;"><span style="color:#777;">TAP</span> to preview &nbsp;·&nbsp; <span style="color:#777;">HOLD</span> to select/deselect</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="footer-action">
+        <button class="btn-main" onclick="showCheckout()">PROCEED TO CHECKOUT</button>
+        <button class="btn-secondary" onclick="showCamera()">SCAN MORE</button>
+    </div>
+</div>
+
+<!-- PREVIEW OVERLAY -->
+<div id="preview-overlay">
+    <img id="preview-img" src="" alt="Preview">
+    <div class="preview-info" id="preview-info"></div>
+    <div class="preview-actions">
+        <button class="preview-delete" onclick="deletePhoto()">DELETE</button>
+        <button class="preview-close" onclick="closePreview()">KEEP ✓</button>
+    </div>
+</div>
+
+<!-- PAGE 4: CHECKOUT -->
+<div id="page4">
+    <div class="form-container">
+        <h2 style="color:#00ff00;font-weight:900;margin:0 0 4px;font-size:22px;">CHECKOUT</h2>
+        <p style="color:#444;font-size:10px;margin:0 0 25px;text-transform:uppercase;letter-spacing:1px;">Secured by Stripe</p>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="cust-name" placeholder="John Smith" autocomplete="name">
+        </div>
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="cust-email" placeholder="john@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+            <label>Shipping Address</label>
+            <input type="text" id="cust-address" placeholder="123 Main St, City, State ZIP" autocomplete="street-address">
+        </div>
+        <div class="summary-card">
+            <div class="summary-row"><span style="color:#555;">Items:</span><span id="final-count" style="font-weight:800;">0</span></div>
+            <div class="summary-row"><span style="color:#555;">Price per unit:</span><span>$29.99</span></div>
+            <div class="summary-row" style="flex-direction:column;align-items:flex-start;">
+                <span style="color:#555;margin-bottom:6px;">Detected:</span>
+                <div class="outlet-chips" id="outlet-chips"></div>
+            </div>
+            <div class="summary-row total-row"><span>TOTAL</span><span id="final-price">$0.00</span></div>
+        </div>
+    </div>
+    <div class="footer-action">
+        <button class="btn-main" id="pay-btn" onclick="sendOrder()">PAY & SEND TO PRODUCTION</button>
+        <button class="btn-secondary" onclick="showGallery()">BACK TO GALLERY</button>
     </div>
 </div>
 
@@ -87,19 +183,60 @@
     var captureLabel = document.getElementById('capture-label');
 
     var capturedPhotos = [];
-    var aligned = false;
-    var perspOk = false;
     var analyzing = false;
     var gyroAvailable = false;
+    var currentPreviewId = null;
 
     var MAKE_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     var STRIPE = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     var PRICE = 29.99;
 
-    function startApp() {
-        document.getElementById('page1').style.display = 'none';
-        document.getElementById('page2').style.display = 'flex';
+    // PAGE NAVIGATION
+    function showPage(id) {
+        ['page1','page2','page3','page4'].forEach(function(p) {
+            document.getElementById(p).style.display = 'none';
+        });
+        document.getElementById(id).style.display = 'flex';
+    }
 
+    function showCamera() {
+        showPage('page2');
+        analyzing = false;
+        setReady();
+    }
+
+    function showGallery() {
+        showPage('page3');
+        renderGallery();
+    }
+
+    function showCheckout() {
+        var valid = capturedPhotos.filter(function(p){ return p.selected; });
+        if (valid.length === 0) { alert("Please select at least one photo."); return; }
+        showPage('page4');
+        document.getElementById('final-count').innerText = valid.length;
+        document.getElementById('final-price').innerText = '$' + (valid.length * PRICE).toFixed(2);
+        var chips = document.getElementById('outlet-chips');
+        chips.innerHTML = '';
+        var types = [];
+        valid.forEach(function(p) {
+            if (p.outletType && types.indexOf(p.outletType) === -1) types.push(p.outletType);
+        });
+        types.forEach(function(t) {
+            var chip = document.createElement('span');
+            chip.className = 'outlet-chip';
+            chip.innerText = t;
+            chips.appendChild(chip);
+        });
+    }
+
+    // INIT
+    window.addEventListener('load', function() {
+        showPage('page1');
+    });
+
+    function startApp() {
+        showPage('page2');
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
             .then(function(stream) {
                 video.srcObject = stream;
@@ -117,18 +254,17 @@
         }, 3000);
     }
 
+    // ORIENTATION
     function handleOrientation(e) {
         if (analyzing) return;
         var beta = e.beta || 0;
         var gamma = e.gamma || 0;
         var isVertical = beta > 45 && beta < 135;
         var isHorizontal = Math.abs(beta) < 30 || beta > 150;
-
         if (isVertical) {
             var dV = Math.abs(beta - 90);
             var dL = Math.abs(gamma);
-            if (dV < 20 && dL < 20) { setReady(); }
-            else { setAim(); }
+            if (dV < 20 && dL < 20) { setReady(); } else { setAim(); }
         } else if (isHorizontal) {
             setReady();
         } else {
@@ -137,8 +273,6 @@
     }
 
     function setReady() {
-        aligned = true;
-        perspOk = true;
         guide.style.borderColor = '#00ff00';
         statusEl.innerText = 'READY — PRESS CAPTURE';
         statusEl.style.color = '#00ff00';
@@ -150,8 +284,6 @@
     }
 
     function setAim() {
-        aligned = false;
-        perspOk = false;
         guide.style.borderColor = '#ff4444';
         statusEl.innerText = 'AIM AT OUTLET';
         statusEl.style.color = '#ff4444';
@@ -162,6 +294,7 @@
         captureLabel.style.color = '#555';
     }
 
+    // CAPTURE
     function doCapture() {
         if (analyzing) return;
         analyzing = true;
@@ -204,8 +337,123 @@
         }, 2000);
     }
 
-    function goGallery() {
-        alert(capturedPhotos.length + ' photos captured.\nGallery coming next!');
+    // GALLERY
+    function renderGallery() {
+        var grid = document.getElementById('gallery-grid');
+        grid.innerHTML = '';
+        if (capturedPhotos.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#333;padding:40px;font-size:12px;">No photos captured</div>';
+            return;
+        }
+        capturedPhotos.forEach(function(p) {
+            var item = document.createElement('div');
+            item.className = 'gallery-item' + (p.selected ? ' selected' : '');
+            item.innerHTML = '<img src="' + p.data + '" alt="' + p.outletType + '">' +
+                (p.selected ? '<div class="check-badge">✓</div>' : '') +
+                '<div class="outlet-tag">' + (p.outletType || 'Unknown') + '</div>';
+            var pressTimer;
+            var didLong = false;
+            item.addEventListener('touchstart', function() {
+                didLong = false;
+                pressTimer = setTimeout(function() {
+                    didLong = true;
+                    p.selected = !p.selected;
+                    renderGallery();
+                    if (navigator.vibrate) navigator.vibrate(40);
+                }, 500);
+            });
+            item.addEventListener('touchend', function(e) {
+                clearTimeout(pressTimer);
+                if (!didLong) { e.preventDefault(); openPreview(p); }
+            });
+            item.addEventListener('touchmove', function() { clearTimeout(pressTimer); });
+            grid.appendChild(item);
+        });
+    }
+
+    // PREVIEW
+    function openPreview(photo) {
+        currentPreviewId = photo.id;
+        document.getElementById('preview-img').src = photo.data;
+        document.getElementById('preview-info').innerText = photo.outletType || 'Unknown';
+        document.getElementById('preview-overlay').classList.add('active');
+    }
+
+    function closePreview() {
+        document.getElementById('preview-overlay').classList.remove('active');
+        currentPreviewId = null;
+    }
+
+    function deletePhoto() {
+        if (!currentPreviewId) return;
+        capturedPhotos = capturedPhotos.filter(function(p) { return p.id !== currentPreviewId; });
+        closePreview();
+        renderGallery();
+        var n = capturedPhotos.length;
+        document.getElementById('counter').innerText = n;
+        document.getElementById('header-count').innerText = n + ' captured';
+        if (n === 0) document.getElementById('review-btn').style.display = 'none';
+    }
+
+    // PAYMENT
+    function generateOrderId() {
+        return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+    }
+
+    function sendOrder() {
+        var name = document.getElementById('cust-name').value.trim();
+        var email = document.getElementById('cust-email').value.trim();
+        var address = document.getElementById('cust-address').value.trim();
+        var selected = capturedPhotos.filter(function(p) { return p.selected; });
+        if (!name) { alert("Please enter your full name."); return; }
+        if (!email || email.indexOf('@') === -1) { alert("Please enter a valid email."); return; }
+        if (!address) { alert("Please enter your shipping address."); return; }
+        if (selected.length === 0) { alert("No images selected."); return; }
+
+        var btn = document.getElementById('pay-btn');
+        btn.innerText = 'SENDING ORDER...';
+        btn.disabled = true;
+
+        var orderId = generateOrderId();
+
+        var payload = {
+            customer: { name: name, email: email, address: address },
+            order_info: {
+                order_id: orderId,
+                total_items: selected.length,
+                total_price: parseFloat((selected.length * PRICE).toFixed(2)),
+                timestamp: new Date().toISOString(),
+                status: 'PENDING'
+            },
+            assets: selected.map(function(img) {
+                return {
+                    id: img.id,
+                    base64: img.data.split(',')[1],
+                    outlet_type: img.outletType || 'Unknown',
+                    timestamp: img.timestamp
+                };
+            })
+        };
+
+        fetch(MAKE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(function(r) {
+            if (r.ok) {
+                btn.innerText = 'REDIRECTING TO PAYMENT...';
+                window.location.replace(STRIPE + '?client_reference_id=' + encodeURIComponent(orderId) + '&prefilled_email=' + encodeURIComponent(email));
+            } else {
+                throw new Error('Server error');
+            }
+        })
+        .catch(function(err) {
+            console.error(err);
+            alert("Connection error. Please try again.");
+            btn.innerText = 'PAY & SEND TO PRODUCTION';
+            btn.disabled = false;
+        });
     }
 </script>
 </body>
