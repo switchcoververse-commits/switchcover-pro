@@ -218,27 +218,26 @@
         })
         .then(function(r) { return r.json(); })
         .then(function(result) {
-            analyzingEl.style.display = 'none';
-            if (result.outlet_detected && result.confidence >= 60) {
-                doSaveCapture(result.outlet_type, result.count || 1);
-            } else {
-                showNotDetected();
-            }
-        })
-        .catch(function(err) {
-            console.error(err);
-            analyzingEl.style.display = 'none';
-            statusEl.innerText = 'CONNECTION ERROR';
-            statusEl.style.color = '#ff4444';
-            guide.style.borderColor = '#ff4444';
-            instruction.innerText = 'Check connection and try again';
-            setTimeout(function() {
-                analyzing = false;
-                setReady();
-            }, 2000);
-        });
+    analyzingEl.style.display = 'none';
+    instruction.innerText = JSON.stringify(result);
+    if (result.outlet_detected && result.confidence >= 60) {
+        doSaveCapture(result.outlet_type, result.count || 1);
+    } else {
+        showNotDetected();
     }
-
+})
+        .catch(function(err) {
+    console.error(err);
+    analyzingEl.style.display = 'none';
+    statusEl.innerText = err.message || 'ERROR';
+    statusEl.style.color = '#ff4444';
+    guide.style.borderColor = '#ff4444';
+    instruction.innerText = err.message || 'Unknown error';
+    setTimeout(function() {
+        analyzing = false;
+        setReady();
+    }, 4000);
+});
     function doSaveCapture(outletType, count) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
