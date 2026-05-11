@@ -3,19 +3,23 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
     try {
         const { imageBase64 } = req.body;
-        const GEMINI_KEY = process.env.GEMINI_API_KEY;
+        
+        if (!imageBase64) {
+            return res.status(400).json({ error: 'No image provided' });
+        }
 
-        const response = await fetch(
+        const GEMINI_KEY = process.env.GEMINI_API_KEY;
+        
+        if (!GEMINI_KEY) {
+            return res.status(500).json({ error: 'API key not configured' });
+        }
+
+        const geminiResponse = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
             {
                 method: 'POST',
@@ -30,7 +34,12 @@ export default async function handler(req, res) {
             }
         );
 
-        const data = await response.json();
+        if (!geminiResponse.ok) {
+            const errText = await geminiResponse.text();
+            return res.status(500).json({ error: 'Gemini error: ' + errText });
+        }
+
+        const data = await geminiResponse.json();
         const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
         const match = text.match(/\{[\s\S]*\}/);
 
@@ -39,8 +48,8 @@ export default async function handler(req, res) {
         } else {
             return res.status(200).json({ outlet_detected: false, outlet_type: null, confidence: 0, count: 0 });
         }
+
     } catch (err) {
-        console.error(err);
         return res.status(500).json({ error: err.message });
     }
 }
