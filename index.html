@@ -205,11 +205,21 @@
         guide.style.borderColor = '#00aaff';
         analyzingEl.style.display = 'flex';
 
-        var temp = document.createElement('canvas');
-        temp.width = 640;
-        temp.height = 480;
-        temp.getContext('2d').drawImage(video, 0, 0, 640, 480);
-        var frameBase64 = temp.toDataURL('image/jpeg', 0.8).split(',')[1];
+       var temp = document.createElement('canvas');
+temp.width = video.videoWidth || 640;
+temp.height = video.videoHeight || 480;
+temp.getContext('2d').drawImage(video, 0, 0, temp.width, temp.height);
+var frameBase64 = temp.toDataURL('image/jpeg', 0.9).split(',')[1];
+
+// Verifica que la imagen no está vacía
+if (!frameBase64 || frameBase64.length < 1000) {
+    analyzing = false;
+    statusEl.innerText = 'CAMERA NOT READY';
+    statusEl.style.color = '#ff4444';
+    instruction.innerText = 'Wait for camera to load and try again';
+    setTimeout(function() { setReady(); }, 2000);
+    return;
+}
 
         fetch(DETECT_URL, {
             method: 'POST',
