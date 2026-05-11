@@ -15,60 +15,24 @@
         #guide { position: absolute; width: 140px; height: 180px; border: 3px solid #ff4444; border-radius: 10px; z-index: 5; transition: border-color 0.3s; }
         #status { position: absolute; top: 15px; background: rgba(0,0,0,0.85); padding: 8px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; z-index: 10; color: #ff4444; letter-spacing: 1px; }
         #instruction { position: absolute; bottom: 15px; background: rgba(0,0,0,0.8); padding: 8px 16px; border-radius: 15px; font-size: 11px; z-index: 10; color: #aaa; text-align: center; max-width: 85%; }
-        #outlet-msg { position: absolute; top: 50px; background: rgba(0,0,0,0.8); padding: 6px 14px; border-radius: 15px; font-size: 10px; z-index: 10; color: #00ff00; display: none; text-align: center; }
-
-        /* CONTROLS */
         .controls { padding: 20px 25px; background: #000; border-top: 1px solid #111; display: flex; justify-content: space-between; align-items: center; }
-        
-        /* CAPTURE BUTTON — visible y grande */
-        #capture-btn {
-            width: 75px; height: 75px;
-            border-radius: 50%;
-            border: 4px solid #444;
-            background: #222;
-            cursor: pointer;
-            position: relative;
-            -webkit-appearance: none;
-            transition: all 0.2s;
-        }
-        #capture-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 55px; height: 55px;
-            background: #444;
-            border-radius: 50%;
-            transition: all 0.2s;
-        }
-        #capture-btn.ready {
-            border-color: #00ff00;
-        }
-        #capture-btn.ready::after {
-            background: #00ff00;
-        }
-        #capture-btn:disabled {
-            opacity: 0.4;
-        }
-        #capture-btn:active:not(:disabled) {
-            transform: scale(0.92);
-        }
+        #capture-btn { width: 75px; height: 75px; border-radius: 50%; border: 4px solid #444; background: #222; cursor: pointer; position: relative; -webkit-appearance: none; transition: all 0.2s; }
+        #capture-btn::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 55px; height: 55px; background: #444; border-radius: 50%; transition: all 0.2s; }
+        #capture-btn.ready { border-color: #00ff00; }
+        #capture-btn.ready::after { background: #00ff00; }
+        #capture-btn:disabled { opacity: 0.4; }
+        #capture-btn:active:not(:disabled) { transform: scale(0.92); }
         #capture-label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; text-align: center; }
-
         #counter { color: #00ff00; font-size: 24px; font-weight: 900; min-width: 50px; text-align: center; }
         #counter-label { font-size: 9px; color: #444; text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; text-align: center; }
-        #review-btn { background: transparent; color: #00ff00; border: 1px solid #333; padding: 10px 14px; border-radius: 20px; font-size: 10px; cursor: pointer; display: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
+        #review-btn { background: transparent; color: #00ff00; border: 1px solid #333; padding: 10px 14px; border-radius: 20px; font-size: 10px; cursor: pointer; display: none; font-weight: 700; text-transform: uppercase; }
         .btn-green { background: #00ff00; color: #000; border: none; padding: 17px 0; width: 100%; max-width: 280px; border-radius: 35px; font-weight: 900; font-size: 14px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; }
-        
         .auth-steps { background: #111; border: 1px solid #222; border-radius: 16px; padding: 20px; margin-bottom: 35px; max-width: 300px; text-align: left; width: 100%; }
         .auth-step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
         .auth-step:last-child { margin-bottom: 0; }
         .step-num { background: #00ff00; color: #000; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; flex-shrink: 0; }
         .step-text { color: #aaa; font-size: 13px; line-height: 1.5; }
         .step-text strong { color: #fff; }
-
-        /* Analyzing overlay */
         #analyzing { position: absolute; inset: 0; background: rgba(0,0,0,0.75); z-index: 20; display: none; flex-direction: column; justify-content: center; align-items: center; border-radius: 18px; }
         .spinner { width: 48px; height: 48px; border: 3px solid rgba(0,255,0,0.2); border-top: 3px solid #00ff00; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -98,7 +62,6 @@
         <div id="guide"></div>
         <div id="status">AIM AT OUTLET</div>
         <div id="instruction">Center outlet or switch inside the frame</div>
-        <div id="outlet-msg"></div>
         <div id="analyzing">
             <div class="spinner"></div>
             <div style="color:#00ff00;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">Identifying...</div>
@@ -129,7 +92,6 @@
     var instruction = document.getElementById('instruction');
     var captureBtn = document.getElementById('capture-btn');
     var captureLabel = document.getElementById('capture-label');
-    var outletMsg = document.getElementById('outlet-msg');
     var analyzingEl = document.getElementById('analyzing');
 
     var capturedPhotos = [];
@@ -138,58 +100,46 @@
     var analyzing = false;
     var gyroAvailable = false;
 
-    var GEMINI_KEY = 'var GEMINI_URL = '/api/detect';';
-    var GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+    var DETECT_URL = '/api/detect';
     var MAKE_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     var STRIPE = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     var PRICE = 29.99;
 
-function startApp() {
-    document.getElementById('page1').style.display = 'none';
-    document.getElementById('page2').style.display = 'flex';
+    function startApp() {
+        document.getElementById('page1').style.display = 'none';
+        document.getElementById('page2').style.display = 'flex';
 
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(function(stream) {
-            video.srcObject = stream;
-            video.play().catch(function(){});
-        })
-        .catch(function() { alert("Camera access required."); });
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.play().catch(function(){});
+            })
+            .catch(function() { alert("Camera access required."); });
 
-    window.addEventListener('deviceorientation', function(e) {
-        if (e.beta !== null && e.beta !== undefined) gyroAvailable = true;
-        handleOrientation(e);
-    });
+        window.addEventListener('deviceorientation', function(e) {
+            if (e.beta !== null && e.beta !== undefined) gyroAvailable = true;
+            handleOrientation(e);
+        });
 
-    setTimeout(function() {
-        if (!gyroAvailable) setReady();
-    }, 3000);
-}
+        setTimeout(function() {
+            if (!gyroAvailable) { setReady(); }
+        }, 3000);
+    }
 
     function handleOrientation(e) {
         if (analyzing) return;
         var beta = e.beta || 0;
         var gamma = e.gamma || 0;
-        var alpha = e.alpha || 0;
-
-        // Detecta orientación del dispositivo
-        // Vertical (pared): beta ~90
-        // Horizontal mirando abajo (piso): beta ~0, gamma ~0
-        // Horizontal mirando arriba (techo): beta ~0, gamma ~180 o beta ~180
-
         var isVertical = beta > 45 && beta < 135;
-        var isHorizontalDown = Math.abs(beta) < 30 && Math.abs(gamma) < 30;
-        var isHorizontalUp = beta > 150 || beta < -150;
-
+        var isHorizontal = Math.abs(beta) < 30 || beta > 150;
         var dL = Math.abs(gamma);
         var goodAngle = false;
 
         if (isVertical) {
-            // Pared — tolerancia normal
             var dV = Math.abs(beta - 90);
             goodAngle = dV < 20 && dL < 20;
             perspOk = dV < 25 && dL < 25;
-        } else if (isHorizontalDown || isHorizontalUp) {
-            // Piso o techo — siempre aceptable
+        } else if (isHorizontal) {
             goodAngle = true;
             perspOk = true;
         } else {
@@ -210,7 +160,7 @@ function startApp() {
         aligned = true;
         perspOk = true;
         guide.style.borderColor = '#00ff00';
-        statusEl.innerText = '✓ READY — PRESS CAPTURE';
+        statusEl.innerText = 'READY — PRESS CAPTURE';
         statusEl.style.color = '#00ff00';
         instruction.innerText = 'Press the button to capture';
         captureBtn.disabled = false;
@@ -256,34 +206,21 @@ function startApp() {
         analyzingEl.style.display = 'flex';
 
         var temp = document.createElement('canvas');
-        temp.width = 640; temp.height = 480;
+        temp.width = 640;
+        temp.height = 480;
         temp.getContext('2d').drawImage(video, 0, 0, 640, 480);
         var frameBase64 = temp.toDataURL('image/jpeg', 0.8).split(',')[1];
 
-        fetch(GEMINI_URL, {
+        fetch(DETECT_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ imageBase64: frameBase64 })
-                contents: [{ parts: [
-                    { text: 'Analyze this image. Respond ONLY with valid JSON, no markdown, no extra text. Detect electrical outlets, power sockets, wall switches, floor outlets, ceiling outlets, or any electrical wall/floor/ceiling plate. Format: {"outlet_detected":true,"outlet_type":"TYPE","confidence":85,"count":1}. If none detected: {"outlet_detected":false,"outlet_type":null,"confidence":0,"count":0}. Types: "GFCI Duplex","Standard Duplex","USB Duplex","USB-C Duplex","Single Outlet","Triplex Outlet","Quad Outlet","Sextuple Outlet","Smart Outlet","Floor Outlet","Ceiling Outlet","Schuko EU","UK BS1363","French Type E","Swiss Type J","Italian Type L","Brazilian ABNT","Australian AS/NZS","Single Switch","Double Switch","Triple Switch","Quad Switch","Dimmer Switch","Fan Switch","Smart Switch","3-Way Switch","Switch Outlet Combo","Unknown Wall Plate".' },
-                    { inline_data: { mime_type: 'image/jpeg', data: frameBase64 } }
-                ]}],
-                generationConfig: { maxOutputTokens: 150, temperature: 0.1 }
-            })
         })
         .then(function(r) { return r.json(); })
-        .then(function(data) {
+        .then(function(result) {
             analyzingEl.style.display = 'none';
-            var text = '';
-            try { text = data.candidates[0].content.parts[0].text || ''; } catch(e) {}
-            var match = text.match(/\{[\s\S]*\}/);
-            if (match) {
-                var result = JSON.parse(match[0]);
-                if (result.outlet_detected && result.confidence >= 60) {
-                    doSaveCapture(result.outlet_type, result.count || 1);
-                } else {
-                    showNotDetected();
-                }
+            if (result.outlet_detected && result.confidence >= 60) {
+                doSaveCapture(result.outlet_type, result.count || 1);
             } else {
                 showNotDetected();
             }
@@ -303,11 +240,9 @@ function startApp() {
     }
 
     function doSaveCapture(outletType, count) {
-        // Full res capture
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
-
         capturedPhotos.push({
             id: Date.now(),
             data: canvas.toDataURL('image/jpeg', 0.95),
@@ -316,27 +251,19 @@ function startApp() {
             selected: true,
             timestamp: new Date().toISOString()
         });
-
         var n = capturedPhotos.length;
         document.getElementById('counter').innerText = n;
         document.getElementById('header-count').innerText = n + ' captured';
         document.getElementById('review-btn').style.display = 'block';
-
-        // Flash
         var flash = document.createElement('div');
         flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.85;z-index:50;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
         document.getElementById('viewport').appendChild(flash);
         setTimeout(function() { flash.style.opacity='0'; setTimeout(function(){flash.remove();},400); }, 80);
-
-        // Haptic
         if (navigator.vibrate) navigator.vibrate([80,40,150]);
-
-        var countLabel = count > 1 ? ' x' + count : '';
-        statusEl.innerText = '📸 ' + outletType + countLabel;
+        statusEl.innerText = 'CAPTURED: ' + outletType + (count > 1 ? ' x'+count : '');
         statusEl.style.color = '#00ff00';
         guide.style.borderColor = '#00ff00';
         captureLabel.innerText = 'CAPTURED ✓';
-
         setTimeout(function() {
             analyzing = false;
             setReady();
@@ -347,7 +274,7 @@ function startApp() {
         statusEl.innerText = 'NO OUTLET DETECTED';
         statusEl.style.color = '#ff4444';
         guide.style.borderColor = '#ff4444';
-        instruction.innerText = 'Make sure outlet fills the frame and try again';
+        instruction.innerText = 'Make sure outlet fills the frame';
         if (navigator.vibrate) navigator.vibrate([50,50,50]);
         setTimeout(function() {
             analyzing = false;
@@ -356,7 +283,7 @@ function startApp() {
     }
 
     function goGallery() {
-        alert(capturedPhotos.length + ' photos captured.\nGallery, checkout and payment coming next!');
+        alert(capturedPhotos.length + ' photos captured.\nGallery coming next!');
     }
 </script>
 </body>
