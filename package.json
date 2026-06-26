@@ -3,5 +3,25 @@
   "version": "1.0.0",
   "engines": {
     "node": "24.x"
+  },
+  "description": "Camouflage outlet covers with AI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/switchcoververse-commits/switchcover-pro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/switchcoververse-commits/switchcover-pro/issues"
+  },
+  "homepage": "https://github.com/switchcoververse-commits/switchcover-pro#readme",
+  "dependencies": {
+    "sharp": "^0.35.2"
   }
 }
