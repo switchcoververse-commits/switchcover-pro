@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <!-- CamoPro SVG Mask - FRONT -->
+  <!-- Outlet: Australian AS/NZS Type I -->
+  <!-- Plate: 76mm x 114mm + 5mm border -->
+  <!-- Country: AU -->
+  <!-- Canvas: 1350x825px at 300 DPI -->
+  
+  <!-- Black background = transparent (dest-in blend) -->
+  <rect width="1350" height="825" fill="black"/>
+  
+  <!-- White area = keep texture -->
+  <rect x="167.1" y="-319.8" width="1015.7" height="1464.6" rx="12" ry="12" fill="white"/>
+  
+  <!-- Die-cut openings (black = cut through) -->
+  <rect x="521.5" y="93.6" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
+  <rect x="734.1" y="93.6" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
+  <circle cx="675.0" cy="388.9" r="47.2" fill="black"/>
+  <rect x="521.5" y="589.7" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
+  <rect x="734.1" y="589.7" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
+  <circle cx="675.0" cy="884.9" r="47.2" fill="black"/>
+
+</svg>

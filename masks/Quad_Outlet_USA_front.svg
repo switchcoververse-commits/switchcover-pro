@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <!-- CamoPro SVG Mask - FRONT -->
+  <!-- Outlet: Quad Outlet USA -->
+  <!-- Plate: 114mm x 114mm + 5mm border -->
+  <!-- Country: USA -->
+  <!-- Canvas: 1350x825px at 300 DPI -->
+  
+  <!-- Black background = transparent (dest-in blend) -->
+  <rect width="1350" height="825" fill="black"/>
+  
+  <!-- White area = keep texture -->
+  <rect x="-57.3" y="-319.8" width="1464.6" height="1464.6" rx="12" ry="12" fill="white"/>
+  
+  <!-- Die-cut openings (black = cut through) -->
+  <rect x="119.9" y="-95.4" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="285.2" y="-95.4" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="202.6" y="117.2" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
+  <rect x="875.8" y="-95.4" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="1041.1" y="-95.4" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="958.5" y="117.2" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
+  <rect x="119.9" y="566.0" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="285.2" y="566.0" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="202.6" y="778.6" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
+  <rect x="875.8" y="566.0" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="1041.1" y="566.0" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="958.5" y="778.6" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
+
+</svg>

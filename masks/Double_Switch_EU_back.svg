@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <!-- CamoPro SVG - BACK/INSTALLATION GUIDE -->
+  <!-- Outlet: Double Switch EU -->
+  <!-- Country: EU -->
+  
+  <!-- White background -->
+  <rect width="1350" height="825" fill="white"/>
+  
+  <!-- Total sticker area -->
+  <rect x="-210.8" y="-119.0" width="1771.6" height="1063.0" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
+  
+  <!-- FOLD LINE - dashed inner rectangle (exact plate edge) -->
+  <rect x="-151.8" y="-59.9" width="1653.5" height="944.9" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
+  
+  <!-- FOLD LINE labels -->
+  <text x="675.0" y="-65.9" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="675.0" y="898.9" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="-157.8" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,-157.8,412.5)">FOLD LINE</text>
+  <text x="1515.8" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,1515.8,412.5)">FOLD LINE</text>
+  
+  <!-- Opening markers -->
+  <rect x="25.4" y="176.3" width="472.4" height="472.4" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="852.2" y="176.3" width="472.4" height="472.4" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+
+  
+  <!-- Screw hole markers -->
+  <circle cx="675.0" cy="10.9" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="638.5" y1="10.9" x2="711.5" y2="10.9" stroke="#666" stroke-width="1"/>
+  <line x1="675.0" y1="-25.6" x2="675.0" y2="47.5" stroke="#666" stroke-width="1"/>
+  <circle cx="675.0" cy="814.1" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="638.5" y1="814.1" x2="711.5" y2="814.1" stroke="#666" stroke-width="1"/>
+  <line x1="675.0" y1="777.5" x2="675.0" y2="850.6" stroke="#666" stroke-width="1"/>
+
+
+  <!-- CamoPro branding -->
+  <text x="675.0" y="-99.0" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
+  
+  <!-- Outlet type label -->
+  <text x="675.0" y="-84.0" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">Double Switch EU</text>
+
+  <!-- Installation steps -->
+  <text x="-195.8" y="34.5" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
+  <text x="-195.8" y="56.5" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
+  <text x="-195.8" y="78.5" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
+  <text x="-195.8" y="100.5" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
+  <text x="-195.8" y="122.5" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
+  <text x="-195.8" y="144.5" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
+  
+  <!-- Warning -->
+  <text x="675.0" y="926.0" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">⚠ Do not cover live electrical contacts</text>
+  
+  <!-- Dimensions -->
+  <text x="675.0" y="938.0" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">140mm × 80mm + 5mm border | EU</text>
+
+</svg>

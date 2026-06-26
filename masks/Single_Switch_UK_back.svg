@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <!-- CamoPro SVG - BACK/INSTALLATION GUIDE -->
+  <!-- Outlet: Single Switch UK -->
+  <!-- Country: UK -->
+  
+  <!-- White background -->
+  <rect width="1350" height="825" fill="white"/>
+  
+  <!-- Total sticker area -->
+  <rect x="108.1" y="-154.4" width="1133.9" height="1133.9" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
+  
+  <!-- FOLD LINE - dashed inner rectangle (exact plate edge) -->
+  <rect x="167.1" y="-95.4" width="1015.7" height="1015.7" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
+  
+  <!-- FOLD LINE labels -->
+  <text x="675.0" y="-101.4" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="675.0" y="934.4" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="161.1" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,161.1,412.5)">FOLD LINE</text>
+  <text x="1196.9" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,1196.9,412.5)">FOLD LINE</text>
+  
+  <!-- Opening markers -->
+  <rect x="438.8" y="235.3" width="472.4" height="354.3" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+
+  
+  <!-- Screw hole markers -->
+  <circle cx="675.0" cy="-36.3" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="638.5" y1="-36.3" x2="711.5" y2="-36.3" stroke="#666" stroke-width="1"/>
+  <line x1="675.0" y1="-72.8" x2="675.0" y2="0.2" stroke="#666" stroke-width="1"/>
+  <circle cx="675.0" cy="861.3" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="638.5" y1="861.3" x2="711.5" y2="861.3" stroke="#666" stroke-width="1"/>
+  <line x1="675.0" y1="824.8" x2="675.0" y2="897.8" stroke="#666" stroke-width="1"/>
+
+
+  <!-- CamoPro branding -->
+  <text x="675.0" y="-134.4" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
+  
+  <!-- Outlet type label -->
+  <text x="675.0" y="-119.4" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">Single Switch UK</text>
+
+  <!-- Installation steps -->
+  <text x="123.1" y="6.2" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
+  <text x="123.1" y="28.2" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
+  <text x="123.1" y="50.2" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
+  <text x="123.1" y="72.2" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
+  <text x="123.1" y="94.2" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
+  <text x="123.1" y="116.2" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
+  
+  <!-- Warning -->
+  <text x="675.0" y="961.4" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">⚠ Do not cover live electrical contacts</text>
+  
+  <!-- Dimensions -->
+  <text x="675.0" y="973.4" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">86mm × 86mm + 5mm border | UK</text>
+
+</svg>

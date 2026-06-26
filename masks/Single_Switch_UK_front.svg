@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <!-- CamoPro SVG Mask - FRONT -->
+  <!-- Outlet: Single Switch UK -->
+  <!-- Plate: 86mm x 86mm + 5mm border -->
+  <!-- Country: UK -->
+  <!-- Canvas: 1350x825px at 300 DPI -->
+  
+  <!-- Black background = transparent (dest-in blend) -->
+  <rect width="1350" height="825" fill="black"/>
+  
+  <!-- White area = keep texture -->
+  <rect x="108.1" y="-154.4" width="1133.9" height="1133.9" rx="12" ry="12" fill="white"/>
+  
+  <!-- Die-cut openings (black = cut through) -->
+  <rect x="438.8" y="235.3" width="472.4" height="354.3" rx="3" ry="3" fill="black"/>
+
+</svg>

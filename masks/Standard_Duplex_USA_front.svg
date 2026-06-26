@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <!-- CamoPro SVG Mask - FRONT -->
+  <!-- Outlet: Standard Duplex USA -->
+  <!-- Plate: 70mm x 114mm + 5mm border -->
+  <!-- Country: USA -->
+  <!-- Canvas: 1350x825px at 300 DPI -->
+  
+  <!-- Black background = transparent (dest-in blend) -->
+  <rect width="1350" height="825" fill="black"/>
+  
+  <!-- White area = keep texture -->
+  <rect x="202.6" y="-319.8" width="944.9" height="1464.6" rx="12" ry="12" fill="white"/>
+  
+  <!-- Die-cut openings (black = cut through) -->
+  <rect x="474.2" y="-48.1" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="639.6" y="-48.1" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="556.9" y="164.5" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
+  <rect x="474.2" y="542.4" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="639.6" y="542.4" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
+  <rect x="556.9" y="755.0" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
+
+</svg>
