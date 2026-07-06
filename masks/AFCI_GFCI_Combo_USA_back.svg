@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <rect width="1350" height="825" fill="white"/>
+  <line x1="675" y1="50" x2="675" y2="775" stroke="black" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="675" y="400" font-family="Arial" font-size="20" fill="black" text-anchor="middle" font-weight="bold">FOLD HERE</text>
+</svg>
