@@ -1,19 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG Mask - FRONT -->
-  <!-- Outlet: Triple Switch USA -->
-  <!-- Plate: 158mm x 114mm + 5mm border -->
-  <!-- Country: USA -->
-  <!-- Canvas: 1350x825px at 300 DPI -->
-  
-  <!-- Black background = transparent (dest-in blend) -->
+  <!-- CamoPro FRONT mask: Triple_Switch_USA | 158x114mm + 5mm border | Canvas: 1350x825px 300DPI -->
   <rect width="1350" height="825" fill="black"/>
-  
-  <!-- White area = keep texture -->
   <rect x="-317.1" y="-319.8" width="1984.2" height="1464.6" rx="12" ry="12" fill="white"/>
-  
-  <!-- Die-cut openings (black = cut through) -->
-  <rect x="-116.3" y="235.3" width="259.8" height="354.3" rx="3" ry="3" fill="black"/>
-  <rect x="545.1" y="235.3" width="259.8" height="354.3" rx="3" ry="3" fill="black"/>
-  <rect x="1206.5" y="235.3" width="259.8" height="354.3" rx="3" ry="3" fill="black"/>
-
+  <rect x="-163.6" y="188.1" width="496.1" height="448.8" rx="3" fill="black"/>
+  <rect x="427.0" y="188.1" width="496.1" height="448.8" rx="3" fill="black"/>
+  <rect x="1017.5" y="188.1" width="496.1" height="448.8" rx="3" fill="black"/>
 </svg>

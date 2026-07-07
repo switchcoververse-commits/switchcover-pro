@@ -1,56 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG - BACK/INSTALLATION GUIDE -->
-  <!-- Outlet: UK BS1363 Type G -->
-  <!-- Country: UK -->
-  
-  <!-- White background -->
-  <rect width="1350" height="825" fill="white"/>
-  
-  <!-- Total sticker area -->
-  <rect x="108.1" y="-154.4" width="1133.9" height="1133.9" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
-  
-  <!-- FOLD LINE - dashed inner rectangle (exact plate edge) -->
-  <rect x="167.1" y="-95.4" width="1015.7" height="1015.7" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
-  
-  <!-- FOLD LINE labels -->
-  <text x="675.0" y="-101.4" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
-  <text x="675.0" y="934.4" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
-  <text x="161.1" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,161.1,412.5)">FOLD LINE</text>
-  <text x="1196.9" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,1196.9,412.5)">FOLD LINE</text>
-  
-  <!-- Opening markers -->
-  <rect x="580.5" y="70.0" width="189.0" height="94.5" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="332.5" y="518.8" width="118.1" height="189.0" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="899.4" y="518.8" width="118.1" height="189.0" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1016" height="1016" viewBox="0 0 1016 1016">
+  <!-- CamoPro BACK: Type_G_UK | Canvas: 1016x1016px 300DPI -->
+  <rect width="1016" height="1016" fill="white"/>
+  <rect x="-58.9" y="-58.9" width="1133.9" height="1133.9" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
+  <rect x="0.1" y="0.1" width="1015.7" height="1015.7" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="508.0" y="-5.9" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="508.0" y="1029.9" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="-5.9" y="508.0" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,-5.9,508.0)">FOLD LINE</text>
+  <text x="1029.9" y="508.0" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,1029.9,508.0)">FOLD LINE</text>
+  <rect x="389.9" y="141.9" width="236.2" height="118.1" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="141.9" y="649.7" width="141.7" height="236.2" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="732.4" y="649.7" width="141.7" height="236.2" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
 
-  
-  <!-- Screw hole markers -->
-  <circle cx="675.0" cy="-36.3" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
-  <line x1="638.5" y1="-36.3" x2="711.5" y2="-36.3" stroke="#666" stroke-width="1"/>
-  <line x1="675.0" y1="-72.8" x2="675.0" y2="0.2" stroke="#666" stroke-width="1"/>
-  <circle cx="675.0" cy="861.3" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
-  <line x1="638.5" y1="861.3" x2="711.5" y2="861.3" stroke="#666" stroke-width="1"/>
-  <line x1="675.0" y1="824.8" x2="675.0" y2="897.8" stroke="#666" stroke-width="1"/>
+  <circle cx="508.0" cy="59.2" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="471.5" y1="59.2" x2="544.5" y2="59.2" stroke="#666" stroke-width="1"/>
+  <line x1="508.0" y1="22.7" x2="508.0" y2="95.7" stroke="#666" stroke-width="1"/>
+  <circle cx="508.0" cy="956.8" r="33.5" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="471.5" y1="956.8" x2="544.5" y2="956.8" stroke="#666" stroke-width="1"/>
+  <line x1="508.0" y1="920.3" x2="508.0" y2="993.3" stroke="#666" stroke-width="1"/>
 
-
-  <!-- CamoPro branding -->
-  <text x="675.0" y="-134.4" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
-  
-  <!-- Outlet type label -->
-  <text x="675.0" y="-119.4" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">UK BS1363 Type G</text>
-
-  <!-- Installation steps -->
-  <text x="123.1" y="6.2" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
-  <text x="123.1" y="28.2" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
-  <text x="123.1" y="50.2" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
-  <text x="123.1" y="72.2" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
-  <text x="123.1" y="94.2" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
-  <text x="123.1" y="116.2" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
-  
-  <!-- Warning -->
-  <text x="675.0" y="961.4" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">⚠ Do not cover live electrical contacts</text>
-  
-  <!-- Dimensions -->
-  <text x="675.0" y="973.4" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">86mm × 86mm + 5mm border | UK</text>
-
+  <text x="508.0" y="-38.9" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
+  <text x="508.0" y="-23.9" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">Type G UK</text>
+  <text x="-43.9" y="152.5" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
+  <text x="-43.9" y="172.5" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
+  <text x="-43.9" y="192.5" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
+  <text x="-43.9" y="212.5" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
+  <text x="-43.9" y="232.5" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
+  <text x="-43.9" y="252.5" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
+  <text x="508.0" y="1056.9" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">Do not cover live electrical contacts</text>
+  <text x="508.0" y="1068.9" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">86x86mm + 5mm border</text>
 </svg>

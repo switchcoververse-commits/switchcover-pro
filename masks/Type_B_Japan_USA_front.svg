@@ -1,20 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG Mask - FRONT -->
-  <!-- Outlet: Type B Japan/USA Unpolarized -->
-  <!-- Plate: 70mm x 114mm + 5mm border -->
-  <!-- Country: JP -->
-  <!-- Canvas: 1350x825px at 300 DPI -->
-  
-  <!-- Black background = transparent (dest-in blend) -->
-  <rect width="1350" height="825" fill="black"/>
-  
-  <!-- White area = keep texture -->
-  <rect x="202.6" y="-319.8" width="944.9" height="1464.6" rx="12" ry="12" fill="white"/>
-  
-  <!-- Die-cut openings (black = cut through) -->
-  <rect x="497.8" y="-24.5" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
-  <rect x="757.7" y="-24.5" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
-  <rect x="497.8" y="660.5" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
-  <rect x="757.7" y="660.5" width="94.5" height="189.0" rx="2" ry="2" fill="black"/>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="825" height="1350" viewBox="0 0 825 1350">
+  <!-- CamoPro FRONT mask: Type_B_Japan_USA | 70x114mm + 5mm border | Canvas: 825x1350px 300DPI -->
+  <rect width="825" height="1350" fill="black"/>
+  <rect x="-59.9" y="-57.3" width="944.9" height="1464.6" rx="12" ry="12" fill="white"/>
+  <rect x="211.7" y="214.4" width="94.5" height="212.6" rx="2" fill="black"/>
+  <rect x="518.8" y="214.4" width="94.5" height="212.6" rx="2" fill="black"/>
+  <rect x="211.7" y="923.0" width="94.5" height="212.6" rx="2" fill="black"/>
+  <rect x="518.8" y="923.0" width="94.5" height="212.6" rx="2" fill="black"/>
 </svg>

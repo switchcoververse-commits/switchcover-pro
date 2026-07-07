@@ -1,30 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG - BACK/INSTALLATION GUIDE -->
-  <!-- Outlet: Triple Switch USA -->
-  <!-- Country: USA -->
-  
-  <!-- White background -->
+  <!-- CamoPro BACK: Triple_Switch_USA | Canvas: 1350x825px 300DPI -->
   <rect width="1350" height="825" fill="white"/>
-  
-  <!-- Total sticker area -->
   <rect x="-317.1" y="-319.8" width="1984.2" height="1464.6" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
-  
-  <!-- FOLD LINE - dashed inner rectangle (exact plate edge) -->
   <rect x="-258.1" y="-260.7" width="1866.1" height="1346.5" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
-  
-  <!-- FOLD LINE labels -->
   <text x="675.0" y="-266.7" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
   <text x="675.0" y="1099.7" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
   <text x="-264.1" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,-264.1,412.5)">FOLD LINE</text>
   <text x="1622.1" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,1622.1,412.5)">FOLD LINE</text>
-  
-  <!-- Opening markers -->
-  <rect x="-116.3" y="235.3" width="259.8" height="354.3" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="545.1" y="235.3" width="259.8" height="354.3" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="1206.5" y="235.3" width="259.8" height="354.3" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="-163.6" y="188.1" width="496.1" height="448.8" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="427.0" y="188.1" width="496.1" height="448.8" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="1017.5" y="188.1" width="496.1" height="448.8" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
 
-  
-  <!-- Screw hole markers -->
   <circle cx="675.0" cy="-201.7" r="39.4" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
   <line x1="632.6" y1="-201.7" x2="717.4" y2="-201.7" stroke="#666" stroke-width="1"/>
   <line x1="675.0" y1="-244.1" x2="675.0" y2="-159.2" stroke="#666" stroke-width="1"/>
@@ -32,25 +18,14 @@
   <line x1="632.6" y1="1026.7" x2="717.4" y2="1026.7" stroke="#666" stroke-width="1"/>
   <line x1="675.0" y1="984.2" x2="675.0" y2="1069.1" stroke="#666" stroke-width="1"/>
 
-
-  <!-- CamoPro branding -->
   <text x="675.0" y="-299.8" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
-  
-  <!-- Outlet type label -->
   <text x="675.0" y="-284.8" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">Triple Switch USA</text>
-
-  <!-- Installation steps -->
-  <text x="-302.1" y="-126.1" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
-  <text x="-302.1" y="-104.1" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
-  <text x="-302.1" y="-82.1" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
-  <text x="-302.1" y="-60.1" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
-  <text x="-302.1" y="-38.1" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
-  <text x="-302.1" y="-16.1" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
-  
-  <!-- Warning -->
-  <text x="675.0" y="1126.8" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">⚠ Do not cover live electrical contacts</text>
-  
-  <!-- Dimensions -->
-  <text x="675.0" y="1138.8" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">158mm × 114mm + 5mm border | USA</text>
-
+  <text x="-302.1" y="-58.8" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
+  <text x="-302.1" y="-38.8" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
+  <text x="-302.1" y="-18.8" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
+  <text x="-302.1" y="1.2" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
+  <text x="-302.1" y="21.2" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
+  <text x="-302.1" y="41.2" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
+  <text x="675.0" y="1126.8" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">Do not cover live electrical contacts</text>
+  <text x="675.0" y="1138.8" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">158x114mm + 5mm border</text>
 </svg>

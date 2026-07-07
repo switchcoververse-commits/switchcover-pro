@@ -1,18 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG Mask - FRONT -->
-  <!-- Outlet: Type E French/Belgian -->
-  <!-- Plate: 80mm x 80mm + 5mm border -->
-  <!-- Country: EU -->
-  <!-- Canvas: 1350x825px at 300 DPI -->
-  
-  <!-- Black background = transparent (dest-in blend) -->
-  <rect width="1350" height="825" fill="black"/>
-  
-  <!-- White area = keep texture -->
-  <rect x="143.5" y="-119.0" width="1063.0" height="1063.0" rx="12" ry="12" fill="white"/>
-  
-  <!-- Die-cut openings (black = cut through) -->
-  <circle cx="675.0" cy="412.5" r="259.8" fill="black"/>
-  <circle cx="675.0" cy="152.7" r="35.4" fill="black"/>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="945" height="945" viewBox="0 0 945 945">
+  <!-- CamoPro FRONT mask: Type_E_France | 80x80mm + 5mm border | Canvas: 945x945px 300DPI -->
+  <rect width="945" height="945" fill="black"/>
+  <rect x="-59.0" y="-59.0" width="1063.0" height="1063.0" rx="12" ry="12" fill="white"/>
+  <circle cx="472.5" cy="472.5" r="259.8" fill="black"/>
+  <circle cx="472.5" cy="189.0" r="47.2" fill="black"/>
 </svg>

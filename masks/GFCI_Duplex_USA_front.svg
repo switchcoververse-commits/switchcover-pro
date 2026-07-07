@@ -1,24 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG Mask - FRONT -->
-  <!-- Outlet: GFCI Duplex USA -->
-  <!-- Plate: 70mm x 114mm + 5mm border -->
-  <!-- Country: USA -->
-  <!-- Canvas: 1350x825px at 300 DPI -->
-  
-  <!-- Black background = transparent (dest-in blend) -->
-  <rect width="1350" height="825" fill="black"/>
-  
-  <!-- White area = keep texture -->
-  <rect x="202.6" y="-319.8" width="944.9" height="1464.6" rx="12" ry="12" fill="white"/>
-  
-  <!-- Die-cut openings (black = cut through) -->
-  <rect x="474.2" y="-119.0" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
-  <rect x="639.6" y="-119.0" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
-  <rect x="556.9" y="93.6" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
-  <rect x="521.5" y="259.0" width="307.1" height="118.1" rx="2" ry="2" fill="black"/>
-  <rect x="521.5" y="400.7" width="307.1" height="118.1" rx="2" ry="2" fill="black"/>
-  <rect x="474.2" y="589.7" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
-  <rect x="639.6" y="589.7" width="118.1" height="189.0" rx="3" ry="3" fill="black"/>
-  <rect x="556.9" y="802.3" width="94.5" height="94.5" rx="4" ry="4" fill="black"/>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="825" height="1350" viewBox="0 0 825 1350">
+  <!-- CamoPro FRONT mask: GFCI_Duplex_USA | 70x114mm + 5mm border | Canvas: 825x1350px 300DPI -->
+  <rect width="825" height="1350" fill="black"/>
+  <rect x="-59.9" y="-57.3" width="944.9" height="1464.6" rx="12" ry="12" fill="white"/>
+  <rect x="176.3" y="214.4" width="165.4" height="236.2" rx="3" fill="black"/>
+  <rect x="483.4" y="214.4" width="165.4" height="236.2" rx="3" fill="black"/>
+  <rect x="329.8" y="497.8" width="118.1" height="118.1" rx="5" fill="black"/>
+  <rect x="235.3" y="675.0" width="354.3" height="141.7" rx="2" fill="black"/>
+  <rect x="235.3" y="852.2" width="354.3" height="141.7" rx="2" fill="black"/>
+  <rect x="176.3" y="1041.1" width="165.4" height="236.2" rx="3" fill="black"/>
+  <rect x="483.4" y="1041.1" width="165.4" height="236.2" rx="3" fill="black"/>
+  <rect x="329.8" y="1301.0" width="118.1" height="118.1" rx="5" fill="black"/>
 </svg>

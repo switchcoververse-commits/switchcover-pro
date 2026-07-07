@@ -1,61 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG - BACK/INSTALLATION GUIDE -->
-  <!-- Outlet: USB Duplex Outlet USA -->
-  <!-- Country: USA -->
-  
-  <!-- White background -->
-  <rect width="1350" height="825" fill="white"/>
-  
-  <!-- Total sticker area -->
-  <rect x="202.6" y="-319.8" width="944.9" height="1464.6" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
-  
-  <!-- FOLD LINE - dashed inner rectangle (exact plate edge) -->
-  <rect x="261.6" y="-260.7" width="826.8" height="1346.5" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
-  
-  <!-- FOLD LINE labels -->
-  <text x="675.0" y="-266.7" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
-  <text x="675.0" y="1099.7" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
-  <text x="255.6" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,255.6,412.5)">FOLD LINE</text>
-  <text x="1102.4" y="412.5" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,1102.4,412.5)">FOLD LINE</text>
-  
-  <!-- Opening markers -->
-  <rect x="474.2" y="-95.4" width="118.1" height="189.0" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="639.6" y="-95.4" width="118.1" height="189.0" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="556.9" y="117.2" width="94.5" height="94.5" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="521.5" y="329.8" width="141.7" height="70.9" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="686.8" y="329.8" width="141.7" height="70.9" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="474.2" y="566.0" width="118.1" height="189.0" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="639.6" y="566.0" width="118.1" height="189.0" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
-  <rect x="556.9" y="778.6" width="94.5" height="94.5" rx="4" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="825" height="1350" viewBox="0 0 825 1350">
+  <!-- CamoPro BACK: USB_Duplex_USA | Canvas: 825x1350px 300DPI -->
+  <rect width="825" height="1350" fill="white"/>
+  <rect x="-59.9" y="-57.3" width="944.9" height="1464.6" rx="12" ry="12" fill="white" stroke="#333" stroke-width="2"/>
+  <rect x="-0.9" y="1.8" width="826.8" height="1346.5" rx="8" ry="8" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="8,4"/>
+  <text x="412.5" y="-4.2" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="412.5" y="1362.2" font-family="Arial" font-size="9" fill="#555" text-anchor="middle">FOLD LINE</text>
+  <text x="-6.9" y="675.0" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(-90,-6.9,675.0)">FOLD LINE</text>
+  <text x="839.9" y="675.0" font-family="Arial" font-size="9" fill="#555" text-anchor="middle" transform="rotate(90,839.9,675.0)">FOLD LINE</text>
+  <rect x="176.3" y="167.1" width="165.4" height="236.2" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="483.4" y="167.1" width="165.4" height="236.2" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="329.8" y="450.6" width="118.1" height="118.1" rx="5" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="211.7" y="615.9" width="177.2" height="82.7" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="436.1" y="615.9" width="177.2" height="82.7" rx="2" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="176.3" y="828.5" width="165.4" height="236.2" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="483.4" y="828.5" width="165.4" height="236.2" rx="3" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
+  <rect x="329.8" y="1112.0" width="118.1" height="118.1" rx="5" fill="#e8e8e8" stroke="#999" stroke-width="1"/>
 
-  
-  <!-- Screw hole markers -->
-  <circle cx="675.0" cy="-201.7" r="39.4" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
-  <line x1="632.6" y1="-201.7" x2="717.4" y2="-201.7" stroke="#666" stroke-width="1"/>
-  <line x1="675.0" y1="-244.1" x2="675.0" y2="-159.2" stroke="#666" stroke-width="1"/>
-  <circle cx="675.0" cy="1026.7" r="39.4" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
-  <line x1="632.6" y1="1026.7" x2="717.4" y2="1026.7" stroke="#666" stroke-width="1"/>
-  <line x1="675.0" y1="984.2" x2="675.0" y2="1069.1" stroke="#666" stroke-width="1"/>
+  <circle cx="412.5" cy="60.8" r="39.4" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="370.1" y1="60.8" x2="454.9" y2="60.8" stroke="#666" stroke-width="1"/>
+  <line x1="412.5" y1="18.4" x2="412.5" y2="103.3" stroke="#666" stroke-width="1"/>
+  <circle cx="412.5" cy="1289.2" r="39.4" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <line x1="370.1" y1="1289.2" x2="454.9" y2="1289.2" stroke="#666" stroke-width="1"/>
+  <line x1="412.5" y1="1246.7" x2="412.5" y2="1331.6" stroke="#666" stroke-width="1"/>
 
-
-  <!-- CamoPro branding -->
-  <text x="675.0" y="-299.8" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
-  
-  <!-- Outlet type label -->
-  <text x="675.0" y="-284.8" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">USB Duplex Outlet USA</text>
-
-  <!-- Installation steps -->
-  <text x="217.6" y="-126.1" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
-  <text x="217.6" y="-104.1" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
-  <text x="217.6" y="-82.1" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
-  <text x="217.6" y="-60.1" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
-  <text x="217.6" y="-38.1" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
-  <text x="217.6" y="-16.1" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
-  
-  <!-- Warning -->
-  <text x="675.0" y="1126.8" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">⚠ Do not cover live electrical contacts</text>
-  
-  <!-- Dimensions -->
-  <text x="675.0" y="1138.8" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">70mm × 114mm + 5mm border | USA</text>
-
+  <text x="412.5" y="-37.3" font-family="Arial" font-size="14" font-weight="bold" fill="#222" text-anchor="middle">CamoPro Sticker</text>
+  <text x="412.5" y="-22.3" font-family="Arial" font-size="9" fill="#666" text-anchor="middle">USB Duplex USA</text>
+  <text x="-44.9" y="203.7" font-family="Arial" font-size="10" font-weight="bold" fill="#333">Installation:</text>
+  <text x="-44.9" y="223.7" font-family="Arial" font-size="9" fill="#444">1. Clean plate surface</text>
+  <text x="-44.9" y="243.7" font-family="Arial" font-size="9" fill="#444">2. Peel backing paper</text>
+  <text x="-44.9" y="263.7" font-family="Arial" font-size="9" fill="#444">3. Align with plate edges</text>
+  <text x="-44.9" y="283.7" font-family="Arial" font-size="9" fill="#444">4. Press firmly from center</text>
+  <text x="-44.9" y="303.7" font-family="Arial" font-size="9" fill="#444">5. Fold border edges around plate</text>
+  <text x="412.5" y="1389.3" font-family="Arial" font-size="8" fill="#cc0000" text-anchor="middle">Do not cover live electrical contacts</text>
+  <text x="412.5" y="1401.3" font-family="Arial" font-size="7" fill="#999" text-anchor="middle">70x114mm + 5mm border</text>
 </svg>

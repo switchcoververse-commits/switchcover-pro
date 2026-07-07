@@ -1,19 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
-  <!-- CamoPro SVG Mask - FRONT -->
-  <!-- Outlet: Brazilian ABNT NBR 14136 -->
-  <!-- Plate: 80mm x 80mm + 5mm border -->
-  <!-- Country: BR -->
-  <!-- Canvas: 1350x825px at 300 DPI -->
-  
-  <!-- Black background = transparent (dest-in blend) -->
-  <rect width="1350" height="825" fill="black"/>
-  
-  <!-- White area = keep texture -->
-  <rect x="143.5" y="-119.0" width="1063.0" height="1063.0" rx="12" ry="12" fill="white"/>
-  
-  <!-- Die-cut openings (black = cut through) -->
-  <circle cx="675.0" cy="235.3" r="56.7" fill="black"/>
-  <circle cx="509.6" cy="554.2" r="47.2" fill="black"/>
-  <circle cx="840.4" cy="554.2" r="47.2" fill="black"/>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="945" height="945" viewBox="0 0 945 945">
+  <!-- CamoPro FRONT mask: Brazilian_ABNT | 80x80mm + 5mm border | Canvas: 945x945px 300DPI -->
+  <rect width="945" height="945" fill="black"/>
+  <rect x="-59.0" y="-59.0" width="1063.0" height="1063.0" rx="12" ry="12" fill="white"/>
+  <circle cx="472.5" cy="259.9" r="65.0" fill="black"/>
+  <circle cx="283.5" cy="637.9" r="53.1" fill="black"/>
+  <circle cx="661.5" cy="637.9" r="53.1" fill="black"/>
 </svg>
