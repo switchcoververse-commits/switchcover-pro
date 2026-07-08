@@ -66,8 +66,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const mapping = OUTLET_MAP[outletType] || OUTLET_MAP[outletType.trim()];
+// If outletType is already a filename (contains underscore), use it directly
+let mapping = OUTLET_MAP[outletType] || OUTLET_MAP[outletType.trim()];
 
+// If no mapping but outletType looks like a filename (e.g. GFCI_Duplex_USA)
+if (!mapping && outletType.includes('_')) {
+  mapping = { svg: outletType, w: 825, h: 1350 }; // default dimensions
+}
     if (!mapping) {
       return res.status(404).json({
         error: 'OUTLET_NOT_SUPPORTED',
@@ -112,3 +117,4 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: err.message });
   }
 }
+
