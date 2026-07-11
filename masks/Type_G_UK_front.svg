@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1016" height="1016" viewBox="0 0 1016 1016">
-  <!-- CamoPro FRONT mask: Type_G_UK | 86x86mm + 5mm border | Canvas: 1016x1016px 300DPI -->
-  <rect width="1016" height="1016" fill="black"/>
-  <rect x="-58.9" y="-58.9" width="1133.9" height="1133.9" rx="12" ry="12" fill="white"/>
-  <rect x="389.9" y="141.9" width="236.2" height="118.1" rx="2" fill="black"/>
-  <rect x="141.9" y="649.7" width="141.7" height="236.2" rx="2" fill="black"/>
-  <rect x="732.4" y="649.7" width="141.7" height="236.2" rx="2" fill="black"/>
-</svg>

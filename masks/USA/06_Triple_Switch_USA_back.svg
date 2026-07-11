@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="825" viewBox="0 0 1350 825">
+  <rect width="1350" height="825" fill="white"/>
+  <rect x="0" y="0" width="1350" height="825" rx="56" fill="white" stroke="#333" stroke-width="3"/>
+  <line x1="675" y1="0" x2="675" y2="825" stroke="#333" stroke-width="3" stroke-dasharray="12,6"/>
+  <text x="675" y="40" font-family="Arial" font-size="24" fill="#333" text-anchor="middle" font-weight="bold">FOLD LINE</text>
+  <text x="675" y="785" font-family="Arial" font-size="24" fill="#333" text-anchor="middle" font-weight="bold">FOLD LINE</text>
+</svg>

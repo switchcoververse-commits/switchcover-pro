@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1350" height="1350" viewBox="0 0 1350 1350">
+  <rect width="1350" height="1350" fill="black"/>
+  <rect x="0" y="0" width="1350" height="1350" rx="56" fill="white"/>
+  <rect x="94" y="165" width="165" height="236" rx="6" fill="black"/>
+  <rect x="307" y="165" width="165" height="236" rx="6" fill="black"/>
+  <circle cx="201" cy="449" r="18" fill="black"/>
+  <circle cx="414" cy="449" r="18" fill="black"/>
+  <rect x="94" y="800" width="165" height="236" rx="6" fill="black"/>
+  <rect x="307" y="800" width="165" height="236" rx="6" fill="black"/>
+  <circle cx="201" cy="1080" r="18" fill="black"/>
+  <circle cx="414" cy="1080" r="18" fill="black"/>
+  <rect x="707" y="165" width="165" height="236" rx="6" fill="black"/>
+  <rect x="920" y="165" width="165" height="236" rx="6" fill="black"/>
+  <circle cx="814" cy="449" r="18" fill="black"/>
+  <circle cx="1027" cy="449" r="18" fill="black"/>
+  <rect x="707" y="800" width="165" height="236" rx="6" fill="black"/>
+  <rect x="920" y="800" width="165" height="236" rx="6" fill="black"/>
+  <circle cx="814" cy="1080" r="18" fill="black"/>
+  <circle cx="1027" cy="1080" r="18" fill="black"/>
+</svg>
