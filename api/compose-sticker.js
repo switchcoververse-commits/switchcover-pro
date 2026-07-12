@@ -95,16 +95,17 @@ export default async function handler(req, res) {
       });
     }
 
+    // Convertir textura base64 a buffer
     const textureBuffer = Buffer.from(textureBase64, 'base64');
+    // Convertir a PNG para garantizar compatibilidad con Sharp
+    const textureImage = await sharp(textureBuffer).png().toBuffer();
 
-    // Convertir SVG a PNG con canal alfa
-    const maskBuffer = await sharp(maskPath)
-      .png()
-      .toBuffer();
+    // Convertir SVG a PNG para usar como máscara
+    const maskBuffer = await sharp(maskPath).png().toBuffer();
 
-    const result = await sharp(textureBuffer)
+    const result = await sharp(textureImage)
       .resize(mapping.w, mapping.h, { fit: 'fill' })
-      .composite([{ input: maskBuffer, blend: 'dest-out' }])
+      .composite([{ input: maskBuffer, blend: 'dest-in' }])
       .png()
       .toBuffer();
 
