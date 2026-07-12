@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 
 const OUTLET_MAP = {
-  // 🇺🇸 USA
   "GFCI_Duplex_USA": { svg: "GFCI_Duplex_USA", w: 825, h: 1350, region: "USA" },
   "GFCI Duplex": { svg: "GFCI_Duplex_USA", w: 825, h: 1350, region: "USA" },
   "GFCI Duplex USA": { svg: "GFCI_Duplex_USA", w: 825, h: 1350, region: "USA" },
@@ -31,8 +30,6 @@ const OUTLET_MAP = {
   "Dimmer Switch": { svg: "Dimmer_Switch_USA", w: 825, h: 1350, region: "USA" },
   "AFCI_GFCI_Combo_USA": { svg: "AFCI_GFCI_Combo_USA", w: 825, h: 1350, region: "USA" },
   "Type_A_Mexico": { svg: "Type_A_Mexico", w: 825, h: 1350, region: "USA" },
-
-  // 🇪🇺 EU
   "Schuko_EU": { svg: "Schuko_EU", w: 945, h: 945, region: "EU" },
   "Schuko EU": { svg: "Schuko_EU", w: 945, h: 945, region: "EU" },
   "Double_Schuko_EU": { svg: "Double_Schuko_EU", w: 1350, h: 945, region: "EU" },
@@ -40,20 +37,14 @@ const OUTLET_MAP = {
   "Single_Switch_EU": { svg: "Single_Switch_EU", w: 945, h: 945, region: "EU" },
   "Double_Switch_EU": { svg: "Double_Switch_EU", w: 1350, h: 945, region: "EU" },
   "Triple_Rocker_EU": { svg: "Triple_Rocker_EU", w: 1350, h: 945, region: "EU" },
-
-  // 🇬🇧 UK
   "Type_G_UK": { svg: "Type_G_UK", w: 1016, h: 1016, region: "UK" },
   "Type G": { svg: "Type_G_UK", w: 1016, h: 1016, region: "UK" },
   "Type_G_Double_UK": { svg: "Type_G_Double_UK", w: 1350, h: 1016, region: "UK" },
-
-  // 🌏 Asia
   "Type_I_Australia": { svg: "Type_I_Australia", w: 898, h: 1350, region: "Asia" },
   "Type I": { svg: "Type_I_Australia", w: 898, h: 1350, region: "Asia" },
   "Type_I_Double_AU": { svg: "Type_I_Double_AU", w: 1350, h: 1350, region: "Asia" },
   "Type_A_Japan_Single": { svg: "Type_A_Japan_Single", w: 825, h: 1350, region: "Asia" },
   "Type_B_Japan_Ground": { svg: "Type_B_Japan_Ground", w: 825, h: 1350, region: "Asia" },
-
-  // 🌎 Others
   "Frame_55_Berker_EU": { svg: "Frame_55_Berker_EU", w: 650, h: 650, region: "Others" },
   "Swiss_Type_J": { svg: "Swiss_Type_J", w: 945, h: 945, region: "Others" },
   "Italian_Type_L": { svg: "Italian_Type_L", w: 945, h: 945, region: "Others" },
@@ -72,12 +63,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Buscar en el mapa
     let mapping = OUTLET_MAP[outletType] || OUTLET_MAP[outletType.trim()];
 
-    // Si no hay mapeo y el nombre contiene guion bajo, intentar inferir
     if (!mapping && outletType.includes('_')) {
-      // Inferir región por sufijo
       let region = 'USA';
       if (outletType.endsWith('_EU')) region = 'EU';
       else if (outletType.endsWith('_UK')) region = 'UK';
@@ -95,7 +83,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Ruta dinámica con región
     const maskPath = path.join(process.cwd(), 'masks', mapping.region, `${mapping.svg}_${side}.svg`);
 
     if (!fs.existsSync(maskPath)) {
@@ -110,9 +97,14 @@ export default async function handler(req, res) {
 
     const textureBuffer = Buffer.from(textureBase64, 'base64');
 
+    // Convertir SVG a PNG con canal alfa
+    const maskBuffer = await sharp(maskPath)
+      .png()
+      .toBuffer();
+
     const result = await sharp(textureBuffer)
       .resize(mapping.w, mapping.h, { fit: 'fill' })
-      .composite([{ input: maskPath, blend: 'dest-in' }])
+      .composite([{ input: maskBuffer, blend: 'dest-in' }])
       .png()
       .toBuffer();
 
