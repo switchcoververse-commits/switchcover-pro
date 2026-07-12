@@ -95,17 +95,24 @@ export default async function handler(req, res) {
       });
     }
 
-    // Convertir textura base64 a buffer
+    // Convertir textura base64 a buffer y asegurar canal alfa
     const textureBuffer = Buffer.from(textureBase64, 'base64');
-    // Convertir a PNG para garantizar compatibilidad con Sharp
-    const textureImage = await sharp(textureBuffer).png().toBuffer();
-
-    // Convertir SVG a PNG para usar como máscara
-    const maskBuffer = await sharp(maskPath).png().toBuffer();
-
-    const result = await sharp(textureImage)
+    const texture = await sharp(textureBuffer)
       .resize(mapping.w, mapping.h, { fit: 'fill' })
-      .composite([{ input: maskBuffer, blend: 'dest-in' }])
+      .ensureAlpha()
+      .png()
+      .toBuffer();
+
+    // Generar canal alfa a partir de la máscara
+    const alphaBuffer = await sharp(maskPath)
+      .resize(mapping.w, mapping.h)
+      .ensureAlpha()
+      .extractChannel('red')
+      .toBuffer();
+
+    // Aplicar el canal alfa a la textura
+    const result = await sharp(texture)
+      .joinChannel(alphaBuffer)
       .png()
       .toBuffer();
 
