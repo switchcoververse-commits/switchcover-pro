@@ -1,26 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="825" height="1350" viewBox="0 0 825 1350">
-  <!-- FONDO BLANCO: área de la placa que se CONSERVA -->
-  <rect width="825" height="1350" fill="white"/>
-  
-  <!-- BORDE EXTERIOR: se recorta para dar forma a la placa -->
-  <rect x="0" y="0" width="825" height="1350" rx="56" fill="black"/>
-  
-  <!-- DIE-CUTS (AGUJEROS NEGROS) -->
-  <!-- Slots superiores (forma de T acostada) -->
+  <!-- FONDO NEGRO: área que se RECORTA -->
+  <rect width="825" height="1350" fill="black"/>
+  <!-- DIE-CUTS BLANCOS: área que se CONSERVA -->
+  <rect x="0" y="0" width="825" height="1350" rx="56" fill="white"/>
   <rect x="200" y="260" width="100" height="20" rx="3" fill="black"/>
   <rect x="420" y="260" width="100" height="20" rx="3" fill="black"/>
-  
-  <!-- Orificio circular central (tierra) -->
-  <circle cx="360" cy="360" r="25" fill="black"/>
-  
-  <!-- Botones TEST y RESET -->
   <rect x="280" y="550" width="160" height="40" rx="5" fill="black"/>
   <rect x="280" y="650" width="160" height="40" rx="5" fill="black"/>
-  
-  <!-- Slots inferiores -->
   <rect x="200" y="850" width="100" height="20" rx="3" fill="black"/>
   <rect x="420" y="850" width="100" height="20" rx="3" fill="black"/>
-  
-  <!-- Orificio circular inferior (tierra) -->
-  <circle cx="360" cy="950" r="25" fill="black"/>
 </svg>
