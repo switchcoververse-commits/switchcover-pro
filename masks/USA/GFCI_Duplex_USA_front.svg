@@ -1,17 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="825" height="1350" viewBox="0 0 825 1350">
-  <rect width="825" height="1350" fill="black"/>
-  <rect x="0" y="0" width="825" height="1350" rx="56" fill="white"/>
-  <!-- Slots superiores (forma de T acostada) -->
-  <rect x="200" y="260" width="100" height="20" rx="3" fill="black"/>
-  <rect x="420" y="260" width="100" height="20" rx="3" fill="black"/>
-  <!-- Orificio circular central -->
-  <circle cx="360" cy="360" r="25" fill="black"/>
-  <!-- Botones TEST y RESET (rectángulos pequeños) -->
-  <rect x="280" y="550" width="160" height="40" rx="5" fill="black"/>
-  <rect x="280" y="650" width="160" height="40" rx="5" fill="black"/>
-  <!-- Slots inferiores -->
-  <rect x="200" y="850" width="100" height="20" rx="3" fill="black"/>
-  <rect x="420" y="850" width="100" height="20" rx="3" fill="black"/>
-  <!-- Orificio circular inferior -->
-  <circle cx="360" cy="950" r="25" fill="black"/>
+  <!-- FONDO BLANCO: área que se CONSERVA -->
+  <rect width="825" height="1350" fill="white"/>
+  <!-- DIE-CUTS NEGROS: áreas que se RECORTAN -->
+  <rect x="0" y="0" width="825" height="1350" rx="56" fill="black"/>
+  <rect x="200" y="260" width="100" height="20" rx="3" fill="white"/>
+  <rect x="420" y="260" width="100" height="20" rx="3" fill="white"/>
+  <circle cx="360" cy="360" r="25" fill="white"/>
+  <rect x="280" y="550" width="160" height="40" rx="5" fill="white"/>
+  <rect x="280" y="650" width="160" height="40" rx="5" fill="white"/>
+  <rect x="200" y="850" width="100" height="20" rx="3" fill="white"/>
+  <rect x="420" y="850" width="100" height="20" rx="3" fill="white"/>
+  <circle cx="360" cy="950" r="25" fill="white"/>
 </svg>
