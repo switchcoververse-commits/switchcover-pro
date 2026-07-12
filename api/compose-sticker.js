@@ -112,7 +112,7 @@ export default async function handler(req, res) {
 
     const result = await sharp(textureBuffer)
       .resize(mapping.w, mapping.h, { fit: 'fill' })
-      .composite([{ input: maskPath, blend: 'dest-in' }])
+      .composite([{ input: maskPath, blend: 'src-over' }])
       .png()
       .toBuffer();
 
