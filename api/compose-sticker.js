@@ -36,7 +36,7 @@ const OUTLET_MAP = {
   "Type_E_France": { svg: "Type_E_France", w: 945, h: 945, region: "EU" },
   "Single_Switch_EU": { svg: "Single_Switch_EU", w: 945, h: 945, region: "EU" },
   "Double_Switch_EU": { svg: "Double_Switch_EU", w: 1350, h: 945, region: "EU" },
-  "Triple_Rocker_EU": { svg: "Triple_Rocker_EU", w: 1350, h: 945, region: "EU" },
+  "Triple_Rocker_EU": { svg: "Triple_Rocker_EU", w: 1900, h: 945, region: "EU" },
   "Type_G_UK": { svg: "Type_G_UK", w: 1016, h: 1016, region: "UK" },
   "Type G": { svg: "Type_G_UK", w: 1016, h: 1016, region: "UK" },
   "Type_G_Double_UK": { svg: "Type_G_Double_UK", w: 1350, h: 1016, region: "UK" },
@@ -45,7 +45,7 @@ const OUTLET_MAP = {
   "Type_I_Double_AU": { svg: "Type_I_Double_AU", w: 1350, h: 1350, region: "Asia" },
   "Type_A_Japan_Single": { svg: "Type_A_Japan_Single", w: 825, h: 1350, region: "Asia" },
   "Type_B_Japan_Ground": { svg: "Type_B_Japan_Ground", w: 825, h: 1350, region: "Asia" },
-  "Frame_55_Berker_EU": { svg: "Frame_55_Berker_EU", w: 650, h: 650, region: "Others" },
+  "Frame_55_Berker_EU": { svg: "Frame_55_Berker_EU", w: 945, h: 945, region: "Others" },
   "Swiss_Type_J": { svg: "Swiss_Type_J", w: 945, h: 945, region: "Others" },
   "Italian_Type_L": { svg: "Italian_Type_L", w: 945, h: 945, region: "Others" },
 };
