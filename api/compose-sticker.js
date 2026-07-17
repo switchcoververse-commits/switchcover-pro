@@ -99,7 +99,7 @@ export default async function handler(req, res) {
     const textureBuffer = Buffer.from(textureBase64, 'base64');
     const texture = await sharp(textureBuffer)
       .resize(mapping.w, mapping.h, { fit: 'fill' })
-      .ensureAlpha()
+      .removeAlpha()
       .png()
       .toBuffer();
 
