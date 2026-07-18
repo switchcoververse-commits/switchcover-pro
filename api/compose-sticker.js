@@ -48,7 +48,19 @@ const OUTLET_MAP = {
   "Frame_55_Berker_EU": { svg: "Frame_55_Berker_EU", w: 945, h: 945, region: "Others" },
   "Swiss_Type_J": { svg: "Swiss_Type_J", w: 945, h: 945, region: "Others" },
   "Italian_Type_L": { svg: "Italian_Type_L", w: 945, h: 945, region: "Others" },
-};
+  "Decora_Rocker_2Gang_USA": { svg: "Decora_Rocker_2Gang_USA", w: 1350, h: 1350, region: "USA" },
+  "Decora_Rocker_3Gang_USA": { svg: "Decora_Rocker_3Gang_USA", w: 1875, h: 1350, region: "USA" },
+  "Decora_Rocker_4Gang_USA": { svg: "Decora_Rocker_4Gang_USA", w: 2400, h: 1350, region: "USA" },
+  "Decora_Rocker_5Gang_USA": { svg: "Decora_Rocker_5Gang_USA", w: 2925, h: 1350, region: "USA" },
+  "Decora_Rocker_6Gang_USA": { svg: "Decora_Rocker_6Gang_USA", w: 3450, h: 1350, region: "USA" },
+  "Standard_Duplex_2Gang_USA": { svg: "Standard_Duplex_2Gang_USA", w: 1350, h: 1350, region: "USA" },
+  "Standard_Duplex_3Gang_USA": { svg: "Standard_Duplex_3Gang_USA", w: 1875, h: 1350, region: "USA" },
+  "Standard_Duplex_4Gang_USA": { svg: "Standard_Duplex_4Gang_USA", w: 2400, h: 1350, region: "USA" },
+  "Standard_Duplex_5Gang_USA": { svg: "Standard_Duplex_5Gang_USA", w: 2925, h: 1350, region: "USA" },
+  "Standard_Duplex_6Gang_USA": { svg: "Standard_Duplex_6Gang_USA", w: 3450, h: 1350, region: "USA" },
+  "Toggle_4Gang_USA": { svg: "Toggle_4Gang_USA", w: 2400, h: 1350, region: "USA" },
+  "Toggle_5Gang_USA": { svg: "Toggle_5Gang_USA", w: 2925, h: 1350, region: "USA" },
+  "Toggle_6Gang_USA": { svg: "Toggle_6Gang_USA", w: 3450, h: 1350, region: "USA" },  };
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
