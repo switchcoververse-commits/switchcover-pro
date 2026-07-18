@@ -96,20 +96,24 @@ export default async function handler(req, res) {
     }
 
     // Convertir textura base64 a buffer y asegurar canal alfa
-    const textureBuffer = Buffer.from(textureBase64, 'base64');
-    const texture = await sharp(textureBuffer)
-      .resize(mapping.w, mapping.h, { fit: 'fill' })
-      .removeAlpha()
-      .png()
-      .toBuffer();
+  const WRAP_MM = 11; // cubre el grosor máximo conocido de nuestras placas + margen
+const PX_PER_MM = 300 / 25.4;
+const wrapPx = Math.round(WRAP_MM * PX_PER_MM);
+const totalW = mapping.w + 2 * wrapPx;
+const totalH = mapping.h + 2 * wrapPx;
 
-    // Generar canal alfa a partir de la máscara
-    const alphaBuffer = await sharp(maskPath)
-      .resize(mapping.w, mapping.h)
-      .ensureAlpha()
-      .extractChannel('red')
-      .toBuffer();
+const textureBuffer = Buffer.from(textureBase64, 'base64');
+const texture = await sharp(textureBuffer)
+  .resize(totalW, totalH, { fit: 'fill' })
+  .removeAlpha()
+  .png()
+  .toBuffer();
 
+const alphaBuffer = await sharp(maskPath)
+  .resize(totalW, totalH)
+  .ensureAlpha()
+  .extractChannel('red')
+  .toBuffer();
     // Aplicar el canal alfa a la textura
     const result = await sharp(texture)
       .joinChannel(alphaBuffer)
