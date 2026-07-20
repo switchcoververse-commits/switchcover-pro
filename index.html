@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CamoPro AI V35</title>
+    <title>CamoPro AI V36</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <style>
         * { box-sizing: border-box; }
@@ -27,12 +27,24 @@
         #capture-btn:active:not(:disabled) { transform: scale(0.92); }
         #capture-label { font-size: 9px; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; text-align: center; }
 
+        /* QUALITY REJECTION MODAL (V36) */
+        #quality-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.96); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; padding: 25px; text-align: center; }
+        #quality-overlay.active { display: flex; }
+        #quality-overlay img { max-width: 70vw; max-height: 38vh; object-fit: contain; border-radius: 12px; border: 2px solid #ff9500; opacity: 0.85; }
+        .q-title { color: #ff9500; font-size: 19px; font-weight: 900; margin: 20px 0 10px; letter-spacing: 0.5px; }
+        .q-msg { color: #ccc; font-size: 14px; line-height: 1.6; max-width: 330px; margin-bottom: 8px; }
+        .q-tip { color: #666; font-size: 12px; line-height: 1.5; max-width: 330px; margin-bottom: 24px; }
+        .q-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; }
+        .q-retry { background: #00ff00; color: #000; border: none; padding: 15px 0; border-radius: 30px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .q-force { background: transparent; color: #777; border: 1px solid #333; padding: 12px 0; border-radius: 30px; font-weight: 700; font-size: 11px; cursor: pointer; text-transform: uppercase; }
+
         /* GALLERY */
         .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px; }
         .gallery-item { position: relative; border-radius: 12px; overflow: hidden; border: 2px solid #2a2a2a; cursor: pointer; background: #111; }
         .gallery-item.selected { border-color: #00ff00; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
         .gallery-item img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
         .check-badge { position: absolute; top: 8px; right: 8px; background: #00ff00; color: #000; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; }
+        .warn-badge { position: absolute; top: 8px; left: 8px; background: #ff9500; color: #000; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 12px; }
         .outlet-tag { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.92)); color: #00ff00; font-size: 9px; font-weight: 800; padding: 18px 8px 7px; text-transform: uppercase; }
 
         /* PREVIEW */
@@ -78,9 +90,9 @@
 <!-- PAGE 1: INTRO -->
 <div id="page1">
     <h1 style="color:#00ff00;font-size:32px;letter-spacing:3px;margin:0 0 8px;text-shadow:0 0 20px rgba(0,255,0,0.4);">CAMOPRO AI</h1>
-    <p style="color:#aaa;font-size:13px;margin:0 0 35px;text-transform:uppercase;letter-spacing:2px;">Texture Cloning V35</p>
+    <p style="color:#aaa;font-size:13px;margin:0 0 35px;text-transform:uppercase;letter-spacing:2px;">Texture Cloning V36</p>
     <div class="auth-steps">
-        <div class="auth-step"><div class="step-num">1</div><div class="step-text"><strong>Point</strong> camera at outlet, switch, or floor/ceiling plate</div></div>
+        <div class="auth-step"><div class="step-num">1</div><div class="step-text"><strong>Point</strong> camera at an outlet or switch <strong>mounted on the wall</strong></div></div>
         <div class="auth-step"><div class="step-num">2</div><div class="step-text"><strong>Align</strong> it inside the frame — wait for green</div></div>
         <div class="auth-step"><div class="step-num">3</div><div class="step-text"><strong>Press</strong> the capture button</div></div>
         <div class="auth-step"><div class="step-num">4</div><div class="step-text"><strong>Pay</strong> → We ship your custom sticker</div></div>
@@ -112,6 +124,18 @@
         <div>
             <button id="review-btn" onclick="showGallery()" style="display:none;background:transparent;color:#00ff00;border:1px solid #333;padding:10px 14px;border-radius:20px;font-size:10px;cursor:pointer;font-weight:700;text-transform:uppercase;">REVIEW</button>
         </div>
+    </div>
+</div>
+
+<!-- QUALITY REJECTION OVERLAY (V36) -->
+<div id="quality-overlay">
+    <img id="q-img" src="" alt="Rejected capture">
+    <div class="q-title" id="q-title">PHOTO NEEDS A RETAKE</div>
+    <div class="q-msg" id="q-msg"></div>
+    <div class="q-tip" id="q-tip"></div>
+    <div class="q-actions">
+        <button class="q-retry" onclick="qualityRetry()">RETAKE PHOTO</button>
+        <button class="q-force" id="q-force-btn" onclick="qualityKeepAnyway()" style="display:none;">USE THIS PHOTO ANYWAY</button>
     </div>
 </div>
 
@@ -172,10 +196,12 @@
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
+<canvas id="qcanvas" style="display:none;"></canvas>
 
 <script>
     var video = document.getElementById('video');
     var canvas = document.getElementById('canvas');
+    var qcanvas = document.getElementById('qcanvas');
     var guide = document.getElementById('guide');
     var statusEl = document.getElementById('status');
     var instruction = document.getElementById('instruction');
@@ -190,6 +216,174 @@
     var MAKE_URL = 'https://hook.us2.make.com/54xeiu9j4733vbvnfjm7lah2u4wkjm1r';
     var STRIPE = 'https://buy.stripe.com/4gM4gyesH7Wv92feQt7EQ00';
     var PRICE = 29.99;
+
+    // =====================================================================
+    // V36 — LOCAL PHOTO QUALITY FILTER
+    // ---------------------------------------------------------------------
+    // Why: on 2026-07-18 a burst of ~30 photos taken in a store (plates still
+    // in their packaging, on a marble counter, no receptacle installed) had a
+    // ~25% failure rate downstream. Every failure costs a full Gemini
+    // classify + image generation (~$0.04) and, for a paying customer, a
+    // support ticket. Catching a bad frame HERE — while the customer is still
+    // standing in front of the wall — is orders of magnitude cheaper than
+    // catching it after checkout.
+    //
+    // These checks are 100% local (canvas + JS), cost nothing, and run in a
+    // few milliseconds. They deliberately do NOT try to detect "is this a
+    // wallplate" — that needs a model. They only catch the mechanical
+    // failures: out of focus, too dark, blown out, heavily tilted.
+    //
+    // IMPORTANT PRODUCT RULE: a false rejection must never block a sale.
+    // After 2 consecutive rejections on the same attempt, the customer is
+    // offered "USE THIS PHOTO ANYWAY". Quality metrics travel with the
+    // payload so thresholds can be tuned later against real outcomes.
+    // =====================================================================
+
+    // Thresholds — deliberately permissive to start. Tune with real data
+    // from the quality metrics sent in the payload.
+    var Q_BLUR_MIN      = 22;   // Laplacian variance. Lower = blurrier.
+    var Q_DARK_MAX      = 42;   // Mean luma below this = too dark.
+    var Q_BRIGHT_MIN    = 218;  // Mean luma above this = washed out.
+    var Q_GLARE_MAX_PCT = 12;   // % of near-white pixels = glare/reflection.
+    var Q_TILT_MAX      = 28;   // Degrees off perpendicular.
+    var Q_MIN_DIMENSION = 480;  // Minimum captured resolution (px).
+
+    var lastBeta = null, lastGamma = null;
+    var pendingCapture = null;   // {dataUrl, metrics, reason}
+    var rejectStreak = 0;
+
+    // Analyse the current canvas content. Returns metrics + verdict.
+    function analyzeQuality(sourceCanvas) {
+        // Downscale for speed — 240px wide is plenty for these statistics.
+        var w = 240;
+        var h = Math.max(1, Math.round(sourceCanvas.height * (w / sourceCanvas.width)));
+        qcanvas.width = w; qcanvas.height = h;
+        var qctx = qcanvas.getContext('2d');
+        qctx.drawImage(sourceCanvas, 0, 0, w, h);
+
+        var img = qctx.getImageData(0, 0, w, h).data;
+
+        // Grayscale (luma) buffer
+        var gray = new Float32Array(w * h);
+        var sum = 0, nearWhite = 0;
+        for (var i = 0, p = 0; i < img.length; i += 4, p++) {
+            var l = 0.299 * img[i] + 0.587 * img[i + 1] + 0.114 * img[i + 2];
+            gray[p] = l;
+            sum += l;
+            if (l > 245) nearWhite++;
+        }
+        var meanLuma = sum / (w * h);
+        var glarePct = (nearWhite / (w * h)) * 100;
+
+        // Laplacian variance = focus measure.
+        // Kernel: 4*center - up - down - left - right
+        var lapSum = 0, lapSumSq = 0, count = 0;
+        for (var y = 1; y < h - 1; y++) {
+            for (var x = 1; x < w - 1; x++) {
+                var idx = y * w + x;
+                var lap = 4 * gray[idx] - gray[idx - 1] - gray[idx + 1] - gray[idx - w] - gray[idx + w];
+                lapSum += lap;
+                lapSumSq += lap * lap;
+                count++;
+            }
+        }
+        var lapMean = lapSum / count;
+        var blurVar = (lapSumSq / count) - (lapMean * lapMean);
+
+        // Tilt from the last gyroscope reading (if we have one)
+        var tilt = null;
+        if (lastBeta !== null && lastGamma !== null) {
+            var dV = Math.abs(Math.abs(lastBeta) - 90);
+            var dL = Math.abs(lastGamma);
+            tilt = Math.round(Math.max(dV, dL));
+        }
+
+        var metrics = {
+            blur: Math.round(blurVar),
+            luma: Math.round(meanLuma),
+            glare_pct: Math.round(glarePct * 10) / 10,
+            tilt_deg: tilt,
+            width: sourceCanvas.width,
+            height: sourceCanvas.height
+        };
+
+        // Verdict — first failing check wins, ordered by how badly it hurts
+        // the downstream texture generation.
+        var reason = null;
+
+        if (Math.min(sourceCanvas.width, sourceCanvas.height) < Q_MIN_DIMENSION) {
+            reason = {
+                title: 'RESOLUTION TOO LOW',
+                msg: 'The camera returned a very small image.',
+                tip: 'Close other camera apps and try again. If it keeps happening, restart your browser.'
+            };
+        } else if (blurVar < Q_BLUR_MIN) {
+            reason = {
+                title: 'PHOTO IS BLURRY',
+                msg: 'The image came out soft — we need sharp detail to reproduce your wall texture.',
+                tip: 'Hold the phone still, tap the screen on the plate to focus, and take the photo again.'
+            };
+        } else if (meanLuma < Q_DARK_MAX) {
+            reason = {
+                title: 'TOO DARK',
+                msg: 'There is not enough light to read the wall colour and texture accurately.',
+                tip: 'Turn on the room light, or open a curtain. Avoid standing between the light and the wall.'
+            };
+        } else if (meanLuma > Q_BRIGHT_MIN) {
+            reason = {
+                title: 'TOO BRIGHT',
+                msg: 'The photo is washed out, so the texture detail is lost.',
+                tip: 'Step out of direct sunlight or move slightly to the side, then retake.'
+            };
+        } else if (glarePct > Q_GLARE_MAX_PCT) {
+            reason = {
+                title: 'GLARE DETECTED',
+                msg: 'A bright reflection is covering part of the wall.',
+                tip: 'Change your angle slightly, or block the light source with your body, and retake.'
+            };
+        } else if (tilt !== null && tilt > Q_TILT_MAX) {
+            reason = {
+                title: 'PHONE IS TILTED',
+                msg: 'The photo was taken at an angle, which distorts the plate proportions.',
+                tip: 'Stand square in front of the wall and hold the phone flat against the wall plane.'
+            };
+        }
+
+        return { metrics: metrics, reason: reason };
+    }
+
+    function showQualityWarning(dataUrl, reason) {
+        document.getElementById('q-img').src = dataUrl;
+        document.getElementById('q-title').innerText = reason.title;
+        document.getElementById('q-msg').innerText = reason.msg;
+        document.getElementById('q-tip').innerText = reason.tip;
+        // Escape hatch: never let a false rejection block a sale.
+        document.getElementById('q-force-btn').style.display = (rejectStreak >= 2) ? 'block' : 'none';
+        document.getElementById('quality-overlay').classList.add('active');
+        if (navigator.vibrate) navigator.vibrate([60, 60, 60]);
+    }
+
+    function hideQualityWarning() {
+        document.getElementById('quality-overlay').classList.remove('active');
+    }
+
+    function qualityRetry() {
+        hideQualityWarning();
+        pendingCapture = null;
+        analyzing = false;
+        setReady();
+    }
+
+    function qualityKeepAnyway() {
+        hideQualityWarning();
+        if (pendingCapture) {
+            commitCapture(pendingCapture.dataUrl, pendingCapture.metrics, true);
+            pendingCapture = null;
+        }
+        rejectStreak = 0;
+        analyzing = false;
+        setReady();
+    }
 
     // PAGE NAVIGATION
     function showPage(id) {
@@ -237,12 +431,8 @@
 
     // FIX (V35): iOS 13+ requires an explicit user-gesture permission request
     // for DeviceOrientationEvent, or the browser silently never fires the
-    // event. The previous version listened for 'deviceorientation' without
-    // ever calling requestPermission(), so on iPhone gyroAvailable stayed
-    // false forever and after the 3s timeout the app just force-enabled
-    // capture regardless of real alignment. This now requests permission
-    // inside the same tap that starts the camera (required by iOS — it must
-    // happen inside a user gesture handler).
+    // event. This requests permission inside the same tap that starts the
+    // camera (required by iOS — it must happen inside a user gesture handler).
     function startApp() {
         showPage('page2');
 
@@ -268,8 +458,6 @@
                     if (state === 'granted') {
                         attachOrientationListener();
                     } else {
-                        // Permission denied — fall back to manual "ready" after a short delay
-                        // so the customer isn't stuck at a frame that can never turn green.
                         setTimeout(setReady, 1500);
                     }
                 })
@@ -277,7 +465,6 @@
                     setTimeout(setReady, 1500);
                 });
         } else {
-            // Android / older iOS — no permission prompt needed
             attachOrientationListener();
         }
 
@@ -288,6 +475,10 @@
 
     // ORIENTATION
     function handleOrientation(e) {
+        // V36: remember the last reading so the quality check can measure tilt
+        if (e.beta !== null && e.beta !== undefined) lastBeta = e.beta;
+        if (e.gamma !== null && e.gamma !== undefined) lastGamma = e.gamma;
+
         if (analyzing) return;
         var beta = e.beta || 0;
         var gamma = e.gamma || 0;
@@ -332,47 +523,68 @@
         analyzing = true;
         captureBtn.disabled = true;
         captureBtn.classList.remove('ready');
-        statusEl.innerText = 'CAPTURING...';
+        statusEl.innerText = 'CHECKING QUALITY...';
         statusEl.style.color = '#00aaff';
         guide.style.borderColor = '#00aaff';
-        // NOTE (V35): outletType is intentionally a generic placeholder here.
-        // Real classification (region format / gang count / device type)
-        // happens server-side in Make via Gemini — see
-        // scripts/gemini_classification_prompt.md in the plates_db repo.
-        // We do NOT classify on-device: it would need the model weights or
-        // an API call with a key that can't be safely embedded in client JS.
-        doSaveCapture('Pending classification', 1);
-    }
 
-    function doSaveCapture(outletType, count) {
+        // Draw the frame first — we analyse the exact pixels we would send.
         canvas.width = video.videoWidth || 640;
         canvas.height = video.videoHeight || 480;
         canvas.getContext('2d').drawImage(video, 0, 0);
+
+        var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        var check = analyzeQuality(canvas);
+
+        if (check.reason) {
+            rejectStreak++;
+            pendingCapture = { dataUrl: dataUrl, metrics: check.metrics, reason: check.reason };
+            showQualityWarning(dataUrl, check.reason);
+            statusEl.innerText = 'RETAKE NEEDED';
+            statusEl.style.color = '#ff9500';
+            guide.style.borderColor = '#ff9500';
+            return;
+        }
+
+        rejectStreak = 0;
+        commitCapture(dataUrl, check.metrics, false);
+
+        setTimeout(function() {
+            analyzing = false;
+            setReady();
+        }, 2000);
+    }
+
+    // NOTE: outletType is intentionally a generic placeholder here.
+    // Real classification (window shape / gang count) happens server-side in
+    // Make via Gemini. We do NOT classify on-device: it would need the model
+    // weights or an API call with a key that can't be safely embedded in
+    // client JS.
+    function commitCapture(dataUrl, metrics, forced) {
         capturedPhotos.push({
             id: Date.now(),
-            data: canvas.toDataURL('image/jpeg', 0.95),
-            outletType: outletType,
-            count: count,
+            data: dataUrl,
+            outletType: 'Pending classification',
+            count: 1,
             selected: true,
+            quality: metrics,
+            quality_override: !!forced,
             timestamp: new Date().toISOString()
         });
         var n = capturedPhotos.length;
         document.getElementById('counter').innerText = n;
         document.getElementById('header-count').innerText = n + ' captured';
         document.getElementById('review-btn').style.display = 'block';
+
         var flash = document.createElement('div');
         flash.style.cssText = 'position:absolute;inset:0;background:white;opacity:0.85;z-index:50;border-radius:18px;pointer-events:none;transition:opacity 0.4s;';
         document.getElementById('viewport').appendChild(flash);
         setTimeout(function() { flash.style.opacity='0'; setTimeout(function(){flash.remove();},400); }, 80);
         if (navigator.vibrate) navigator.vibrate([80,40,150]);
+
         statusEl.innerText = 'CAPTURED ✓';
         statusEl.style.color = '#00ff00';
         guide.style.borderColor = '#00ff00';
         captureLabel.innerText = 'CAPTURED ✓';
-        setTimeout(function() {
-            analyzing = false;
-            setReady();
-        }, 2000);
     }
 
     // GALLERY
@@ -388,6 +600,7 @@
             item.className = 'gallery-item' + (p.selected ? ' selected' : '');
             item.innerHTML = '<img src="' + p.data + '" alt="' + p.outletType + '">' +
                 (p.selected ? '<div class="check-badge">✓</div>' : '') +
+                (p.quality_override ? '<div class="warn-badge" title="Quality warning overridden">!</div>' : '') +
                 '<div class="outlet-tag">' + (p.outletType || 'Unknown') + '</div>';
             var pressTimer;
             var didLong = false;
@@ -438,22 +651,15 @@
         return 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
     }
 
-    // FIX (V35): the previous version sent the full order (including images)
-    // to Make BEFORE any payment confirmation existed — it only checked
-    // whether the webhook POST itself succeeded (network-level success),
-    // not whether Stripe was ever actually paid. If the customer closed the
-    // tab on the Stripe page, or the payment failed, Make had already
-    // received a "send to production" style payload.
+    // FIX (V35): the payload marks status: 'AWAITING_PAYMENT'. Make must gate
+    // the Nano Banana / Gelato steps behind a separate Stripe webhook
+    // (checkout.session.completed) that flips the order to 'PAID' using
+    // order_id as the match key BEFORE continuing the scenario.
     //
-    // Real fix requires a change on the Make side too (this front end alone
-    // can't confirm a Stripe payment — Stripe doesn't tell the browser
-    // synchronously): the payload below now explicitly marks
-    // status: 'AWAITING_PAYMENT' instead of 'PENDING', and Make must be
-    // configured to gate the Nano Banana / Gelato steps behind a separate
-    // Stripe webhook (checkout.session.completed or payment_link paid event)
-    // that flips the order's status to 'PAID' using order_id as the match
-    // key, BEFORE continuing the scenario. This file only prepares the data
-    // correctly for that — the gating itself must live in Make.
+    // NOTE (V36): order_id is ALSO sent at the top level of order_info, and
+    // Make's "Add a Row" module currently writes order_info.timestamp into the
+    // order_id column. That must be changed to order_info.order_id, otherwise
+    // Stripe's client_reference_id can never be matched back to the row.
     function sendOrder() {
         var name = document.getElementById('cust-name').value.trim();
         var email = document.getElementById('cust-email').value.trim();
@@ -477,11 +683,6 @@
                 total_items: selected.length,
                 total_price: parseFloat((selected.length * PRICE).toFixed(2)),
                 timestamp: new Date().toISOString(),
-                // IMPORTANT: Make must NOT start Nano Banana / Gelato steps
-                // while status is AWAITING_PAYMENT. A separate Stripe
-                // webhook flips this to PAID by matching order_id
-                // (sent below as client_reference_id) before the scenario
-                // is allowed to continue.
                 status: 'AWAITING_PAYMENT'
             },
             assets: selected.map(function(img) {
@@ -489,6 +690,10 @@
                     id: img.id,
                     base64: img.data.split(',')[1],
                     outlet_type_client_hint: img.outletType || 'Unknown',
+                    // V36: local quality metrics travel with each photo so the
+                    // thresholds above can be tuned against real outcomes.
+                    quality: img.quality || null,
+                    quality_override: !!img.quality_override,
                     timestamp: img.timestamp
                 };
             })
