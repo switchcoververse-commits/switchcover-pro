@@ -60,7 +60,8 @@ const OUTLET_MAP = {
   "Standard_Duplex_6Gang_USA": { svg: "Standard_Duplex_6Gang_USA", w: 3450, h: 1350, region: "USA" },
   "Toggle_4Gang_USA": { svg: "Toggle_4Gang_USA", w: 2400, h: 1350, region: "USA" },
   "Toggle_5Gang_USA": { svg: "Toggle_5Gang_USA", w: 2925, h: 1350, region: "USA" },
-  "Toggle_6Gang_USA": { svg: "Toggle_6Gang_USA", w: 3450, h: 1350, region: "USA" },  };
+  "Toggle_6Gang_USA": { svg: "Toggle_6Gang_USA", w: 3450, h: 1350, region: "USA" },
+};
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -107,25 +108,32 @@ export default async function handler(req, res) {
       });
     }
 
-    // Convertir textura base64 a buffer y asegurar canal alfa
-  const WRAP_MM = 11; // cubre el grosor máximo conocido de nuestras placas + margen
-const PX_PER_MM = 300 / 25.4;
-const wrapPx = Math.round(WRAP_MM * PX_PER_MM);
-const totalW = mapping.w + 2 * wrapPx;
-const totalH = mapping.h + 2 * wrapPx;
+    // ---- Cálculo del wrap (franja que envuelve el canto de la placa) ----
+    // NOTA: valor fijo, cubre el grosor máximo conocido de placas USA + margen.
+    // Pendiente: leer safe_wrap_mm por región/gang desde universal_fit_templates.json
+    const WRAP_MM = 11;
+    const PX_PER_MM = 300 / 25.4;
+    const wrapPx = Math.round(WRAP_MM * PX_PER_MM);
+    const totalW = mapping.w + 2 * wrapPx;
+    const totalH = mapping.h + 2 * wrapPx;
 
-const textureBuffer = Buffer.from(textureBase64, 'base64');
-const texture = await sharp(textureBuffer)
-  .resize(totalW, totalH, { fit: 'fill' })
-  .removeAlpha()
-  .png()
-  .toBuffer();
+    // Textura: se estira al tamaño total (cara + wrap), sin canal alfa propio
+    const textureBuffer = Buffer.from(textureBase64, 'base64');
+    const texture = await sharp(textureBuffer)
+      .resize(totalW, totalH, { fit: 'fill' })
+      .removeAlpha()
+      .png()
+      .toBuffer();
 
-const alphaBuffer = await sharp(maskPath)
-  .resize(totalW, totalH)
-  .ensureAlpha()
-  .extractChannel('red')
-  .toBuffer();
+    // Máscara: MISMO fit: 'fill' que la textura.
+    // Sin 'fill', sharp usa 'cover' por defecto y RECORTA la máscara si la
+    // proporción no calza exacto -> el cutout saldría corrido sin dar error.
+    const alphaBuffer = await sharp(maskPath)
+      .resize(totalW, totalH, { fit: 'fill' })
+      .ensureAlpha()
+      .extractChannel('red')
+      .toBuffer();
+
     // Aplicar el canal alfa a la textura
     const result = await sharp(texture)
       .joinChannel(alphaBuffer)
@@ -138,7 +146,11 @@ const alphaBuffer = await sharp(maskPath)
       outletType,
       svgUsed: `${mapping.region}/${mapping.svg}_${side}.svg`,
       side,
-      dimensions: `${mapping.w}x${mapping.h}px (300 DPI)`,
+      // Reporta el tamaño REAL del archivo generado (cara + wrap), no solo la cara
+      dimensions: `${totalW}x${totalH}px (300 DPI)`,
+      plate_face: `${mapping.w}x${mapping.h}px`,
+      wrap_mm: WRAP_MM,
+      wrap_px: wrapPx,
       status: 'SUCCESS'
     });
 
