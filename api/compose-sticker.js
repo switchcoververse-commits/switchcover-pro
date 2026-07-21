@@ -113,55 +113,95 @@ register(['Double_Switch_USA', 'Double Switch', 'Double Switch USA'], 'toggle', 
 register(['Triple_Switch_USA', 'Triple Switch', 'Triple Switch USA'], 'toggle', 3);
 for (let g = 4; g <= 6; g++) register([`Toggle_${g}Gang_USA`], 'toggle', g);
 
-/* --- Tamaño de placa: cálculo + red de seguridad ---------------------- */
+/* --- Series reales de fabricante -------------------------------------- *
+ * Fuente: Pass & Seymour/Legrand, catálogo Wall Plates, hojas I-41/I-42 y
+ * S-3/S-4. Leviton Q-1289 coincide (su "Midway" = Junior-Jumbo).
+ * Los fabricantes SÓLO producen estos cinco tamaños. Cualquier resultado
+ * fuera de esta lista es, por definición, un error de medición. */
+const PLATE_SERIES = [
+  { key: 'standard',          w1: 69.85, h: 114.30 },  // 2.75"  x 4.5"
+  { key: 'trademaster',       w1: 74.61, h: 119.06 },  // 2.9375" x 4.6875"
+  { key: 'midway_juniorjumbo',w1: 79.38, h: 123.83 },  // 3.125" x 4.875"
+  { key: 'trademaster_jumbo', w1: 84.14, h: 128.59 },  // 3.3125" x 5.0625"
+  { key: 'jumbo',             w1: 88.90, h: 133.35 }   // 3.5"   x 5.25"
+];
+
+function seriesSize(series, gangs) {
+  return { w: series.w1 + (gangs - 1) * GANG_PITCH_MM, h: series.h };
+}
+
 function standardPlateSize(gangs) {
-  return {
-    w: STD_1GANG_W_MM + (gangs - 1) * GANG_PITCH_MM,
-    h: STD_H_MM
-  };
+  return seriesSize(PLATE_SERIES[0], gangs);
 }
 
 /**
  * Decide el tamaño real de la placa.
- * Prioridad: (1) proporción medida en la foto, (2) mm explícitos,
- * (3) tamaño Standard como respaldo.
- * Cualquier valor absurdo se descarta y cae al respaldo — nunca se imprime
- * un disparate por una lectura mala del modelo.
+ *
+ * POR QUÉ ASÍ (aprendido en la PRUEBA 6, 21 jul):
+ * La primera versión calculaba ancho y alto por separado a partir de las dos
+ * proporciones que devuelve el modelo. Resultado real: 95.8 x 108.6mm en una
+ * placa que mide 69.85 x 114.3 — una placa casi cuadrada, que no existe.
+ * Causa: el ancho se calibraba contra la ventana del toggle, que mide 10.32mm
+ * y ocupa poquísimos píxeles; un error de 2px ahí se multiplica por 7. El alto
+ * (ventana de 23.81mm) salió con sólo 5% de error.
+ *
+ * Solución: NO dejar el tamaño libre. Se usa la proporción más confiable — la
+ * de ALTO, porque la ventana siempre es más alta que ancha en las tres
+ * familias — para elegir a cuál de las cinco series de fabricante pertenece la
+ * placa, y el ancho sale de la tabla oficial. Así el resultado sólo puede ser
+ * un tamaño que realmente se fabrica.
  */
 function resolvePlateSize({ gangs, family, widthRatio, heightRatio, plateWidthMm, plateHeightMm }) {
-  const std = standardPlateSize(gangs);
-  const ref = WINDOW_FAMILIES[family].refWidthMm;
+  const fam = WINDOW_FAMILIES[family];
+  const refW = fam.refWidthMm;
+  const refH = fam.openings[0].h;
 
-  // Límites de cordura, derivados de las series reales de fabricante:
-  // la más chica es Standard; la más grande, Jumbo (+0.75" ancho y alto).
-  // Se deja un 8% extra de tolerancia por error de medición.
-  const minW = std.w * 0.92;
-  const maxW = (std.w + 19.05) * 1.08;
-  const minH = STD_H_MM * 0.92;
-  const maxH = (STD_H_MM + 19.05) * 1.08;
-
-  let w = null, h = null, source = 'standard_fallback';
-
-  if (Number.isFinite(widthRatio) && widthRatio > 0) {
-    w = widthRatio * ref;
-    if (Number.isFinite(heightRatio) && heightRatio > 0) {
-      h = heightRatio * WINDOW_FAMILIES[family].openings[0].h;
-    }
-    source = 'window_ratio';
-  } else if (Number.isFinite(plateWidthMm) && plateWidthMm > 0) {
-    w = plateWidthMm;
-    h = Number.isFinite(plateHeightMm) ? plateHeightMm : null;
-    source = 'explicit_mm';
+  // Milímetros explícitos tienen prioridad (uso manual / reproceso).
+  if (Number.isFinite(plateWidthMm) && plateWidthMm > 0 &&
+      Number.isFinite(plateHeightMm) && plateHeightMm > 0) {
+    return { w: plateWidthMm, h: plateHeightMm, source: 'explicit_mm' };
   }
 
-  // Si sólo tenemos ancho, deducimos el alto: en todas las series el alto
-  // crece igual que el ancho de 1 gang (ambos "+3/16", "+3/8", "+3/4").
-  if (w && !h) h = STD_H_MM + (w - std.w);
+  // Estimación de la ALTURA de la placa. Preferimos la proporción vertical;
+  // si no vino, la deducimos de la horizontal como último recurso.
+  let hEstimate = null, basis = null;
+  if (Number.isFinite(heightRatio) && heightRatio > 0) {
+    hEstimate = heightRatio * refH;
+    basis = 'height_ratio';
+  } else if (Number.isFinite(widthRatio) && widthRatio > 0) {
+    const wEstimate = widthRatio * refW;
+    // Convertimos ancho -> alto usando la relación de la serie Standard.
+    hEstimate = PLATE_SERIES[0].h + (wEstimate - standardPlateSize(gangs).w);
+    basis = 'width_ratio_fallback';
+  }
 
-  const sane = w && h && w >= minW && w <= maxW && h >= minH && h <= maxH;
-  if (!sane) return { ...std, source: 'standard_fallback', rejected: w ? { w, h } : null };
+  if (!hEstimate) {
+    return { ...standardPlateSize(gangs), source: 'standard_fallback', rejected: null };
+  }
 
-  return { w, h, source };
+  // Tolerancia: si la estimación queda muy lejos de CUALQUIER serie real,
+  // la medición no es de fiar y usamos Standard.
+  const MAX_DEV_MM = 12;
+  let best = null, bestDev = Infinity;
+  for (const s of PLATE_SERIES) {
+    const dev = Math.abs(hEstimate - s.h);
+    if (dev < bestDev) { bestDev = dev; best = s; }
+  }
+
+  if (bestDev > MAX_DEV_MM) {
+    return {
+      ...standardPlateSize(gangs),
+      source: 'standard_fallback',
+      rejected: { estimated_height_mm: Number(hEstimate.toFixed(1)), basis }
+    };
+  }
+
+  return {
+    ...seriesSize(best, gangs),
+    source: `series:${best.key}`,
+    basis,
+    estimated_height_mm: Number(hEstimate.toFixed(1))
+  };
 }
 
 /* --- Generación de la máscara ---------------------------------------- *
@@ -285,7 +325,9 @@ export default async function handler(req, res) {
       window_family: WINDOW_FAMILIES[family].label,
       gangs,
       plate_mm: `${size.w.toFixed(1)} x ${size.h.toFixed(1)}`,
-      size_source: size.source,          // window_ratio | explicit_mm | standard_fallback
+      size_source: size.source,          // series:<nombre> | explicit_mm | standard_fallback
+      size_basis: size.basis || null,    // height_ratio | width_ratio_fallback
+      size_estimated_height_mm: size.estimated_height_mm || null,
       size_rejected: size.rejected || null,
       wrap_mm: WRAP_MM,
       dimensions: `${W}x${H}px (${DPI} DPI)`,
