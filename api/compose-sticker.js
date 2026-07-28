@@ -139,7 +139,12 @@ for (let g = 1; g <= 6; g++) register([`Adorne_${g}Gang_USA`], 'adorne', g);
  * Los fabricantes SÓLO producen estos cinco tamaños. Cualquier resultado
  * fuera de esta lista es, por definición, un error de medición.
  * NOTA: esta tabla NO aplica a Adorne — Adorne usa ADORNE_* más abajo,
- * porque su tamaño no varía por fabricante (sólo lo hace Legrand). */
+ * porque su tamaño no varía por fabricante (sólo lo hace Legrand).
+ * NOTA (28 jul): Lutron Claro (screwless, ventana Decora estándar) NO
+ * necesita entrada propia — sus medidas (confirmadas en Bees Lighting:
+ * 1g 2.94"x4.69", incremento ~46mm/gang) coinciden casi exactamente con
+ * la serie 'trademaster' ya presente acá (74.61x119.06mm). El sistema de
+ * calibración por proporción de altura ya lo asigna a esta serie solo. */
 const PLATE_SERIES = [
   { key: 'standard',           w1: 69.85, h: 114.30 }, // 2.75" x 4.5"
   { key: 'trademaster',        w1: 74.61, h: 119.06 }, // 2.9375" x 4.6875"
