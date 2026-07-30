@@ -100,6 +100,16 @@ const WINDOW_FAMILIES = {
     openings: [{ w: 44.96, h: 63.50, dy: 0, rx: 2.0, ry: 2.0 }],
     refWidthMm: 44.96
   },
+  // Single Receptacle — ventana redonda, para electrodomésticos de
+  // circuito dedicado (heladera, freezer, etc.). Confirmado con foto real
+  // de Fase 0 (30 jul): diámetro medido ~1 5/16"-1 3/8", dentro del rango
+  // estándar de fabricante (1.4"-1.406" = 35.56-35.71mm). Círculo real:
+  // se logra con rx=ry=mitad del diámetro sobre un cuadrado w=h.
+  single_receptacle: {
+    label: 'Single Receptacle (redondo)',
+    openings: [{ w: 35.71, h: 35.71, dy: 0, rx: 17.86, ry: 17.86 }],
+    refWidthMm: 35.71
+  },
   // Placa ciega (Blank) — sin ninguna abertura. Confirmado (Fiber Savvy,
   // Bees Lighting): mismo tamaño que la serie Standard NEMA, 69.85x114.30mm.
   // No hay ventana de referencia para calibrar por proporción -- no tiene
@@ -148,6 +158,9 @@ for (let g = 4; g <= 6; g++) register([`Toggle_${g}Gang_USA`], 'toggle', g);
 // Adorne (Legrand) — screwless, módulo estándar o "plus"
 register(['Adorne_1GangPlus_USA', 'Adorne 1-Gang Plus', 'Adorne Plus'], 'adorne_plus', 1);
 for (let g = 1; g <= 6; g++) register([`Adorne_${g}Gang_USA`], 'adorne', g);
+
+// Single Receptacle — redonda, electrodomésticos de circuito dedicado
+register(['SingleReceptacle_USA', 'Single Receptacle', 'Single Receptacle USA'], 'single_receptacle', 1);
 
 // Blank — placa ciega, sin abertura. Mismo contorno que Standard NEMA.
 for (let g = 1; g <= 6; g++) register([`Blank_${g}Gang_USA`], 'blank', g);
@@ -292,6 +305,55 @@ function resolvePlateSize({ gangs, family, widthRatio, heightRatio, plateWidthMm
   };
 }
 
+/* --- Generación de la máscara para COMBINACIONES ----------------------- *
+ * Placas con formas DISTINTAS lado a lado (ej: 1 Toggle + 1 Duplex en la
+ * misma placa física) — caso real de fabricante, confirmado 30 jul.
+ * Distinto del combo-DEVICE (switch+outlet en un solo dispositivo, que ya
+ * usa la ventana Decora estándar y no necesita nada de esto).
+ * A diferencia de buildMaskSvg, cada posición de gang puede usar una
+ * familia de ventana distinta. El tamaño de la placa se resuelve igual
+ * que siempre (todas las familias NEMA comparten la misma tabla de series
+ * reales, así que calibrar contra cualquiera de ellas da el mismo resultado). */
+function buildComboMaskSvg({ plateWmm, plateHmm, families, pitchMm }) {
+  const gangs = families.length;
+  const totalWmm = plateWmm + 2 * WRAP_MM;
+  const totalHmm = plateHmm + 2 * WRAP_MM;
+  const W = Math.round(mm(totalWmm));
+  const H = Math.round(mm(totalHmm));
+
+  const plateX = mm(WRAP_MM);
+  const plateY = mm(WRAP_MM);
+  const plateW = mm(plateWmm);
+  const plateH = mm(plateHmm);
+  const cx = plateX + plateW / 2;
+  const cy = plateY + plateH / 2;
+
+  const rects = [];
+  families.forEach((famKey, i) => {
+    const fam = WINDOW_FAMILIES[famKey];
+    const gx = cx + (i - (gangs - 1) / 2) * mm(pitchMm);
+    fam.openings.forEach((o) => {
+      const ow = mm(o.w), oh = mm(o.h);
+      rects.push(
+        `<rect x="${(gx - ow / 2).toFixed(2)}" y="${(cy + mm(o.dy) - oh / 2).toFixed(2)}" ` +
+        `width="${ow.toFixed(2)}" height="${oh.toFixed(2)}" ` +
+        `rx="${mm(o.rx).toFixed(2)}" ry="${mm(o.ry).toFixed(2)}" fill="black"/>`
+      );
+    });
+  });
+
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
+    `<rect width="${W}" height="${H}" fill="black"/>` +
+    `<rect x="${plateX.toFixed(2)}" y="${plateY.toFixed(2)}" ` +
+    `width="${plateW.toFixed(2)}" height="${plateH.toFixed(2)}" ` +
+    `rx="${mm(PLATE_CORNER_R_MM).toFixed(2)}" fill="white"/>` +
+    rects.join('') +
+    `</svg>`;
+
+  return { svg, W, H };
+}
+
 /* --- Generación de la máscara ---------------------------------------- *
  * Blanco = se imprime (la placa). Negro = agujero (la ventana).
  * El lienzo incluye el wrap en los cuatro lados. */
@@ -358,10 +420,100 @@ export default async function handler(req, res) {
       widthRatio,      // ancho_placa / ancho_ventana, medido en la foto
       heightRatio,      // alto_placa / alto_ventana (opcional)
       plateWidthMm,      // alternativa: milímetros explícitos
-      plateHeightMm
+      plateHeightMm,
+      gangLayout        // NUEVO (30 jul): string "toggle,duplex" para placas
+                          // combinadas con formas distintas por posición.
+                          // Vacío o un solo valor = comportamiento normal.
     } = req.body || {};
 
-    if (!textureBase64 || !outletType || !side) {
+    if (!textureBase64 || !side) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // --- Modo combinación: formas distintas lado a lado ------------------
+    // Dos sistemas de montaje distintos pueden combinarse ENTRE SÍ, pero
+    // NUNCA uno con el otro -- no es una limitación de código, es que esa
+    // placa no existe físicamente:
+    //  - Grupo NEMA (pitch 46.04mm, mismo yugo/caja estándar): toggle,
+    //    duplex, decora, blank, single_receptacle -- se combinan libremente.
+    //  - Grupo Adorne (pitch 46.74mm, marco metálico propietario Legrand):
+    //    adorne, adorne_plus -- se combinan solo entre ellos.
+    const NEMA_COMBO_FAMILIES = ['toggle', 'duplex', 'decora', 'blank', 'single_receptacle'];
+    const ADORNE_COMBO_FAMILIES = ['adorne', 'adorne_plus'];
+
+    const layoutArr = (gangLayout || '')
+      .split(',')
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    const isCombo = layoutArr.length > 1;
+
+    if (isCombo) {
+      const allNema = layoutArr.every((f) => NEMA_COMBO_FAMILIES.includes(f));
+      const allAdorne = layoutArr.every((f) => ADORNE_COMBO_FAMILIES.includes(f));
+
+      if (!allNema && !allAdorne) {
+        return res.status(404).json({
+          error: 'OUTLET_NOT_SUPPORTED',
+          outlet_type_detected: `combo: ${gangLayout}`,
+          action: 'NOTIFY_CUSTOMER_DELAY',
+          customer_message: `We detected a combination wallplate mixing incompatible mounting systems ("${gangLayout}"). This combination does not exist as a real product. Your order will be reviewed manually. We will notify you by email.`
+        });
+      }
+
+      const gangs = layoutArr.length;
+      let size, pitchMm;
+
+      if (allAdorne) {
+        size = { ...adornePlateSize(gangs), source: 'adorne_table' };
+        pitchMm = ADORNE_GANG_PITCH_MM;
+      } else {
+        // Calibrar contra la primera posición que tenga ventana real --
+        // 'blank' no sirve de referencia porque no hay nada que medir ahí.
+        const refFamily = layoutArr.find((f) => f !== 'blank') || layoutArr[0];
+        size = resolvePlateSize({
+          gangs, family: refFamily,
+          widthRatio: Number(widthRatio),
+          heightRatio: Number(heightRatio),
+          plateWidthMm: Number(plateWidthMm),
+          plateHeightMm: Number(plateHeightMm)
+        });
+        pitchMm = GANG_PITCH_MM;
+      }
+
+      const { svg, W, H } = buildComboMaskSvg({
+        plateWmm: size.w, plateHmm: size.h, families: layoutArr, pitchMm
+      });
+
+      const texture = await sharp(Buffer.from(textureBase64, 'base64'))
+        .resize(W, H, { fit: 'fill' })
+        .removeAlpha()
+        .png()
+        .toBuffer();
+
+      const alpha = await sharp(Buffer.from(svg))
+        .resize(W, H, { fit: 'fill' })
+        .ensureAlpha()
+        .extractChannel('red')
+        .toBuffer();
+
+      const result = await sharp(texture).joinChannel(alpha).png().toBuffer();
+
+      return res.status(200).json({
+        imageBase64: result.toString('base64'),
+        mimeType: 'image/png',
+        outletType: `combo: ${gangLayout}`,
+        window_family: `Combinación (${layoutArr.map((f) => WINDOW_FAMILIES[f].label).join(' + ')})`,
+        gangs,
+        plate_mm: `${size.w.toFixed(1)} x ${size.h.toFixed(1)}`,
+        size_source: size.source,
+        wrap_mm: WRAP_MM,
+        dimensions: `${W}x${H}px (${DPI} DPI)`,
+        side,
+        status: 'SUCCESS'
+      });
+    }
+
+    if (!outletType) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
