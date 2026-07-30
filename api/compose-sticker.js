@@ -99,7 +99,23 @@ const WINDOW_FAMILIES = {
     label: 'Adorne screwless (plus module)',
     openings: [{ w: 44.96, h: 63.50, dy: 0, rx: 2.0, ry: 2.0 }],
     refWidthMm: 44.96
+  },
+  // Placa ciega (Blank) — sin ninguna abertura. Confirmado (Fiber Savvy,
+  // Bees Lighting): mismo tamaño que la serie Standard NEMA, 69.85x114.30mm.
+  // No hay ventana de referencia para calibrar por proporción -- no tiene
+  // sentido pedirle a Gemini un ratio contra algo que no existe, así que
+  // esta familia siempre usa el tamaño Standard (ver resolvePlateSize).
+  blank: {
+    label: 'Blank (sin abertura)',
+    openings: [],
+    refWidthMm: null
   }
+  // NOTA (30 jul): Keystone / AV / Coaxial / HDMI / USB / teléfono NO son
+  // una familia nueva -- usan el mismo corte rectangular que 'decora'
+  // (confirmado: Legrand vende el inserto de datos para que encaje en la
+  // "Keystone Frame", que a su vez encaja en una abertura decorator
+  // estándar). Se registran como alias de 'decora' en OUTLET_MAP más abajo,
+  // no como familia propia.
 };
 
 /* --- Catálogo: nombre -> familia + cantidad de gangs ------------------
@@ -133,6 +149,18 @@ for (let g = 4; g <= 6; g++) register([`Toggle_${g}Gang_USA`], 'toggle', g);
 register(['Adorne_1GangPlus_USA', 'Adorne 1-Gang Plus', 'Adorne Plus'], 'adorne_plus', 1);
 for (let g = 1; g <= 6; g++) register([`Adorne_${g}Gang_USA`], 'adorne', g);
 
+// Blank — placa ciega, sin abertura. Mismo contorno que Standard NEMA.
+for (let g = 1; g <= 6; g++) register([`Blank_${g}Gang_USA`], 'blank', g);
+register(['Blank_USA'], 'blank', 1); // alias sin sufijo de gang, por si el prompt lo devuelve así
+
+// Keystone / AV / Coaxial / HDMI / USB / teléfono — NO es una familia
+// nueva: usan el mismo corte que Decora (ver nota arriba). Se registran
+// como alias directos de 'decora' para que el mapa de tamaños y la
+// máscara sean exactamente los mismos.
+register(['Keystone_USA', 'AV_Wallplate_USA', 'Coax_USA', 'Data_Wallplate_USA',
+  'HDMI_Wallplate_USA', 'Phone_Wallplate_USA'], 'decora', 1);
+for (let g = 2; g <= 6; g++) register([`Keystone_${g}Gang_USA`, `AV_Wallplate_${g}Gang_USA`], 'decora', g);
+
 /* --- Series reales de fabricante (NEMA) -------------------------------- *
  * Fuente: Pass & Seymour/Legrand, catálogo Wall Plates, hojas I-41/I-42 y
  * S-3/S-4. Leviton Q-1289 coincide (su "Midway" = Junior-Jumbo).
@@ -150,7 +178,13 @@ const PLATE_SERIES = [
   { key: 'trademaster',        w1: 74.61, h: 119.06 }, // 2.9375" x 4.6875"
   { key: 'midway_juniorjumbo', w1: 79.38, h: 123.83 }, // 3.125" x 4.875"
   { key: 'trademaster_jumbo',  w1: 84.14, h: 128.59 }, // 3.3125" x 5.0625"
-  { key: 'jumbo',               w1: 88.90, h: 133.35 } // 3.5" x 5.25"
+  { key: 'jumbo',               w1: 88.90, h: 133.35 }, // 3.5" x 5.25" (Leviton Oversize oficial)
+  { key: 'oversize_generic',   w1: 88.90, h: 139.70 }  // 3.5" x 5.5" -- confirmado 30 jul, Fase 0
+  // Distinta de 'jumbo': mismo ancho (3.5"), pero 0.25" más alta. Común en
+  // placas genéricas (ENERLITES, CML, etc.) combinadas con dispositivo de
+  // otra marca (ej. GFCI Leviton + placa de otro fabricante). El "LEVITON"
+  // visible en la foto es del DISPOSITIVO, no necesariamente de la PLACA --
+  // no asumir que coinciden.
 ];
 
 function seriesSize(series, gangs) {
@@ -195,6 +229,15 @@ function resolvePlateSize({ gangs, family, widthRatio, heightRatio, plateWidthMm
   // Adorne: tabla directa, sin calibración por foto.
   if (family === 'adorne' || family === 'adorne_plus') {
     return { ...adornePlateSize(gangs), source: 'adorne_table' };
+  }
+
+  // Blank: no hay ninguna ventana en la foto contra la cual medir una
+  // proporción -- pedirle un ratio a Gemini no tendría sentido. Se asume
+  // Standard (el tamaño más común con amplio margen); si el cliente tiene
+  // una Blank Midway/Jumbo real, cae fuera de este caso raro y sale un
+  // poco chica -- aceptable dado lo infrecuente del pedido.
+  if (family === 'blank') {
+    return { ...standardPlateSize(gangs), source: 'standard_assumed_blank' };
   }
 
   const fam = WINDOW_FAMILIES[family];
