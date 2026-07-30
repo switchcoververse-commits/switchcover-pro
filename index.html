@@ -90,7 +90,29 @@ input::placeholder { color: #333; }
 <div class="auth-step"><div class="step-num">4</div><div class="step-text"><strong>Pay</strong> → We ship your custom sticker</div></div>
 </div>
 <button class="btn-green" onclick="startApp()">INITIALIZE SCANNER</button>
+<button onclick="showDeviceCheckModal()" style="margin-top:16px;background:rgba(255,149,0,0.1);border:1px solid #ff9500;color:#ff9500;padding:10px 18px;border-radius:20px;font-size:11px;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:6px;">⚠ Check if your device is supported</button>
 </div>
+
+<!-- DEVICE SUPPORT MODAL -->
+<div id="device-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:10001;align-items:center;justify-content:center;padding:25px;">
+<div style="background:#111;border:1px solid #333;border-radius:16px;padding:24px;max-width:340px;max-height:80vh;overflow-y:auto;">
+<h3 style="color:#ff4444;margin:0 0 14px;font-size:16px;font-weight:900;">NOT YET SUPPORTED</h3>
+<ul style="color:#aaa;font-size:13px;line-height:1.9;margin:0 0 18px;padding-left:20px;">
+<li>Thermostats</li>
+<li>Weatherproof / outdoor "in-use" covers</li>
+<li>Vintage push-button switches</li>
+<li>Twist-lock / locking receptacles</li>
+</ul>
+<p style="color:#fff;font-size:12px;line-height:1.6;margin:0 0 20px;font-weight:700;">Have one of these? Message us BEFORE ordering for a custom quote — do not use the camera for these, your order may be delayed or refunded.</p>
+<button onclick="document.getElementById('device-modal-overlay').style.display='none'" style="width:100%;background:#00ff00;color:#000;border:none;padding:14px 0;border-radius:25px;font-weight:900;font-size:13px;cursor:pointer;">GOT IT</button>
+</div>
+</div>
+
+<script>
+function showDeviceCheckModal() {
+document.getElementById('device-modal-overlay').style.display = 'flex';
+}
+</script>
 <!-- PAGE 2: CAMERA -->
 <div id="page2">
 <div style="padding:12px 15px;background:#000;border-bottom:1px solid #111;display:flex;justify-content:space-between;align-items:center;">
